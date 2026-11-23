@@ -17,4 +17,12 @@
 
 # The service worker must always be checked for updates
 /sw.js
-  Cache-Control: no-cache
+  Cache-Control: public, max-age=0, must-revalidate
+
+# The *.pages.dev addresses are only copies of the site: keep them out of search so sizeit.games is the one that ranks
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+# The image behind a challenge link preview is generated per link: not for search results
+/og-card
+  X-Robots-Tag: noindex

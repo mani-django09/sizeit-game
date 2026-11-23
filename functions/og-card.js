@@ -51,7 +51,7 @@ export async function onRequestGet(ctx) {
     return await ImageResponse.async(tree, {
       width: 1200, height: 630, format: 'png',
       fonts: [new GoogleFont('Bricolage Grotesque', { name: 'Bricolage', weight: 800 })],
-      headers: { 'Cache-Control': 'public, max-age=604800, immutable' }
+      headers: { 'Cache-Control': 'public, max-age=604800, immutable', 'X-Robots-Tag': 'noindex' }
     });
   } catch (e) {
     console.error('og-card failed:', e && e.stack || e);

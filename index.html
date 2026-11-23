@@ -25,7 +25,17 @@
   <link rel="preload" href="fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/style.css">
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "WebSite", "name": "sizeit.games", "url": "https://sizeit.games/", "description": "Free daily guessing games about size, weight, speed, distance and numbers.", "inLanguage": "en"}
+  {"@context": "https://schema.org", "@graph": [
+    {"@type": "Organization", "@id": "https://sizeit.games/#org", "name": "sizeit.games", "url": "https://sizeit.games/",
+      "logo": {"@type": "ImageObject", "url": "https://sizeit.games/icons/icon-512.png", "width": 512, "height": 512},
+      "description": "Free daily games about the real size, weight, speed and distance of things.",
+      "email": "contact@sizeit.games",
+      "contactPoint": {"@type": "ContactPoint", "contactType": "customer support", "email": "contact@sizeit.games", "url": "https://sizeit.games/contact/", "availableLanguage": "English"},
+      "knowsAbout": ["size comparison", "weight", "speed", "distance", "estimation games"]},
+    {"@type": "WebSite", "@id": "https://sizeit.games/#website", "url": "https://sizeit.games/", "name": "sizeit.games",
+      "description": "Free daily guessing games about size, weight, speed, distance and numbers.",
+      "inLanguage": "en", "publisher": {"@id": "https://sizeit.games/#org"}}
+  ]}
   </script>
 </head>
 <body>
@@ -33,7 +43,7 @@
     <section class="hero">
       <div>
         <span class="eyebrow"><span class="dot"></span><span id="dailyChip">Today's puzzles are live</span></span>
-        <h1>How big is it, <span class="hl">really?</span></h1>
+        <h1>How big is it, <span class="hl">really?</span><span class="h1-sub">Free daily size, weight and number games</span></h1>
         <p class="lead">Quick daily games about the real size and weight of things. Whales, dinosaurs, planets, monuments, cricket balls and jumbo jets. Two minutes a day, no sign-up.</p>
         <div class="cta">
           <a class="primary big" href="size-it-up/">Play How Big? →</a>
@@ -48,7 +58,7 @@
 
     <section class="section">
       <div class="section-head">
-        <h2>Today's games</h2>
+        <h2>Today's free daily games</h2>
         <p id="countdown"></p>
       </div>
       <section class="tt" id="total" aria-label="Today's total" style="margin-bottom:16px"></section>
@@ -68,14 +78,14 @@
 
     <section class="section">
       <div class="section-head">
-        <h2>Scale is surprising</h2>
+        <h2>Size and weight facts that surprise people</h2>
         <p>A few from the game library.</p>
       </div>
       <div class="facts" id="facts"></div>
     </section>
 
     <section class="section">
-      <div class="section-head"><h2>How it works</h2></div>
+      <div class="section-head"><h2>How the daily games work</h2></div>
       <div class="steps">
         <div class="step-card"><h3>One puzzle a day</h3><p>Each game has a Daily that is the same for everyone. It resets at midnight, your time.</p></div>
         <div class="step-card"><h3>Guess, then see the truth</h3><p>Every answer comes with the real number drawn to scale, plus a fact to remember.</p></div>

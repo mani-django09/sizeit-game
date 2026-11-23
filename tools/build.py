@@ -80,6 +80,34 @@ for page in OUT.rglob("*.html"):
     crumb_pages += 1
 print(f"Breadcrumb structured data added to {crumb_pages} pages")
 
+# WebApplication structured data for each game page: name, free, playable in the browser, published by the Organization
+# defined on the home page. Built from the page's own <h1>, description and canonical URL, so it can't drift.
+GAME_FOLDERS = ["size-it-up", "which-is-heavier", "sort-it", "ballpark", "speed-race", "how-many-fit", "how-far",
+                "number-guess", "survival", "weekly"]
+app_pages = 0
+for folder in GAME_FOLDERS:
+    page = OUT / folder / "index.html"
+    s = page.read_text(encoding="utf-8")
+    if "data-webapp" in s:
+        continue
+    canon = re.search(r'<link rel="canonical" href="(https://[^"]+)">', s)
+    desc = re.search(r'<meta name="description" content="([^"]*)"', s)
+    h1 = re.search(r"<h1[^>]*>(.*?)</h1>", s, flags=re.S)
+    if not (canon and desc and h1):
+        continue
+    home = re.match(r"https://[^/]+/", canon.group(1)).group(0)
+    data = json.dumps({"@context": "https://schema.org", "@type": "WebApplication", "name": plain(h1.group(1)),
+        "url": canon.group(1), "description": html.unescape(desc.group(1)), "applicationCategory": "GameApplication",
+        "genre": "Quiz", "operatingSystem": "Any (runs in the browser)", "browserRequirements": "Requires JavaScript",
+        "isAccessibleForFree": True, "inLanguage": "en",
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+        "publisher": {"@id": home + "#org"}}, ensure_ascii=False).replace("</", "<\\/")
+    s = s.replace("</head>", f'  <script type="application/ld+json" data-webapp>{data}</script>\n</head>', 1)
+    with open(page, "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(s)
+    app_pages += 1
+print(f"WebApplication structured data added to {app_pages} game pages")
+
 # Service worker cache name: a hash of every published file, so a deploy that changes anything
 # makes returning visitors drop the old cache. No more bumping CACHE in sw.js by hand.
 h = hashlib.sha256()
