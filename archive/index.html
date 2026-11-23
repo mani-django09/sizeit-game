@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Puzzle Archive: Replay Past Daily Games | sizeit.games</title>
+  <meta name="description" content="Missed a day? Replay every past Daily of How Big?, Heavier or Lighter, Sort It, Ballpark, Speed Race and more. Free, no sign-up.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/archive/">
+  <meta property="og:url" content="https://sizeit.games/archive/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Puzzle Archive: Replay Past Daily Games | sizeit.games">
+  <meta property="og:description" content="Missed a day? Replay every past Daily of How Big?, Heavier or Lighter, Sort It, Ballpark, Speed Race and more. Free, no sign-up.">
+  <meta property="og:image" content="https://sizeit.games/og/home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="sizeit.games puzzle archive">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge">📅</span>
+        <div>
+          <h1>Puzzle Archive</h1>
+          <div class="sub" id="sub">Every past Daily, ready to replay.</div>
+        </div>
+      </div>
+      <label class="ar-filter">Show
+        <select id="gameFilter" class="cat-select" aria-label="Game"></select>
+      </label>
+    </div>
+
+    <section class="ar-list" id="list"></section>
+    <p class="hint" id="more"></p>
+
+    <article class="seo guide">
+      <section>
+        <h2>Missed a day? Play it now</h2>
+        <p>Every game on sizeit.games has a Daily that is the same for everyone and changes at midnight. The archive keeps all of them, so you can catch up on a puzzle you missed or replay one to see if you'd do better the second time.</p>
+        <p>Archive games are scored and saved like any other, and they show up in your <a href="../stats/">stats</a>. The one difference: a puzzle played after its day doesn't add to your streak. Streaks are for playing on the day.</p>
+      </section>
+      <section>
+        <h2>How to use the archive</h2>
+        <ol class="howto">
+          <li><b>Pick a day.</b> The newest is at the top. Days you've already finished show your score; the rest say Play.</li>
+          <li><b>Play it like the Daily.</b> You get exactly the puzzles everyone played that day, built from the date.</li>
+          <li><b>See how you'd have ranked.</b> Your score is compared with the players who played on the day, and the comparison says "you'd have beaten". Archive scores are never added to the leaderboard.</li>
+          <li><b>Head back to today.</b> The bar at the top of the game takes you to today's Daily at any time.</li>
+        </ol>
+      </section>
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>How far back does the archive go?</summary><p>To Daily #1, the day the site started. Every Daily since then is here.</p></details>
+        <details><summary>Will an old puzzle change if new objects are added?</summary><p>No. New objects, numbers and racers only join puzzles from the day they're added, so a past Daily always plays exactly as it did on the day.</p></details>
+        <details><summary>Is there an archive for the Weekly Challenge?</summary><p>Not yet. The archive covers the Dailies of every game.</p></details>
+        <details><summary>Can I see the answers for a past day?</summary><p>Yes. The <a href="../answers/">answers page</a> shows every Daily's answers for any date.</p></details>
+      </section>
+    </article>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script>
+    (() => {
+      const { SITE, esc, store, pastDays, fmtDate, dayNumber, icon, ROOT } = SG;
+      SG.header('archive');
+      const games = SITE.games.filter(g => g.status === 'live' && g.daily);
+      const sel = document.getElementById('gameFilter');
+      sel.innerHTML = '<option value="all">All games</option>' + games.map(g => `<option value="${g.id}">${esc(g.name)}</option>`).join('');
+      try { sel.value = localStorage.getItem('sg_archive_filter') || 'all'; } catch { /* ignore */ }
+      if (!sel.value) sel.value = 'all';
+      const recs = Object.fromEntries(games.map(g => [g.id, store.get(g.daily.key, {})]));
+      const days = pastDays();
+      const PAGE = 14;
+      let shown = PAGE;
+
+      function chip(g, day) {
+        const r = recs[g.id][day];
+        const href = `${ROOT}${g.path}?date=${day}`;
+        if (r && r.done) return `<a class="ar-chip done" href="${href}" title="${esc(g.name)}: replay">${icon(g.icon, 'gm-icon')}<span>${esc(g.name)}</span><b>${g.daily.score(r)}/${g.daily.max}</b></a>`;
+        const started = r && !r.done;
+        return `<a class="ar-chip" href="${href}">${icon(g.icon, 'gm-icon')}<span>${esc(g.name)}</span><b>${started ? 'Resume' : 'Play'}</b></a>`;
+      }
+      function render() {
+        const f = sel.value;
+        const list = days.slice(0, shown);
+        document.getElementById('sub').textContent = days.length
+          ? `${days.length} past ${days.length === 1 ? 'day' : 'days'} · ${games.length} games a day`
+          : 'Nothing here yet. Come back tomorrow.';
+        document.getElementById('list').innerHTML = list.map(day => {
+          const gs = f === 'all' ? games : games.filter(g => g.id === f);
+          const done = gs.filter(g => recs[g.id][day] && recs[g.id][day].done).length;
+          return `<div class="ar-day">
+            <div class="ar-head"><b>${esc(fmtDate(day))}</b><span>#${dayNumber(day)}</span>${f === 'all' ? `<span class="ar-count">${done}/${gs.length} played</span>` : ''}</div>
+            <div class="ar-chips">${gs.map(g => chip(g, day)).join('')}</div>
+          </div>`;
+        }).join('');
+        const more = document.getElementById('more');
+        more.innerHTML = shown < days.length ? '<button class="secondary" id="moreBtn">Show older days</button>' : '';
+        const mb = document.getElementById('moreBtn');
+        if (mb) mb.addEventListener('click', () => { shown += PAGE; render(); });
+      }
+      sel.addEventListener('change', () => { try { localStorage.setItem('sg_archive_filter', sel.value); } catch { /* ignore */ } render(); });
+      render();
+    })();
+  </script>
+</body>
+</html>

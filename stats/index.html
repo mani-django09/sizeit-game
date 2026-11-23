@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Your Stats: Streaks and Scores | sizeit.games</title>
+  <meta name="description" content="Your streaks, averages and best scores across every sizeit.games daily game, all in one place.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://sizeit.games/stats/">
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge">📊</span>
+        <div>
+          <h1>Your Stats</h1>
+          <div class="sub">Every game, one page. Saved on this device only.</div>
+        </div>
+      </div>
+    </div>
+
+    <section class="tt" id="total" aria-label="Today's total" style="margin-bottom:16px"></section>
+
+    <section class="st-today" id="today"></section>
+
+    <section class="st-totals stats" id="totals"></section>
+
+    <h2 class="st-h">Game by game</h2>
+    <div class="st-games" id="games"></div>
+
+    <h2 class="st-h">Weekly Challenge</h2>
+    <a class="st-game" href="../weekly/" id="weekly"></a>
+
+    <h2 class="st-h">Survival</h2>
+    <a class="st-game" href="../survival/" id="survival"></a>
+
+    <h2 class="st-h" id="badgesH">Badges</h2>
+    <div class="badges" id="badges"></div>
+
+    <p class="hint">Stats live in this browser. Clearing your browser data, or playing on another device, starts them fresh.</p>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script>
+    (() => {
+      const { SITE, esc, store, todayKey, dateKey, streakInfo, icon, ROOT, untilMidnight } = SG;
+      SG.header('stats');
+      SG.renderTotal(document.getElementById('total'));
+      const games = SITE.games.filter(g => g.status === 'live' && g.daily);
+      const today = todayKey();
+      const recs = Object.fromEntries(games.map(g => [g.id, store.get(g.daily.key, {})]));
+      const doneOn = (g, day, onTime) => { const r = recs[g.id][day]; return !!(r && r.done && (!onTime || !r.late)); };
+      const BESTS = { heavier: ['sg_heavier_best', 'Endless best'], ballpark: ['sg_ballpark_best', 'Rush best'], speed: ['sg_speed_best', 'Endless best'] };
+
+      // ----- Today -----
+      const doneToday = games.filter(g => doneOn(g, today));
+      const all = doneToday.length === games.length;
+      document.getElementById('today').innerHTML = `
+        <div class="st-badge ${all ? 'gold' : ''}">
+          <span class="st-medal">${all ? '🏆' : doneToday.length ? '⭐' : '🎯'}</span>
+          <div><b>${all ? 'Every Daily done today!' : `${doneToday.length} of ${games.length} Dailies done today`}</b>
+          <span>${all ? 'A perfect day. New puzzles in ' + untilMidnight() + '.' : 'Finish them all to earn today\'s trophy.'}</span></div>
+        </div>
+        <div class="st-chips">${games.map(g => {
+          const ok = doneOn(g, today);
+          return `<a class="ar-chip ${ok ? 'done' : ''}" href="${ROOT}${g.path}">${icon(g.icon, 'gm-icon')}<span>${esc(g.name)}</span><b>${ok ? g.daily.score(recs[g.id][today]) + '/' + g.daily.max : 'Play'}</b></a>`;
+        }).join('')}</div>`;
+      if (all) SG.confetti(60);
+
+      // ----- Totals across all games -----
+      const allDays = new Set(games.flatMap(g => Object.keys(recs[g.id]).filter(d => recs[g.id][d].done)));
+      const played = games.reduce((n, g) => n + Object.values(recs[g.id]).filter(r => r.done).length, 0);
+      // a day counts if at least one Daily was finished on that day
+      const anyOnTime = day => games.some(g => doneOn(g, day, true));
+      let cur = 0; const d = new Date();
+      if (!anyOnTime(dateKey(d))) d.setDate(d.getDate() - 1);
+      while (anyOnTime(dateKey(d))) { cur++; d.setDate(d.getDate() - 1); }
+      const perfect = [...allDays].filter(day => games.every(g => doneOn(g, day, true))).length;
+      document.getElementById('totals').innerHTML = [
+        [played, 'Puzzles played'], [allDays.size, 'Days played'], [cur, 'Day streak'], [perfect, 'Perfect days']
+      ].map(([v, l]) => `<div><b>${v}</b><span>${l}</span></div>`).join('');
+
+      // ----- Per game -----
+      document.getElementById('games').innerHTML = games.map(g => {
+        const rec = recs[g.id], st = streakInfo(rec);
+        const scores = st.keys.map(k => g.daily.score(rec[k]));
+        const avg = scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length / g.daily.max * 100) : 0;
+        const best = scores.length ? Math.max(...scores) : 0;
+        const extra = BESTS[g.id] ? `<div><b>${store.get(BESTS[g.id][0], 0)}</b><span>${BESTS[g.id][1]}</span></div>` : '';
+        return `<a class="st-game" href="${ROOT}${g.path}">
+          <div class="st-gh">${icon(g.icon, 'gm-icon')}<b>${esc(g.name)}</b>${doneOn(g, today) ? '<span class="chip done">✓ Today</span>' : ''}</div>
+          <div class="stats">
+            <div><b>${scores.length}</b><span>Played</span></div>
+            <div><b>${avg}%</b><span>Average</span></div>
+            <div><b>${best}</b><span>Best /${g.daily.max}</span></div>
+            <div><b>${st.cur}</b><span>Streak</span></div>
+            <div><b>${st.max}</b><span>Max streak</span></div>
+            ${extra}
+          </div></a>`;
+      }).join('');
+
+      // ----- Weekly -----
+      const weeks = Object.values(store.get('sg_weekly', {})).filter(w => w.done);
+      const wScores = weeks.map(w => w.answers.filter(Boolean).length);
+      document.getElementById('weekly').innerHTML = `
+        <div class="st-gh"><span class="gm-icon" style="font-size:1.2rem">🗓️</span><b>Weekly Challenge</b></div>
+        <div class="stats">
+          <div><b>${weeks.length}</b><span>Weeks played</span></div>
+          <div><b>${wScores.length ? Math.round(wScores.reduce((a, b) => a + b, 0) / wScores.length * 10) : 0}%</b><span>Average</span></div>
+          <div><b>${wScores.length ? Math.max(...wScores) : 0}</b><span>Best /10</span></div>
+        </div>`;
+
+      // ----- Survival -----
+      document.getElementById('survival').innerHTML = `
+        <div class="st-gh">${icon('survival', 'gm-icon')}<b>Survival</b></div>
+        <div class="stats">
+          <div><b>${store.get('sg_survival_runs', 0)}</b><span>Runs</span></div>
+          <div><b>${store.get('sg_survival_best', 0)}</b><span>Best run</span></div>
+        </div>`;
+
+      // ----- Badges -----
+      const got = SG.checkBadges();
+      const n = SG.BADGES.filter(b => got[b.id]).length;
+      document.getElementById('badgesH').textContent = `Badges · ${n} of ${SG.BADGES.length}`;
+      document.getElementById('badges').innerHTML = SG.BADGES.map(b => `<div class="bdg ${got[b.id] ? '' : 'locked'}">
+          <span class="bi" aria-hidden="true">${b.icon}</span><b>${esc(b.name)}</b><span>${esc(b.desc)}</span>
+          ${got[b.id] ? `<em>Earned ${esc(SG.fmtDate(got[b.id]))}</em>` : ''}</div>`).join('');
+    })();
+  </script>
+</body>
+</html>

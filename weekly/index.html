@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Size it up Weekly Challenge: A New Themed Quiz Every Monday</title>
+  <meta name="description" content="Ten rounds, one theme, once a week. India Week, Space Week, Animal Week and more: guess sizes, weights, speeds and numbers. Free, no sign-up.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/weekly/">
+  <meta property="og:url" content="https://sizeit.games/weekly/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Weekly Challenge: A New Themed Quiz Every Monday">
+  <meta property="og:description" content="Ten rounds, one theme, once a week. India Week, Space Week, Animal Week and more: guess sizes, weights, speeds and numbers. Free, no sign-up.">
+  <meta property="og:image" content="https://sizeit.games/og/weekly.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="sizeit.games Weekly Challenge">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Weekly Challenge – themed estimation quiz","applicationCategory":"GameApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A free weekly quiz with a new theme every Monday: ten rounds of size, weight, speed and number guessing."}
+  </script>
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge">🗓️</span>
+        <div>
+          <h1>Size it up Weekly Challenge</h1>
+          <div class="sub">One theme, ten rounds, one try a week.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wk-theme" id="theme"></div>
+
+    <section class="game" id="game">
+      <div class="meta">
+        <span class="round-label" id="progress" style="margin:0"></span>
+        <span class="wk-kind" id="kind"></span>
+        <span class="scorebox" id="scoreLine"></span>
+      </div>
+      <p class="prompt" id="prompt"></p>
+      <div class="wk-options" id="options"></div>
+      <div class="hl-reveal" id="reveal" hidden>
+        <div class="verdict" id="verdict"></div>
+        <div class="txt"><p id="detail"></p><p id="fact"></p></div>
+        <button class="primary" id="nextBtn">Next</button>
+      </div>
+      <div class="dots" id="dots"></div>
+    </section>
+
+    <section class="result" id="result" hidden>
+      <div class="kicker" id="resTitle">This week</div>
+      <div class="rank" id="resRank"></div>
+      <div class="total"><b id="resTotal">0</b><span>/10</span></div>
+      <div class="blocks" id="resBlocks"></div>
+      <p class="countdown" id="resNote"></p>
+      <div class="actions">
+        <button class="primary" id="shareBtn">Share result</button>
+        <a class="secondary" href="../archive/">Play past Dailies</a>
+      </div>
+      <p class="countdown" id="countdown"></p>
+    </section>
+    <p class="hint" id="upcoming"></p>
+
+    <article class="seo guide">
+      <section>
+        <h2>A new theme every Monday</h2>
+        <p>The Dailies are quick. The Weekly Challenge is the one to save for a tea break. Every Monday a new theme starts, such as India Week, Space Week, Animal Week, Big Builds, Sports or Everyday, and it brings ten mixed rounds built from that theme.</p>
+        <p>You only get one go each week, and everyone playing that week gets the same ten rounds, so it's a fair fight when you compare scores.</p>
+      </section>
+      <section>
+        <h2>The four kinds of round</h2>
+        <ul class="tips">
+          <li><b>📏 Size:</b> which of two things is taller, longer or wider?</li>
+          <li><b>⚖️ Weight:</b> which of two things is heavier?</li>
+          <li><b>🏁 Speed:</b> which of two things is faster?</li>
+          <li><b>🔢 Ballpark:</b> which range does a real-world number fall in?</li>
+        </ul>
+        <p>Each right answer is worth a point, for ten in all. Press 1 to 4 to answer and Enter to move on.</p>
+      </section>
+      <section>
+        <h2>The six themes</h2>
+        <p>The themes take turns, one per week, so each comes round every six weeks with a fresh set of rounds.</p>
+        <ul class="tips">
+          <li><b>🇮🇳 India Week:</b> monuments, cricket, autos and tigers. The Qutub Minar, the Statue of Unity, the Vande Bharat Express and a cricket pitch all turn up.</li>
+          <li><b>🚀 Space Week:</b> planets, light, orbits and the speed of sound, from the International Space Station to the Earth's trip around the Sun.</li>
+          <li><b>🐾 Animal Week:</b> whales, cheetahs, cobras and snails, plus every other animal in the game library.</li>
+          <li><b>🏗️ Big Builds Week:</b> towers, statues, ships and jumbo jets. The Burj Khalifa, the Eiffel Tower, the Titanic and the Boeing 747.</li>
+          <li><b>🏏 Sports Week:</b> bats, balls, pitches and the fastest people alive, including Usain Bolt and a Formula 1 car.</li>
+          <li><b>🏠 Everyday Week:</b> phones, doors, bodies and the maths of a day. Surprisingly hard, because we think we already know these.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Weekly, Daily or Survival?</h2>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th></th><th>Dailies</th><th>Weekly</th><th>Survival</th></tr></thead>
+            <tbody>
+              <tr><td>New puzzles</td><td>Every midnight</td><td>Every Monday</td><td>Every run</td></tr>
+              <tr><td>Tries</td><td>One per game per day</td><td>One per week</td><td>Unlimited</td></tr>
+              <tr><td>Rounds</td><td>Depends on the game</td><td>10 mixed</td><td>Until you lose 3 lives</td></tr>
+              <tr><td>Same for everyone</td><td>Yes</td><td>Yes</td><td>No</td></tr>
+              <tr><td>Counts towards streaks</td><td>Yes</td><td>No</td><td>No</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section>
+        <h2>Tips</h2>
+        <ul class="tips">
+          <li><b>Warm up first.</b> The Weekly uses the same objects, racers and numbers as the Dailies, so a few rounds of <a href="../size-it-up/">Size It Up</a> or <a href="../speed-race/">Speed Race</a> sharpen your eye for it.</li>
+          <li><b>Read the comparison word.</b> "Taller", "longer" and "wider" are different questions, and the theme doesn't change that.</li>
+          <li><b>In Ballpark rounds, count the digits.</b> Ask whether the answer has three digits or four before worrying about the exact number.</li>
+          <li><b>There's no clock.</b> You only get one try, so take your time on every round.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Play it with friends</h2>
+        <p>Because everyone gets the same ten rounds all week, the Weekly is made for comparing. Share your result and the link becomes a challenge: your friend plays the same set and sees the score to beat. Or start a <a href="../league/">Friends League</a> for your group and compare your Dailies every day as well.</p>
+      </section>
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>When does the Weekly Challenge change?</summary><p>At midnight on Monday morning, your local time.</p></details>
+        <details><summary>Can I play last week's challenge?</summary><p>Not yet. Past Dailies are in the <a href="../archive/">archive</a>, and past weeks may follow.</p></details>
+        <details><summary>Is the Weekly Challenge free?</summary><p>Yes, with no account and nothing to download.</p></details>
+        <details><summary>Does everyone get the same questions?</summary><p>Yes. The ten rounds are built from the date of that week's Monday, so everyone playing that week gets the same set.</p></details>
+        <details><summary>What is a good score?</summary><p>6 out of 10 makes you a Good Guesser, 8 a Sharp Eye and 9 or 10 a Scale Master. A perfect 10 is rare.</p></details>
+        <details><summary>Does it count towards my streak?</summary><p>No. Streaks are for the Dailies. Your weekly results appear in your <a href="../stats/">stats</a>.</p></details>
+      </section>
+    </article>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="../data/objects.js"></script>
+  <script src="../data/numbers.js"></script>
+  <script src="../data/speeds.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

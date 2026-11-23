@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "description": "Run Pages Functions only for HTML pages and the preview image, never for scripts, images or fonts (keeps the free quota for real visits). Add new pages here.",
+  "include": [
+    "/",
+    "/og-card",
+    "/size-it-up/",
+    "/which-is-heavier/",
+    "/sort-it/",
+    "/ballpark/",
+    "/speed-race/",
+    "/number-guess/",
+    "/how-many-fit/",
+    "/how-far/",
+    "/weekly/",
+    "/survival/",
+    "/answers/",
+    "/archive/",
+    "/suggest/",
+    "/stats/",
+    "/privacy/",
+    "/league/",
+    "/about/",
+    "/contact/",
+    "/terms/",
+    "/categories/"
+  ],
+  "exclude": []
+}

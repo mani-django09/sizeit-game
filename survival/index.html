@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Size it up Survival: Size, Weight and Speed Quiz vs the Clock</title>
+  <meta name="description" content="Bigger or smaller, heavier or lighter, faster, farther, more or less. Quick-fire estimation questions against the clock with three lives. Free, no sign-up.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/survival/">
+  <meta property="og:url" content="https://sizeit.games/survival/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Survival: How Long Can You Last? Size, Weight and Speed Quiz">
+  <meta property="og:description" content="Bigger or smaller, heavier or lighter, faster, farther, more or less. Quick-fire estimation questions against the clock with three lives. Free, no sign-up.">
+  <meta property="og:image" content="https://sizeit.games/og/home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="sizeit.games Survival">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Survival – estimation quiz with three lives","applicationCategory":"GameApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A free endless quiz: size, weight, speed, distance and number questions against the clock, with three lives."}
+  </script>
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge">❤️</span>
+        <div>
+          <h1>Size it up Survival</h1>
+          <div class="sub">Five kinds of question, one clock, three lives.</div>
+        </div>
+      </div>
+    </div>
+
+    <section class="sv-start" id="start">
+      <h2>How long can you last?</h2>
+      <p>Bigger or smaller, heavier or lighter, faster, farther apart, more or less. Each question is a choice between two, and the clock is ticking. A wrong answer or running out of time costs a life. The questions get closer and the clock gets shorter the longer you survive.</p>
+      <button class="primary big" id="startBtn">Start a run</button>
+      <p class="hint" id="bestLine"></p>
+    </section>
+
+    <section class="game" id="game" hidden>
+      <div class="meta">
+        <span class="sv-lives" id="lives"></span>
+        <span class="wk-kind" id="kind"></span>
+        <span class="scorebox" id="scoreLine"></span>
+      </div>
+      <div class="sv-timer" id="timer" aria-hidden="true"><i id="timerBar"></i></div>
+      <p class="prompt" id="prompt"></p>
+      <div class="wk-options two" id="options"></div>
+      <div class="hl-reveal" id="reveal" hidden>
+        <div class="verdict" id="verdict"></div>
+        <div class="txt"><p id="detail"></p><p id="fact"></p></div>
+        <button class="primary" id="nextBtn">Next</button>
+      </div>
+    </section>
+
+    <section class="result" id="result" hidden>
+      <div class="kicker" id="resTitle">Survival</div>
+      <div class="rank" id="resRank"></div>
+      <div class="total"><b id="resTotal">0</b><span>correct</span></div>
+      <div class="blocks" id="resBlocks"></div>
+      <p class="countdown" id="resNote"></p>
+      <div class="actions">
+        <button class="primary" id="shareBtn">Share result</button>
+        <button class="secondary" id="againBtn">Play again</button>
+      </div>
+    </section>
+
+    <article class="seo guide">
+      <section>
+        <h2>An endless estimation quiz</h2>
+        <p>Survival mixes every kind of question on the site into one fast run. Is a blue whale longer than a Boeing 747? Is a Velociraptor heavier than a greyhound? Are Delhi and Mumbai farther apart than New York and Chicago? Answer before the bar runs out.</p>
+        <p>You start with three lives. Every wrong answer, and every question you let time out, costs one. At first the two answers are far apart and you have 14 seconds. As your score grows, the answers get closer together and the clock drops to 7 seconds.</p>
+      </section>
+      <section>
+        <h2>The five kinds of question</h2>
+        <ul class="tips">
+          <li><b>📏 Size:</b> which is taller, longer or wider?</li>
+          <li><b>⚖️ Weight:</b> which is heavier?</li>
+          <li><b>🏁 Speed:</b> which is faster?</li>
+          <li><b>🗺️ Distance:</b> which two cities are farther apart?</li>
+          <li><b>🔢 Number:</b> is the real number more or less than the one shown?</li>
+        </ul>
+        <p>Press 1 or 2 to answer and Enter to move on.</p>
+      </section>
+
+      <section>
+        <h2>How a run gets harder</h2>
+        <p>Survival speeds up the longer you last, in two ways at once.</p>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>Question</th><th>How far apart the two answers are</th><th>Time to answer</th></tr></thead>
+            <tbody>
+              <tr><td>1st</td><td>about 3.2 times</td><td>14 seconds</td></tr>
+              <tr><td>10th</td><td>about 2.4 times</td><td>12 seconds</td></tr>
+              <tr><td>20th</td><td>about 1.5 times</td><td>10 seconds</td></tr>
+              <tr><td>23rd</td><td>1.25 times, and it stays there</td><td>9 seconds</td></tr>
+              <tr><td>29th and after</td><td>1.25 times</td><td>7 seconds</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Early on, the gap is wide enough that a quick gut feeling works. By the twenties, the two answers are only a quarter apart and you need to actually know.</p>
+      </section>
+
+      <section>
+        <h2>Ranks</h2>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>Correct answers</th><th>Rank</th></tr></thead>
+            <tbody>
+              <tr><td>0 to 4</td><td>Keep Practising</td></tr>
+              <tr><td>5 to 9</td><td>Getting There</td></tr>
+              <tr><td>10 to 14</td><td>Survivor</td></tr>
+              <tr><td>15 to 24</td><td>Sharp Eye</td></tr>
+              <tr><td>25 to 39</td><td>Unbreakable</td></tr>
+              <tr><td>40 or more</td><td>Legendary</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>Tips for lasting longer</h2>
+        <ul class="tips">
+          <li><b>Don't let the clock answer for you.</b> A timeout costs a life just like a wrong answer, so when you're unsure, pick the one that feels likelier and move on.</li>
+          <li><b>Read the comparison word.</b> "Taller", "longer" and "wider" are different questions. A blue whale is far longer than a giraffe, but nowhere near as tall.</li>
+          <li><b>Heavy is denser than it looks.</b> Metal and stone beat living things of the same size: an empty Boeing 747 outweighs a blue whale.</li>
+          <li><b>Animal speeds are sprints.</b> A house cat at full tilt beats Usain Bolt, but only for a few seconds.</li>
+          <li><b>Practise in the other games.</b> Every question comes from the same data as the Dailies, so <a href="../size-it-up/">Size It Up</a>, <a href="../which-is-heavier/">Heavier or Lighter</a>, <a href="../speed-race/">Speed Race</a>, <a href="../how-far/">How Far?</a> and <a href="../number-guess/">Number Guess</a> all sharpen your Survival runs.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>About Survival</h2>
+        <p>Survival is the site's arcade mode. There's no Daily and no limit: every run is a fresh shuffle of all five kinds of question, dealt in rotation so no kind goes missing for long. It's the game to play when you've finished your Dailies and still want more, or when you want to settle an argument with a friend right now.</p>
+        <p>It's free, runs in your browser, works on phones with big tap targets, and switches between metric and imperial with the unit button. Your best score and number of runs are saved on your device.</p>
+      </section>
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>Is there a Daily Survival?</summary><p>No. Survival is endless, so you can play as many runs as you like. Your best score is saved on this device and shows in <a href="../stats/">your stats</a>.</p></details>
+        <details><summary>Can I challenge a friend?</summary><p>Yes. Share your result and the link tells your friend exactly what to beat. Runs are random, so they get different questions, but the same rules and clock.</p></details>
+        <details><summary>Does a timeout cost a life?</summary><p>Yes. Running out of time counts the same as a wrong answer and is shown as ⏱️ in your share.</p></details>
+        <details><summary>Is Survival free?</summary><p>Yes, every run, with no sign-up and no limit.</p></details>
+        <details><summary>Are there badges for Survival?</summary><p>Yes. Reach 10 to earn Survivor and 25 to earn Unbreakable. See all badges on the <a href="../stats/">stats page</a>.</p></details>
+      </section>
+        <!-- more-games:start -->
+      <section class="more-games">
+        <h2>More free games</h2>
+        <ul>
+          <li><a href="../size-it-up/"><b>How Big?</b><span>Resize an object to its real size next to another.</span></a></li>
+          <li><a href="../which-is-heavier/"><b>Heavier or Lighter</b><span>Guess which of two things weighs more.</span></a></li>
+          <li><a href="../sort-it/"><b>Sort It</b><span>Put five things in order by size and by weight.</span></a></li>
+          <li><a href="../ballpark/"><b>Ballpark</b><span>Pick the range a real-world number falls in.</span></a></li>
+          <li><a href="../speed-race/"><b>Speed Race</b><span>Pick the faster racer, then watch them race.</span></a></li>
+          <li><a href="../number-guess/"><b>Number Guess</b><span>Guess a real-world number as closely as you can.</span></a></li>
+          <li><a href="../how-many-fit/"><b>How Many Fit?</b><span>Guess how many of one thing fit along another.</span></a></li>
+          <li><a href="../how-far/"><b>How Far?</b><span>Guess the straight-line distance between two cities.</span></a></li>
+        </ul>
+      </section>
+      <!-- more-games:end -->
+    </article>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="../data/objects.js"></script>
+  <script src="../data/numbers.js"></script>
+  <script src="../data/speeds.js"></script>
+  <script src="../data/cities.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

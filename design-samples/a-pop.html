@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sample A · Playful Pop</title>
+<style>
+@font-face { font-family: "Bricolage Grotesque"; src: url(../fonts/bricolage-latin.woff2) format("woff2"); font-weight: 200 800; }
+:root {
+  --bg: #fff4e0; --ink: #1b1740; --muted: #6e6889; --orange: #ff7a1a; --sun: #ffd166; --mint: #5fe0a6; --sky: #7cc7ff; --pink: #ff8fb1; --panel: #fff;
+  --d: "Bricolage Grotesque", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, sans-serif;
+  background-image: radial-gradient(#1b17401a 1.2px, transparent 1.2px); background-size: 22px 22px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+.top { display: flex; align-items: center; gap: 10px; padding: 16px 0; }
+.logo { width: 40px; height: 40px; border-radius: 12px; background: var(--ink); display: grid; grid-auto-flow: column; align-items: end; gap: 3px; padding: 8px; transform: rotate(-6deg); box-shadow: 3px 3px 0 var(--orange); }
+.logo i { width: 6px; border-radius: 2px; background: #fff; } .logo i:nth-child(1) { height: 9px; } .logo i:nth-child(2) { height: 15px; } .logo i:nth-child(3) { height: 22px; background: var(--orange); }
+.brand { font: 800 1.35rem var(--d); letter-spacing: -.03em; }
+.streak { margin-left: auto; background: var(--sun); border: 2.5px solid var(--ink); border-radius: 999px; padding: 4px 12px; font-weight: 800; box-shadow: 3px 3px 0 var(--ink); }
+
+.hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; align-items: center; padding: 22px 0 36px; }
+.sticker { display: inline-block; background: var(--mint); border: 2.5px solid var(--ink); border-radius: 10px; padding: 3px 10px; font: 800 .85rem var(--d); transform: rotate(-3deg); box-shadow: 3px 3px 0 var(--ink); }
+h1 { font: 800 clamp(2.6rem, 7vw, 4.6rem)/.95 var(--d); letter-spacing: -.045em; margin: 16px 0 14px; }
+h1 .u { background: var(--orange); color: #fff; padding: 0 .15em; border-radius: .15em; display: inline-block; transform: rotate(-2deg); box-shadow: 5px 5px 0 var(--ink); }
+.lead { font-size: 1.15rem; color: var(--muted); max-width: 30em; }
+.cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
+.btn { font: 800 1.1rem var(--d); border: 3px solid var(--ink); border-radius: 16px; padding: 14px 22px; box-shadow: 5px 5px 0 var(--ink); text-decoration: none; color: var(--ink); background: #fff; transition: transform .12s, box-shadow .12s; display: inline-flex; gap: 8px; align-items: center; }
+.btn:hover { transform: translate(-2px, -3px); box-shadow: 7px 8px 0 var(--ink); }
+.btn.go { background: var(--orange); color: #fff; }
+.stage { background: var(--sky); border: 3px solid var(--ink); border-radius: 28px; box-shadow: 8px 8px 0 var(--ink); height: 340px; position: relative; overflow: hidden; }
+.stage .ground { position: absolute; left: 0; right: 0; bottom: 0; height: 62px; background: var(--mint); border-top: 3px solid var(--ink); }
+.lineup { position: absolute; left: 4%; right: 4%; bottom: 40px; }
+.lineup svg { width: 100%; height: auto; display: block; overflow: visible; }
+.lineup .pfig { stroke: var(--ink); stroke-width: 2.5; paint-order: stroke; }
+.lineup .pfig:nth-of-type(2) { animation-delay: .12s; } .lineup .pfig:nth-of-type(3) { animation-delay: .24s; } .lineup .pfig:nth-of-type(4) { animation-delay: .36s; } .lineup .pfig:nth-of-type(5) { animation-delay: .48s; }
+.lineup .oa { fill: #fff; } .lineup .ob { fill: var(--orange); }
+.lineup text { font: 800 15px var(--d); fill: var(--ink); }
+@keyframes grow { from { transform: scaleY(0); } }
+.thing { position: absolute; bottom: 62px; display: flex; flex-direction: column; align-items: center; animation: pop .7s cubic-bezier(.2, 1.6, .4, 1) backwards; }
+.thing b { font-size: var(--s); line-height: 1; filter: drop-shadow(3px 3px 0 #1b174055); }
+.thing span { font: 800 .75rem var(--d); background: #fff; border: 2px solid var(--ink); border-radius: 8px; padding: 1px 7px; margin-top: 4px; position: absolute; bottom: -34px; white-space: nowrap; }
+.q { position: absolute; top: 18px; left: 18px; background: #fff; border: 3px solid var(--ink); border-radius: 18px; padding: 10px 14px; font: 800 1.05rem var(--d); box-shadow: 4px 4px 0 var(--ink); animation: wob 3s ease-in-out infinite; }
+@keyframes pop { from { transform: translateY(40px) scale(.4); opacity: 0; } }
+@keyframes wob { 50% { transform: rotate(3deg) translateY(-4px); } }
+
+.day { background: var(--ink); color: #fff; border-radius: 26px; padding: 18px 20px; display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; box-shadow: 8px 8px 0 var(--orange); margin-bottom: 30px; }
+.ring { width: 76px; height: 76px; border-radius: 50%; background: conic-gradient(var(--orange) 0 37%, #ffffff22 0); display: grid; place-items: center; }
+.ring div { width: 58px; height: 58px; border-radius: 50%; background: var(--ink); display: grid; place-items: center; font: 800 1.2rem var(--d); }
+.day h3 { margin: 0; font: 800 1.3rem var(--d); }
+.day p { margin: 2px 0 0; color: #cfcaf0; }
+.dots { display: flex; gap: 6px; margin-top: 8px; } .dots i { width: 26px; height: 8px; border-radius: 9px; background: #ffffff26; } .dots i.d { background: var(--mint); }
+
+.h2 { font: 800 1.8rem var(--d); letter-spacing: -.03em; margin: 0 0 14px; }
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 40px; }
+.card { background: #fff; border: 3px solid var(--ink); border-radius: 24px; box-shadow: 6px 6px 0 var(--ink); overflow: hidden; text-decoration: none; color: var(--ink); transition: transform .15s, box-shadow .15s; }
+.card:hover { transform: translate(-3px, -4px) rotate(-.6deg); box-shadow: 9px 10px 0 var(--ink); }
+.card .art { height: 120px; display: grid; place-items: center; font-size: 3.6rem; border-bottom: 3px solid var(--ink); }
+.card .body { padding: 14px 16px 16px; }
+.card h4 { margin: 0 0 4px; font: 800 1.25rem var(--d); }
+.card p { margin: 0; color: var(--muted); font-size: .92rem; }
+.tag { display: inline-block; margin-top: 10px; font: 800 .78rem var(--d); border: 2px solid var(--ink); border-radius: 999px; padding: 2px 10px; }
+.tag.done { background: var(--mint); }
+
+.result-demo { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center; margin-bottom: 50px; }
+.phone { width: 300px; margin: 0 auto; background: #fff; border: 3px solid var(--ink); border-radius: 36px; box-shadow: 10px 10px 0 var(--ink); padding: 22px 18px; text-align: center; }
+.phone .k { font: 800 .8rem var(--d); color: var(--muted); letter-spacing: .1em; text-transform: uppercase; }
+.phone .rk { font: 800 1.6rem var(--d); margin: 2px 0; }
+.score { font: 800 4.4rem/1 var(--d); color: var(--orange); -webkit-text-stroke: 2px var(--ink); text-shadow: 4px 4px 0 var(--ink); }
+.grid5 { font-size: 1.6rem; letter-spacing: 4px; margin: 10px 0; }
+.beat { background: var(--sun); border: 2.5px solid var(--ink); border-radius: 14px; padding: 8px; font-weight: 800; margin: 10px 0; }
+.wa { width: 100%; justify-content: center; background: #25d366; color: #0b2e17; }
+.notes h3 { font: 800 1.5rem var(--d); margin: 0 0 8px; }
+.notes li { margin-bottom: 6px; }
+@media (max-width: 760px) {
+  .hero, .result-demo { grid-template-columns: 1fr; }
+  .cards { grid-template-columns: 1fr; }
+  .stage { height: 260px; }
+  .day { grid-template-columns: auto 1fr; } .day .btn { grid-column: 1 / -1; justify-content: center; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><div class="logo"><i></i><i></i><i></i></div><span class="brand">sizeit.games</span><span class="streak">🔥 6 days</span></header>
+
+  <section class="hero">
+    <div>
+      <span class="sticker">✨ Daily #23 is live</span>
+      <h1>How big is it, <span class="u">really?</span></h1>
+      <p class="lead">Two-minute guessing games about the real size, weight and speed of things. Whales, jumbo jets, the Statue of Unity.</p>
+      <div class="cta"><a class="btn go" href="#">▶ Play today's Daily</a><a class="btn" href="#">🎲 Random</a><a class="btn" href="#">🏆 League</a></div>
+    </div>
+    <div class="stage">
+      <div class="q">How tall is a giraffe next to you? 🤔</div>
+      <div class="ground"></div>
+      <div class="lineup" id="lineup"></div>
+    </div>
+  </section>
+
+  <section class="day">
+    <div class="ring"><div>3/8</div></div>
+    <div><h3>Today: 296 / 800 points</h3><p>Next up: Speed Race. Five more and you keep your streak alive.</p><div class="dots"><i class="d"></i><i class="d"></i><i class="d"></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <a class="btn go" href="#">Continue →</a>
+  </section>
+
+  <h2 class="h2">Today's games</h2>
+  <div class="cards">
+    <a class="card" href="#"><div class="art" style="background:var(--sun)">📏</div><div class="body"><h4>Size It Up</h4><p>Resize it to its real size next to something you know.</p><span class="tag done">✓ 780/1000</span></div></a>
+    <a class="card" href="#"><div class="art" style="background:var(--pink)">⚖️</div><div class="body"><h4>Heavier or Lighter</h4><p>Ten quick calls. Is the next thing heavier?</p><span class="tag">~1 min</span></div></a>
+    <a class="card" href="#"><div class="art" style="background:var(--mint)">🐆</div><div class="body"><h4>Speed Race</h4><p>Pick the faster racer, then watch them race.</p><span class="tag">~2 min</span></div></a>
+  </div>
+
+  <section class="result-demo">
+    <div class="phone">
+      <div class="k">Size It Up · #23</div>
+      <div class="rk">Sharp Eye 🎯</div>
+      <div class="score">780</div>
+      <div class="grid5">🟩🟩🟨🟩🟧</div>
+      <div class="beat">You beat 82% of 3,140 players</div>
+      <a class="btn wa" href="#">Challenge on WhatsApp</a>
+    </div>
+    <div class="notes">
+      <h3>A · Playful Pop</h3>
+      <ul><li>Cream dotted paper, chunky black outlines, hard shadows that move on hover.</li><li>Bright sticker colours per game, tilted labels, bouncy pop-in animations.</li><li>Feels like a toy or a board game. Strong for sharing and for kids, students and families.</li><li>Closest to the current site, so the least risky change.</li></ul>
+    </div>
+  </section>
+</div>
+<script src="../assets/common.js"></script>
+<script src="../data/objects.js"></script>
+<script>
+  SG.measureShapes(OBJECTS);
+  const O = id => OBJECTS.find(o => o.id === id);
+  document.getElementById('lineup').innerHTML = SG.lineup([
+    { o: O('cat'), cls: 'oa', label: 'Cat' }, { o: O('human'), cls: 'oa', label: 'You' },
+    { o: O('elephant'), cls: 'oa', label: 'Elephant' }, { o: O('giraffe'), cls: 'ob', label: 'Giraffe' }
+  ], { w: 460, h: 250, gap: 22, labels: true, top: 4 });
+</script>
+</body>
+</html>

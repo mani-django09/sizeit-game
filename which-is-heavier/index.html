@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Size it up Heavier or Lighter: Which Is Heavier? Weight Game</title>
+  <meta name="description" content="Is a giraffe heavier than a car? Put two things on a balance and guess which weighs more. Ten a day, or an Endless streak that gets harder.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/which-is-heavier/">
+  <meta property="og:url" content="https://sizeit.games/which-is-heavier/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Which Is Heavier? Heavier or Lighter Daily Weight Game">
+  <meta property="og:description" content="Is a giraffe heavier than a car? Put two things on a balance and guess which weighs more. Ten a day, or an Endless streak that gets harder.">
+  <meta property="og:image" content="https://sizeit.games/og/which-is-heavier.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Which Is Heavier? Heavier or Lighter Daily Weight Game">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Heavier or Lighter – which weighs more?","applicationCategory":"GameApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A free daily weight guessing game: two objects on a balance scale, one known weight, and you decide whether the other is heavier or lighter."}
+  </script>
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge w"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4v4M6 8h20M6 8l-4 10h8L6 8Zm20 0-4 10h8l-4-10ZM10 28h12M16 8v20" class="l-stroke"/><circle cx="16" cy="6" r="2.4" class="l-guess"/></svg></span>
+        <div>
+          <h1>Size it up Heavier or Lighter</h1>
+          <div class="sub" id="sub"></div>
+        </div>
+      </div>
+      <nav class="modes" aria-label="Modes">
+        <button class="mode" data-mode="daily">Daily</button>
+        <button class="mode" data-mode="endless">Endless</button>
+      </nav>
+    </div>
+
+    <section class="game" id="game">
+      <div class="meta">
+        <span class="round-label" id="progress" style="margin:0"></span>
+        <span class="scorebox" id="scoreLine"></span>
+      </div>
+      <p class="prompt" id="prompt"></p>
+
+      <div class="scene">
+        <svg id="scene" viewBox="0 0 600 330" role="img" aria-label="Balance scale">
+          <rect x="250" y="312" width="100" height="14" rx="7" class="stand"/>
+          <path d="M292 312 L300 80 L308 312 Z" class="stand"/>
+          <g id="beam">
+            <rect x="90" y="72" width="420" height="12" rx="6" class="beam"/>
+          </g>
+          <circle cx="300" cy="78" r="11" fill="var(--guess)" stroke="var(--edge)" stroke-width="2.5"/>
+          <line id="ropeA1" class="rope"/><line id="ropeA2" class="rope"/>
+          <line id="ropeB1" class="rope"/><line id="ropeB2" class="rope"/>
+          <g id="panA"><path d="M-80 0 h160 a80 20 0 0 1 -160 0z" class="pan"/><g id="objA" class="oa"></g></g>
+          <g id="panB"><path d="M-80 0 h160 a80 20 0 0 1 -160 0z" class="pan"/><g id="objB" class="ob"></g></g>
+        </svg>
+      </div>
+
+      <div class="labels">
+        <div class="lab" id="labA"><div class="n" id="nameA"></div><div class="w" id="wA"></div></div>
+        <div class="lab" id="labB"><div class="n" id="nameB"></div><div class="w" id="wB">?</div></div>
+      </div>
+
+      <div class="choose" id="choose">
+        <button class="primary big heavy" id="heavierBtn">▼ Heavier</button>
+        <button class="secondary big light" id="lighterBtn">▲ Lighter</button>
+      </div>
+      <div class="hl-reveal" id="reveal" hidden>
+        <div class="verdict" id="verdict"></div>
+        <div class="txt"><p id="ratio"></p><p id="fact"></p></div>
+        <button class="primary" id="nextBtn">Next</button>
+      </div>
+      <p class="hint">Keys: H or ↓ for heavier, L or ↑ for lighter, Enter for next.</p>
+      <div class="dots" id="dots"></div>
+    </section>
+
+    <section class="result" id="result" hidden>
+      <div class="kicker" id="resTitle">Your score</div>
+      <div class="rank" id="resRank"></div>
+      <div class="total"><b id="resTotal">0</b><span id="resOf">/10</span></div>
+      <div class="blocks" id="resBlocks"></div>
+      <p id="resNote" class="countdown"></p>
+      <div class="actions">
+        <button class="primary" id="shareBtn">Share result</button>
+        <button class="secondary" id="againBtn"></button>
+      </div>
+      <p class="countdown" id="countdown"></p>
+    </section>
+
+    <article class="seo guide">
+      <section>
+        <h2>Which one is heavier? Harder to say than you'd think</h2>
+        <p>An empty Boeing 747 or a blue whale? A giraffe or a small car? A scooter or an ostrich? Most of us would answer each of these in a second, and get a surprising number of them wrong. Weight is hidden. You can see how big something is, but you can't see how much of it is solid, hollow, metal or water.</p>
+        <p>Heavier or Lighter is a free daily weight guessing game built around that blind spot. Two things hang on a balance scale. You're told what one of them weighs. You decide whether the other goes up or down. Then the scale tips, and you find out how good your gut really is.</p>
+      </section>
+
+      <section>
+        <h2>How to play</h2>
+        <ol class="howto">
+          <li><b>Read the known weight.</b> The object on the left pan shows its weight, in kilograms or pounds. Use the unit button at the top to switch.</li>
+          <li><b>Look at the mystery object.</b> The one on the right has a question mark where its weight should be.</li>
+          <li><b>Make the call.</b> Tap <b>Heavier</b> or <b>Lighter</b>. On a keyboard, press H or ↓ for heavier and L or ↑ for lighter.</li>
+          <li><b>Watch it tip.</b> The heavier side drops. You'll see the real weight and roughly how many times heavier or lighter it was.</li>
+          <li><b>Keep the chain going.</b> The object you just learned about becomes the known weight for the next question, so every answer teaches you something you'll need straight away.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Two ways to play</h2>
+        <div class="modes-grid">
+          <div class="mode-card"><h3>Daily</h3><p>Ten comparisons, the same for everyone that day, with a new set at midnight your time. Your score is how many you get right, and finishing every day builds a streak.</p></div>
+          <div class="mode-card"><h3>Endless</h3><p>One wrong answer and it's over. It starts gentle, but the two weights get closer together the longer your streak runs, so a run of 20 means you really know your stuff.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Match-ups that catch people out</h2>
+        <p>All of these come from the game itself. Cover the right-hand column and see how many you'd get.</p>
+        <div class="table-wrap">
+          <table class="score-table matchups">
+            <thead><tr><th>Match-up</th><th>Heavier</th></tr></thead>
+            <tbody>
+              <tr><td>Blue whale vs empty Boeing 747</td><td>747, by about 20%</td></tr>
+              <tr><td>Giraffe vs hatchback car</td><td>Giraffe, by about a third</td></tr>
+              <tr><td>Scooter vs ostrich</td><td>Ostrich, just barely</td></tr>
+              <tr><td>House cat vs peacock with its train</td><td>Peacock, by a whisker</td></tr>
+              <tr><td>Smartphone vs cricket ball</td><td>Smartphone</td></tr>
+              <tr><td>Statue of Liberty vs empty Boeing 747</td><td>Statue, by about 13%</td></tr>
+              <tr><td>Titanic vs Eiffel Tower</td><td>Titanic, about 5 times</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>And the Great Pyramid of Giza? It weighs roughly as much as 600 Eiffel Towers.</p>
+      </section>
+
+      <section>
+        <h2>Tips for guessing weight</h2>
+        <ul class="tips">
+          <li><b>Animals are mostly water.</b> A living body weighs about a kilogram per litre of space it takes up. Picture filling it with water and you'll be close.</li>
+          <li><b>Machines are mostly air.</b> Cars, buses and planes look massive, but they're metal shells around empty space. They're usually lighter than their size suggests.</li>
+          <li><b>Solid stone is the real heavyweight.</b> Pyramids and anything built from blocks of rock weigh far more than they look. Hollow statues and open iron towers are much lighter than you'd guess.</li>
+          <li><b>Think in multiples.</b> In the Daily, the two weights are always at least one and a half times apart. If they feel close, look again at what each one is made of.</li>
+          <li><b>Remember the chain.</b> The weight you just learned is your next reference. Hold on to it.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>About the game</h2>
+        <p>Heavier or Lighter uses the same object library as <a href="../size-it-up/">Size It Up</a>, so you'll meet familiar faces: Bengal tigers, auto rickshaws, cricket bats, the ₹10 coin, the Titanic. Weights come from published references. Living things and vehicles vary a lot, so we use a typical adult animal or a standard model.</p>
+        <p>It's free, there's nothing to install and no account to create. It runs on any phone or computer, works offline once you've visited, and keeps your scores on your own device.</p>
+      </section>
+
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>How is the Daily scored?</summary><p>One point for each correct call, out of ten. Nine or ten makes you a Scale Master, eight a Sharp Eye and six a Good Guesser.</p></details>
+        <details><summary>Does Endless get harder?</summary><p>Yes. Early on, the two weights can be dozens of times apart. As your streak grows, the gap shrinks until they're less than twice apart, and every answer is a real decision.</p></details>
+        <details><summary>Can I switch between kilograms and pounds?</summary><p>Yes. Tap the unit button in the top bar. It switches every weight on the page instantly and remembers your choice.</p></details>
+        <details><summary>Why is a 747 heavier than a blue whale?</summary><p>An empty 747 weighs about 180 tonnes, while a large blue whale is around 150 tonnes. A plane is mostly hollow, but it's also enormous, and its metal frame, engines and wings add up.</p></details>
+        <details><summary>Are there other games like this?</summary><p>Try <a href="../size-it-up/">Size It Up</a>, where you resize objects to their real size, or <a href="../number-guess/">Number Guess</a>, where you estimate real-world numbers.</p></details>
+      </section>
+              <!-- more-games:start -->
+      <section class="more-games">
+        <h2>More free games</h2>
+        <ul>
+          <li><a href="../size-it-up/"><b>How Big?</b><span>Resize an object to its real size next to another.</span></a></li>
+          <li><a href="../sort-it/"><b>Sort It</b><span>Put five things in order by size and by weight.</span></a></li>
+          <li><a href="../ballpark/"><b>Ballpark</b><span>Pick the range a real-world number falls in.</span></a></li>
+          <li><a href="../speed-race/"><b>Speed Race</b><span>Pick the faster racer, then watch them race.</span></a></li>
+          <li><a href="../number-guess/"><b>Number Guess</b><span>Guess a real-world number as closely as you can.</span></a></li>
+          <li><a href="../how-many-fit/"><b>How Many Fit?</b><span>Guess how many of one thing fit along another.</span></a></li>
+          <li><a href="../how-far/"><b>How Far?</b><span>Guess the straight-line distance between two cities.</span></a></li>
+          <li><a href="../survival/"><b>Survival</b><span>Mixed questions against the clock, with three lives.</span></a></li>
+        </ul>
+      </section>
+      <!-- more-games:end -->
+    </article>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="../data/objects.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

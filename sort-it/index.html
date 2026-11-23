@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Size it up Sort It: Order Things by Size and Weight | Daily Game</title>
+  <meta name="description" content="Put five things in order, smallest to biggest or lightest to heaviest, then see them side by side at true scale. A free daily sorting game.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/sort-it/">
+  <meta property="og:url" content="https://sizeit.games/sort-it/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Sort It: Order Things by Size and Weight | Daily Game">
+  <meta property="og:description" content="Put five things in order, smallest to biggest or lightest to heaviest, then see them side by side at true scale. A free daily sorting game.">
+  <meta property="og:image" content="https://sizeit.games/og/sort-it.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Sort It: Order Things by Size and Weight | Daily Game">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Sort It – size and weight ranking game","applicationCategory":"GameApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A free daily game where you put five real-world things in order by size or by weight, then see them side by side at true scale."}
+  </script>
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge s"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="20" width="5" height="9" rx="1" class="l-ref"/><rect x="10" y="15" width="5" height="14" rx="1" class="l-ref"/><rect x="17" y="10" width="5" height="19" rx="1" class="l-ref"/><rect x="24" y="4" width="5" height="25" rx="1" class="l-guess"/></svg></span>
+        <div>
+          <h1>Size it up Sort It</h1>
+          <div class="sub" id="sub"></div>
+        </div>
+      </div>
+      <nav class="modes" aria-label="Modes">
+        <button class="mode" data-mode="daily">Daily</button>
+        <button class="mode" data-mode="unlimited">Unlimited</button>
+      </nav>
+    </div>
+
+    <section class="game" id="game">
+      <div class="meta">
+        <div class="pips" id="pips"></div>
+        <span class="scorebox" id="scoreLine"></span>
+      </div>
+      <p class="prompt" id="prompt"></p>
+
+      <ol class="so-slots" id="slots"></ol>
+      <div class="so-pool" id="pool"></div>
+
+      <div class="so-actions" id="actions">
+        <button class="secondary" id="clearBtn">Start over</button>
+        <button class="primary" id="checkBtn" disabled>Check order</button>
+      </div>
+      <p class="hint" id="hint">Tap the items in order, starting with the smallest. Tap a placed item to send it back.</p>
+
+      <div id="reveal" hidden>
+        <div class="so-scene" id="scene"></div>
+        <div class="reveal so-reveal">
+          <div class="pts" id="revealPts"></div>
+          <div>
+            <div class="nums" id="revealNums"></div>
+            <p class="fact" id="revealFact"></p>
+          </div>
+          <button class="primary" id="nextBtn"></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="result" id="result" hidden>
+      <div class="kicker" id="resKicker">Your score</div>
+      <div class="rank" id="resRank"></div>
+      <div class="total"><b id="resTotal">0</b><span>/20</span></div>
+      <div class="so-blocks" id="resBlocks"></div>
+      <div class="actions">
+        <button class="primary" id="shareBtn">Share result</button>
+        <button class="secondary" id="againBtn"></button>
+      </div>
+      <p class="countdown" id="countdown"></p>
+    </section>
+
+    <article class="seo guide">
+      <section>
+        <h2>A daily game about putting things in order</h2>
+        <p>Comparing two things is easy. Ranking five is where it gets interesting. Is a king cobra longer than a Bengal tiger? Does a giraffe outweigh a hatchback? Where does an ostrich fit between a scooter and an auto rickshaw? Sort It hands you five real-world things and asks you to line them up, and then it shows them standing side by side so you can see exactly where you went wrong.</p>
+        <p>Every day brings two rounds: one sorted by size and one sorted by weight. The same object can land in a very different place in each, which is half the fun.</p>
+      </section>
+
+      <section>
+        <h2>How to play</h2>
+        <ol class="howto">
+          <li><b>Read the round.</b> The first round asks you to sort by size. Each card says what is being measured: height for a tower or a giraffe, length for a snake or a ship, width for a coin or a ball. The second sorts by weight.</li>
+          <li><b>Tap in order.</b> Tap the smallest (or lightest) item first, then the next, until all five slots are filled. Changed your mind? Tap a placed item to send it back, or start over.</li>
+          <li><b>Check your order.</b> The size round lines everything up at true scale, and the weight round shows every weight, so you can see the real order at a glance.</li>
+          <li><b>Score up to 10 per round.</b> You get a point for every pair you put the right way round. There are ten pairs among five items, so a perfect order scores 10, and a near miss still scores well.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Why pairs, not positions?</h2>
+        <p>Imagine you get everything right except the first item, which you put last. Scoring by position would give you zero, even though you understood almost everything. Counting pairs is fairer. That mistake only breaks the pairs involving that one item, so you'd still score 6 out of 10. The closer your order is to the truth, the more points you keep.</p>
+      </section>
+
+      <section>
+        <h2>How pair scoring adds up</h2>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>Your order</th><th>Points</th></tr></thead>
+            <tbody>
+              <tr><td>Perfect</td><td>10</td></tr>
+              <tr><td>Two neighbours swapped</td><td>9</td></tr>
+              <tr><td>One item moved from first to last</td><td>6</td></tr>
+              <tr><td>Two separate neighbour swaps</td><td>8</td></tr>
+              <tr><td>Completely back to front</td><td>0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Two rounds make 20 a day. 11 makes you a Good Guesser, 15 a Sharp Eye and 18 a Scale Master.</p>
+      </section>
+      <section>
+        <h2>Same five things, two different orders</h2>
+        <p>Here's why the weight round is never just the size round again. Take five animals from the game library:</p>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>By size (smallest first)</th><th>By weight (lightest first)</th></tr></thead>
+            <tbody>
+              <tr><td>House cat, 0.75 m with its tail</td><td>House cat, about 4.5 kg</td></tr>
+              <tr><td>Peacock, 2.1 m with its train</td><td>Peacock, about 5 kg</td></tr>
+              <tr><td>Ostrich, 2.5 m tall</td><td>King cobra, about 6 kg</td></tr>
+              <tr><td>Bengal tiger, 2.9 m with its tail</td><td>Ostrich, about 110 kg</td></tr>
+              <tr><td>King cobra, 4 m long</td><td>Bengal tiger, about 220 kg</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The cobra goes from the biggest to the middle, because long and thin is light. That kind of swap is exactly what Sort It is built to catch.</p>
+      </section>
+      <section>
+        <h2>Tips</h2>
+        <ul class="tips">
+          <li><b>Find the extremes first.</b> The smallest and biggest are usually obvious. Lock them in and you've already settled seven of the ten pairs.</li>
+          <li><b>Size isn't weight.</b> A peacock's train makes it longer than a house cat by a long way, but they weigh almost the same. Long and light is common in nature.</li>
+          <li><b>Read the small label.</b> In the size round, a snake is measured nose to tail and a tower from base to tip. Compare the measurements, not how big the drawings look on the cards.</li>
+        </ul>
+      </section>
+
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>Is Sort It free?</summary><p>Yes. Play the Daily and as many Unlimited rounds as you like, with no account needed.</p></details>
+        <details><summary>When is the next Daily?</summary><p>At midnight your local time. Everyone gets the same two rounds on the same day.</p></details>
+        <details><summary>Where do the sizes and weights come from?</summary><p>From the same object library as the other games on this site, built from published references. Animals and vehicles use typical values.</p></details>
+        <details><summary>Can I challenge a friend?</summary><p>Yes. Share any result and your friend plays the same rounds with your score to beat. For a group, start a <a href="../league/">Friends League</a>.</p></details>
+        <details><summary>Can I play past Dailies?</summary><p>Yes. Every past Sort It Daily is in the <a href="../archive/">archive</a>.</p></details>
+        <details><summary>What else can I play?</summary><p>Try <a href="../size-it-up/">How Big?</a> to resize things to their real size, <a href="../which-is-heavier/">Heavier or Lighter</a> to weigh one object against another, or <a href="../ballpark/">Ballpark</a> to guess the range of a number.</p></details>
+      </section>
+              <!-- more-games:start -->
+      <section class="more-games">
+        <h2>More free games</h2>
+        <ul>
+          <li><a href="../size-it-up/"><b>How Big?</b><span>Resize an object to its real size next to another.</span></a></li>
+          <li><a href="../which-is-heavier/"><b>Heavier or Lighter</b><span>Guess which of two things weighs more.</span></a></li>
+          <li><a href="../ballpark/"><b>Ballpark</b><span>Pick the range a real-world number falls in.</span></a></li>
+          <li><a href="../speed-race/"><b>Speed Race</b><span>Pick the faster racer, then watch them race.</span></a></li>
+          <li><a href="../number-guess/"><b>Number Guess</b><span>Guess a real-world number as closely as you can.</span></a></li>
+          <li><a href="../how-many-fit/"><b>How Many Fit?</b><span>Guess how many of one thing fit along another.</span></a></li>
+          <li><a href="../how-far/"><b>How Far?</b><span>Guess the straight-line distance between two cities.</span></a></li>
+          <li><a href="../survival/"><b>Survival</b><span>Mixed questions against the clock, with three lives.</span></a></li>
+        </ul>
+      </section>
+      <!-- more-games:end -->
+    </article>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="../data/objects.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

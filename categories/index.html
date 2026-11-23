@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Size It Up by Category: Daily Size Puzzles | sizeit.games</title>
+  <meta name="description" content="A daily size puzzle for every category: animals, dinosaurs, space, geography, landmarks, vehicles, food, bugs and more. Play each Daily or keep going in Unlimited.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/categories/">
+  <meta property="og:url" content="https://sizeit.games/categories/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Size It Up by Category: a Daily for every topic">
+  <meta property="og:description" content="Animals, dinosaurs, space, landmarks, vehicles, food and more. Five rounds each, every day.">
+  <meta property="og:image" content="https://sizeit.games/og/size-it-up.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Size It Up by category">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <main class="wrap">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge">🗂️</span>
+        <div>
+          <h1>Size It Up by Category</h1>
+          <div class="sub" id="sub">Pick a topic. Each has its own Daily, five rounds, new at midnight.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cards cat-cards" id="cats"></div>
+
+    <article class="seo guide">
+      <section>
+        <h2>A Daily for every topic</h2>
+        <p>The main <a href="../size-it-up/">Size It Up</a> Daily mixes everything: a whale one round, a cricket ball the next. Category Dailies keep to one world at a time. Dinosaur fans get five dinosaur pairs, space fans get planets and rockets, food lovers get mangoes, rotis and pizzas. Every category has its own puzzle each day, the same for everyone who plays it.</p>
+        <p>The rules are the same as Size It Up: the grey object is drawn at its real size, you resize the orange one until the pair looks right, and a green outline shows the truth. Five rounds, up to 200 points each.</p>
+      </section>
+      <section>
+        <h2>Daily or Unlimited?</h2>
+        <div class="modes-grid">
+          <div class="mode-card"><h3>Category Daily</h3><p>Five pairs from one category, the same for everyone that day. One try, a new set at midnight your time. Your score shows on this page once you've played.</p></div>
+          <div class="mode-card"><h3>Category Unlimited</h3><p>Fresh pairs from the same category as many times as you like. The best way to get a feel for a topic before the Daily.</p></div>
+        </div>
+      </section>
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>Do category Dailies count towards my streak?</summary><p>No. Streaks and Today's total come from the main Daily of each game. Category Dailies are extra puzzles for the topics you like most.</p></details>
+        <details><summary>Are category scores on the leaderboard?</summary><p>No, only the main Daily is compared with other players. You can still share a category result: the link gives your friend the exact same five pairs and your score to beat.</p></details>
+        <details><summary>Why do some categories mix sizes so much?</summary><p>Some topics are like that. Space has planets thousands of kilometres across and rockets about a hundred metres tall, so each pair is chosen to be close enough to compare by eye.</p></details>
+        <details><summary>Can I suggest a new category?</summary><p>Yes. <a href="../suggest/">Suggest an object</a> and say which topic it belongs to. A category opens once it has enough well-sourced objects.</p></details>
+      </section>
+    </article>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="../data/objects.js"></script>
+  <script>
+    (() => {
+      const { esc, store, todayKey, lineup } = SG;
+      SG.header('categories');
+      SG.measureShapes(OBJECTS);
+      const O = id => OBJECTS.find(o => o.id === id);
+      // id -> art (three or four objects drawn at true scale) and a one-line pitch
+      const INFO = {
+        all: { emoji: '🎲', art: ['human', 'elephant', 'giraffe', 'bus'], blurb: 'Everything mixed: animals, towers, jets and cricket balls. This is the main Size It Up Daily.' },
+        animals: { emoji: '🐘', art: ['cat', 'ostrich', 'elephant', 'giraffe'], blurb: 'Giraffes, tigers, rhinos, cobras and the blue whale, at their real sizes.' },
+        dinos: { emoji: '🦖', art: ['raptor', 'ptera', 'stego', 'trike'], blurb: 'Velociraptor, Stegosaurus, Spinosaurus and the giant Argentinosaurus.' },
+        space: { emoji: '🪐', art: ['moon', 'mars', 'earth'], blurb: 'Planets, the Moon, the Sun, rockets and the International Space Station.' },
+        landmarks: { emoji: '🗼', art: ['gateway', 'indiagate', 'liberty', 'qutub'], blurb: 'Qutub Minar, the Eiffel Tower, the Burj Khalifa and the Statue of Unity.' },
+        vehicles: { emoji: '🚌', art: ['scooter', 'auto', 'car', 'pickup'], blurb: 'Scooters, autos, buses, a Boeing 747 and the Titanic.' },
+        everyday: { emoji: '📱', art: ['phone', 'a4', 'human', 'door'], blurb: 'Phones, coins, doors and sheets of paper. Harder than it sounds.' },
+        food: { emoji: '🥭', art: ['rice', 'egg', 'mango', 'roti'], blurb: 'Rice grains, eggs, mangoes, rotis and a whole pizza.' },
+        geo: { emoji: '🏔️', art: ['fuji', 'kilimanjaro', 'everest'], blurb: 'Mount Everest, Angel Falls, the Nile, the Ganga and Lake Baikal: mountains, waterfalls, rivers and lakes.' },
+        tiny: { emoji: '🐞', art: ['ant', 'ladybird', 'bee', 'monarch'], blurb: 'Ants, bees, ladybirds and the Atlas moth, from millimetres to wingspans.' },
+        sports: { emoji: '🏏', art: ['cball', 'football', 'bat', 'hoop'], blurb: 'Cricket bats and balls, stumps, footballs and a basketball hoop.' },
+        famous: { emoji: '🖼️', art: ['monalisa', 'wadlow', 'redeemer', 'pisa'], blurb: 'The Mona Lisa, the tallest man ever, Christ the Redeemer and Pisa.' },
+        india: { emoji: '🇮🇳', art: ['auto', 'hawamahal', 'gateway', 'charminar'], blurb: 'Autos, rotis, the Taj Mahal, Charminar, cricket and Indian wildlife.' },
+        usa: { emoji: '🇺🇸', art: ['schoolbus', 'rushmore', 'liberty', 'sherman'], blurb: 'School buses, Mount Rushmore, the Golden Gate Bridge and the Empire State.' }
+      };
+      const order = ['all', 'animals', 'dinos', 'space', 'geo', 'landmarks', 'vehicles', 'everyday', 'food', 'tiny', 'sports', 'famous', 'india', 'usa'];
+      const live = order.filter(id => CATEGORIES.some(c => c.id === id));
+      const today = todayKey();
+      const main = store.get('sg_howbig_daily', {})[today];
+      const catRecs = store.get('sg_howbig_cat_daily', {});
+      const sum = a => (a || []).reduce((x, y) => x + y, 0);
+      document.getElementById('cats').innerHTML = live.map(id => {
+        const c = CATEGORIES.find(x => x.id === id), info = INFO[id];
+        const name = id === 'all' ? 'Mixed' : c.name;
+        const rec = id === 'all' ? main : catRecs[`${today}|${id}`];
+        const done = rec && rec.done;
+        const objs = info.art.map(O).filter(Boolean);
+        const art = objs.length ? lineup(objs.map((o, i) => ({ o, cls: i === objs.length - 1 ? 'ob' : 'oa' })), { w: 480, h: 180, pad: 18, gap: 18 }) : '';
+        const daily = id === 'all' ? '../size-it-up/' : `../size-it-up/?daily=${id}`;
+        const unl = id === 'all' ? '../size-it-up/?mode=unlimited&cat=all' : `../size-it-up/?mode=unlimited&cat=${id}`;
+        const count = OBJECTS.filter(o => inCategory(o, id)).length;
+        return `<div class="gcard cat-card">
+          <div class="art">${art}</div>
+          <div class="body">
+            <div class="chips">${done ? `<span class="chip done">✓ Today: ${sum(rec.scores)}/1000</span>` : ''}<span class="chip">${count} objects</span><span class="chip">5 rounds</span></div>
+            <h3>${info.emoji} ${esc(name)}</h3>
+            <p>${esc(info.blurb)}</p>
+            <div class="cat-actions">
+              <a class="primary" href="${daily}">${done ? 'See today\'s result' : 'Play Daily'}</a>
+              <a class="secondary" href="${unl}">Unlimited</a>
+            </div>
+          </div></div>`;
+      }).join('');
+      const played = live.filter(id => (id === 'all' ? main : catRecs[`${today}|${id}`])?.done).length;
+      if (played) document.getElementById('sub').textContent = `${played} of ${live.length} categories played today. New puzzles at midnight.`;
+    })();
+  </script>
+</body>
+</html>

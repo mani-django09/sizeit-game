@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Size it up How Many Fit? Daily Size Comparison Puzzle</title>
+  <meta name="description" content="How many buses long is the Titanic? How many giraffes tall is the Eiffel Tower? Guess how many fit, then watch them line up at true scale.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/how-many-fit/">
+  <meta property="og:url" content="https://sizeit.games/how-many-fit/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="How Many Fit? Daily Size Comparison Puzzle">
+  <meta property="og:description" content="How many buses long is the Titanic? How many giraffes tall is the Eiffel Tower? Guess how many fit, then watch them line up at true scale.">
+  <meta property="og:image" content="https://sizeit.games/og/how-many-fit.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="How Many Fit? Daily Size Comparison Puzzle">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"How Many Fit? – size comparison puzzle","applicationCategory":"GameApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A free daily puzzle: guess how many of one thing fit along another, then see them lined up at true scale."}
+  </script>
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge f"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="20" width="28" height="8" rx="2" class="l-guess"/><rect x="3" y="11" width="7" height="7" rx="1.5" class="l-ref"/><rect x="12.5" y="11" width="7" height="7" rx="1.5" class="l-ref"/><rect x="22" y="11" width="7" height="7" rx="1.5" class="l-ref"/></svg></span>
+        <div>
+          <h1>Size it up How Many Fit?</h1>
+          <div class="sub" id="sub"></div>
+        </div>
+      </div>
+      <nav class="modes" aria-label="Modes">
+        <button class="mode" data-mode="daily">Daily</button>
+        <button class="mode" data-mode="unlimited">Unlimited</button>
+      </nav>
+    </div>
+
+    <section class="game" id="game">
+      <div class="meta">
+        <div class="pips" id="pips"></div>
+        <span class="scorebox"><b id="scoreInfo">0</b> / 1000</span>
+      </div>
+      <p class="prompt" id="prompt"></p>
+
+      <div class="hf-board">
+        <div class="hf-cards" id="cards"></div>
+        <div class="hf-scene" id="scene" hidden></div>
+        <div class="hf-guess"><span class="ng-label">Your guess</span><div class="ng-big" id="bigNum">1</div></div>
+      </div>
+
+      <div id="controls">
+        <div class="controls">
+          <button class="step" id="minusBtn" aria-label="Fewer">−</button>
+          <input type="range" id="slider" min="0" max="1000" step="1" aria-label="How many">
+          <button class="step" id="plusBtn" aria-label="More">+</button>
+        </div>
+        <div class="ng-type">
+          <label for="typeInput">Or type it</label>
+          <input type="text" id="typeInput" inputmode="decimal" autocomplete="off" placeholder="e.g. 12">
+          <button class="primary" id="lockBtn">Lock in</button>
+        </div>
+        <p class="hint">The drawings above are not to scale. Slide, tap − and +, or type a number, then lock in.</p>
+      </div>
+
+      <div class="reveal" id="reveal" hidden>
+        <div class="pts" id="revealPts"></div>
+        <div>
+          <div class="nums" id="revealNums"></div>
+          <div class="meter"><i id="revealMeter"></i></div>
+          <p class="fact" id="revealFact"></p>
+        </div>
+        <button class="primary" id="nextBtn"></button>
+      </div>
+    </section>
+
+    <section class="result" id="result" hidden>
+      <div class="kicker" id="resKicker">Your score</div>
+      <div class="rank" id="resRank"></div>
+      <div class="total"><b id="resTotal">0</b><span>/1000</span></div>
+      <div class="blocks" id="resBlocks"></div>
+      <ol class="rows ng-rows" id="resRows"></ol>
+      <div class="actions">
+        <button class="primary" id="shareBtn">Share result</button>
+        <button class="secondary" id="againBtn"></button>
+      </div>
+      <p class="countdown" id="countdown"></p>
+    </section>
+
+    <article class="seo guide">
+      <section>
+        <h2>How many buses long is the Titanic?</h2>
+        <p>It's one of those questions everyone has an instant answer to, and the answer is usually wrong. How Many Fit? asks you to picture one thing copied over and over, stacked up or lined up end to end, until it matches something much bigger. Then it draws the real answer to scale, copy by copy, so you can see exactly how far off you were.</p>
+        <p>It's a different way of thinking about size. Instead of guessing metres, you think in "how many of these make one of those". That turns out to be how most people actually reason about big things.</p>
+      </section>
+      <section>
+        <h2>How to play</h2>
+        <ol class="howto">
+          <li><b>Read the puzzle.</b> Heights are stacked, so it's "how many giraffes reach the top of the Eiffel Tower?". Lengths and widths are lined up, so it's "how many buses end to end match the Titanic?".</li>
+          <li><b>Guess the count.</b> Use the slider, tap − and +, or type a number. The two drawings are deliberately not to scale.</li>
+          <li><b>Lock in and watch.</b> The real number of copies appears next to the big thing at true scale, along with both measurements.</li>
+          <li><b>Five rounds a day.</b> Each is worth up to 200 points. Within 5% earns all 200, and four times too many or too few earns nothing.</li>
+        </ol>
+      </section>
+      <section>
+        <h2>Ways to play</h2>
+        <div class="modes-grid">
+          <div class="mode-card"><h3>Daily</h3><p>Five puzzles, the same for everyone that day. It resets at midnight your time and counts towards your streak and Today's total.</p></div>
+          <div class="mode-card"><h3>Unlimited</h3><p>A fresh set every game, as many times as you like. Good practice for the trickier pairs.</p></div>
+          <div class="mode-card"><h3>Challenge a friend</h3><p>Share any result and the link becomes a challenge: your friend gets the same five puzzles and the score to beat.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>How scoring works</h2>
+        <p>What counts is how many times too many or too few you guessed, not the raw difference. Saying 30 when the answer is 22 is a decent guess; saying 3 when the answer is 2 is not.</p>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>How far off you were</th><th>Points</th></tr></thead>
+            <tbody>
+              <tr><td>Within 5%</td><td>200</td></tr>
+              <tr><td>10% off</td><td>186</td></tr>
+              <tr><td>25% off</td><td>151</td></tr>
+              <tr><td>1.5 times too many or too few</td><td>108</td></tr>
+              <tr><td>Twice or half the real count</td><td>54</td></tr>
+              <tr><td>Three times off</td><td>9</td></tr>
+              <tr><td>Four times off or more</td><td>0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>Answers that surprise people</h2>
+        <p>A few from the game's own object library. Cover the right-hand column and try them first.</p>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>Puzzle</th><th>About</th></tr></thead>
+            <tbody>
+              <tr><td>City buses end to end to match a blue whale</td><td>2</td></tr>
+              <tr><td>Statues of Liberty stacked to reach the top of the Statue of Unity</td><td>4</td></tr>
+              <tr><td>Qutub Minars stacked to match the Burj Khalifa</td><td>11</td></tr>
+              <tr><td>Cricket bats laid along a cricket pitch</td><td>21</td></tr>
+              <tr><td>City buses end to end to match the Titanic</td><td>22</td></tr>
+              <tr><td>Auto rickshaws end to end to match a Boeing 747</td><td>27</td></tr>
+              <tr><td>Giraffes stacked to reach the top of the Eiffel Tower</td><td>60</td></tr>
+              <tr><td>Earths side by side across the Sun</td><td>109</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>Tips</h2>
+        <ul class="tips">
+          <li><b>Use a halfway point.</b> Twelve buses is too many to picture at once. Six, then double it, is much easier.</li>
+          <li><b>Remember what's measured.</b> A tiger is measured with its tail and a peacock with its train, which makes them longer than you might think.</li>
+          <li><b>Tall things beat long things.</b> Towers are easier to overestimate than ships. The eye exaggerates height.</li>
+          <li><b>Know a few sizes by heart.</b> A person is about 1.7 m, a city bus 12 m, a giraffe 5.5 m, the Eiffel Tower 330 m. Divide one by the other and you're close.</li>
+          <li><b>Big counts hide small errors.</b> On an answer of 60, guessing 55 still scores well. On an answer of 2, guessing 3 costs a lot, so think hardest on the small ones.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>About this game</h2>
+        <p>How Many Fit? uses the same library of real objects as <a href="../size-it-up/">Size It Up</a>: animals, vehicles, landmarks, everyday things and even planets, each with a measured height, length or width from a published source. Each puzzle pairs a small thing with a much bigger one, so the answers range from about 2 to well over 100.</p>
+        <p>The drawings on the puzzle are deliberately not to scale, so you can't just measure the screen. After you lock in, the real number of copies is drawn next to the big thing at true scale, which is often the moment people say "wait, really?" out loud.</p>
+        <p>It's free, runs in your browser, works on phones and needs no account.</p>
+      </section>
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>Is How Many Fit? free?</summary><p>Yes. The Daily and Unlimited are free, with no sign-up.</p></details>
+        <details><summary>Where do the sizes come from?</summary><p>From the same object library as <a href="../size-it-up/">How Big?</a>, built from published references such as official landmark pages and manufacturer specifications.</p></details>
+        <details><summary>Can I play past puzzles?</summary><p>Yes. Every past Daily is in the <a href="../archive/">archive</a>.</p></details>
+        <details><summary>Why are the drawings on the puzzle not to scale?</summary><p>So the screen doesn't give the answer away. The true-scale picture appears as soon as you lock in your guess.</p></details>
+        <details><summary>What is a good score?</summary><p>550 or more makes you a Good Guesser, 750 a Sharp Eye and 900 a Scale Master. Five rounds are worth up to 1000.</p></details>
+        <details><summary>Can I play against my friends?</summary><p>Yes. Share your result as a challenge link, or start a <a href="../league/">Friends League</a> so your group's Daily scores land on one table.</p></details>
+      </section>
+          <!-- more-games:start -->
+      <section class="more-games">
+        <h2>More free games</h2>
+        <ul>
+          <li><a href="../size-it-up/"><b>How Big?</b><span>Resize an object to its real size next to another.</span></a></li>
+          <li><a href="../which-is-heavier/"><b>Heavier or Lighter</b><span>Guess which of two things weighs more.</span></a></li>
+          <li><a href="../sort-it/"><b>Sort It</b><span>Put five things in order by size and by weight.</span></a></li>
+          <li><a href="../ballpark/"><b>Ballpark</b><span>Pick the range a real-world number falls in.</span></a></li>
+          <li><a href="../speed-race/"><b>Speed Race</b><span>Pick the faster racer, then watch them race.</span></a></li>
+          <li><a href="../number-guess/"><b>Number Guess</b><span>Guess a real-world number as closely as you can.</span></a></li>
+          <li><a href="../how-far/"><b>How Far?</b><span>Guess the straight-line distance between two cities.</span></a></li>
+          <li><a href="../survival/"><b>Survival</b><span>Mixed questions against the clock, with three lives.</span></a></li>
+        </ul>
+      </section>
+      <!-- more-games:end -->
+    </article>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="../data/objects.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

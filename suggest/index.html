@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Suggest an Object | sizeit.games</title>
+  <meta name="description" content="Know something surprisingly big, small, heavy or fast? Suggest it for the size, weight and speed guessing games.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/suggest/">
+  <meta property="og:url" content="https://sizeit.games/suggest/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Suggest an Object | sizeit.games">
+  <meta property="og:description" content="Know something surprisingly big, small, heavy or fast? Suggest it for the games.">
+  <meta property="og:image" content="https://sizeit.games/og/home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="sizeit.games">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <main class="wrap narrow">
+    <article class="prose">
+      <h1>Suggest an object</h1>
+      <p>Know something that's surprisingly big, tiny, heavy or fast? Tell us, and it may turn up in a future Daily. Things with a clear, published measurement work best: a landmark's height, an animal's typical weight, a vehicle's length.</p>
+
+      <form class="form" id="form">
+        <label>What is it?
+          <input id="f-name" name="name" required minlength="2" maxlength="80" placeholder="For example: Howrah Bridge">
+        </label>
+        <label>Category
+          <select id="f-cat" name="category">
+            <option>Animals</option><option>Landmarks</option><option>Vehicles</option><option>Space</option><option>Dinosaurs</option>
+            <option>Bugs &amp; tiny things</option><option>Food</option><option>Sports</option><option>Everyday</option><option>Other</option>
+          </select>
+        </label>
+        <label>Its size, weight or speed <span>Optional. For example: 705 m long, or 4.5 kg.</span>
+          <input id="f-measure" name="measure" maxlength="120">
+        </label>
+        <label>Where can we check it? <span>Optional. A link to a reliable page.</span>
+          <input id="f-source" name="source" type="url" maxlength="300" placeholder="https://">
+        </label>
+        <label>Anything else? <span>Optional.</span>
+          <textarea id="f-note" name="note" maxlength="500"></textarea>
+        </label>
+        <div><button class="primary" type="submit" id="send">Send suggestion</button></div>
+        <p class="hint" id="msg" role="status"></p>
+      </form>
+
+      <h2>What makes a great suggestion</h2>
+      <ul>
+        <li><b>A surprise.</b> The best objects are ones people get wrong: the Mona Lisa is only 77 cm tall, and an empty Boeing 747 outweighs a blue whale.</li>
+        <li><b>A clear measurement.</b> Say what to measure: height to the tip, length nose to tail, width across.</li>
+        <li><b>A source.</b> An official page, an encyclopedia entry or a manufacturer's figure. We check every number before it goes in.</li>
+        <li><b>Something people know.</b> A famous landmark, an everyday thing or a well-known animal works better than something nobody has seen.</li>
+        <li><b>Local favourites.</b> Landmarks, foods, vehicles and animals from India and the US are especially welcome.</li>
+      </ul>
+      <h2>What happens next</h2>
+      <p>We check every suggestion against a reliable source, draw an original silhouette, and add the best ones to the games. New objects only join Dailies from the day they're added, so past puzzles never change.</p>
+      <p>Suggestions are anonymous. We don't ask for your name or email, and the form only sends what you type in it. See the <a href="../privacy/">privacy policy</a>.</p>
+    </article>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script>
+    (() => {
+      SG.header('');
+      const $ = id => document.getElementById(id);
+      const val = id => $(id).value.trim();
+      $('form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const data = { p_name: val('f-name'), p_category: val('f-cat'), p_measure: val('f-measure'), p_source: val('f-source'), p_note: val('f-note') };
+        if (data.p_name.length < 2) { $('msg').textContent = 'Please say what it is.'; return; }
+        $('send').disabled = true;
+        $('msg').textContent = 'Sending…';
+        try {
+          if (!SG.board.on) throw new Error('no backend');
+          const r = await SG.board.rpc('suggest_object', data);
+          if (r && r.ok === false) { $('msg').textContent = "That's the most suggestions we can take from you today. Thank you, and please try again tomorrow!"; return; }
+          $('form').innerHTML = `<div class="ok">Thanks! We've got your suggestion for <b>${SG.esc(data.p_name)}</b>. <a href="./">Suggest another</a></div>`;
+        } catch {
+          // No database (or offline): fall back to an email the player sends themselves
+          const body = `Suggestion: ${data.p_name}\nCategory: ${data.p_category}\nMeasurement: ${data.p_measure}\nSource: ${data.p_source}\n\n${data.p_note}`;
+          const href = `mailto:${SG.SITE.contact}?subject=${encodeURIComponent('Object suggestion: ' + data.p_name)}&body=${encodeURIComponent(body)}`;
+          $('msg').innerHTML = `Couldn't send it from here. <a href="${SG.esc(href)}">Send it by email instead</a>.`;
+        } finally { if ($('send')) $('send').disabled = false; }
+      });
+    })();
+  </script>
+</body>
+</html>

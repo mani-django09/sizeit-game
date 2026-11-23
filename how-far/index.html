@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Size it up How Far? Daily Distance Guessing Game: Guess the km</title>
+  <meta name="description" content="How far is Delhi from Mumbai? London from Tokyo? Guess the straight-line distance between two cities, in India, the USA and around the world. Free daily game.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/how-far/">
+  <meta property="og:url" content="https://sizeit.games/how-far/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="How Far? Daily Distance Guessing Game: Guess the km">
+  <meta property="og:description" content="How far is Delhi from Mumbai? London from Tokyo? Guess the straight-line distance between two cities, in India, the USA and around the world. Free daily game.">
+  <meta property="og:image" content="https://sizeit.games/og/how-far.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="How Far? Daily Distance Guessing Game">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"How Far? – distance guessing game","applicationCategory":"GameApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A free daily game: guess the straight-line distance between two cities in India, the USA and around the world."}
+  </script>
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge d"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="7" cy="23" r="4" class="l-ref"/><circle cx="25" cy="9" r="4" class="l-guess"/><path d="M10 20 22 12" class="l-stroke" stroke-dasharray="3 3"/></svg></span>
+        <div>
+          <h1>Size it up How Far?</h1>
+          <div class="sub" id="sub"></div>
+        </div>
+      </div>
+      <nav class="modes" aria-label="Modes">
+        <button class="mode" data-mode="daily">Daily</button>
+        <button class="mode" data-mode="unlimited">Unlimited</button>
+      </nav>
+    </div>
+
+    <section class="game" id="game">
+      <div class="meta">
+        <div class="pips" id="pips"></div>
+        <span id="scopeWrap" hidden><select id="scope" class="cat-select" aria-label="Region">
+          <option value="mix">India + USA + world</option><option value="in">India only</option><option value="us">USA only</option><option value="w">World only</option>
+        </select></span>
+        <span class="scorebox"><b id="scoreInfo">0</b> / 1000</span>
+      </div>
+      <p class="prompt" id="prompt"></p>
+
+      <div class="hw-board">
+        <div class="hw-map" id="map"></div>
+        <div class="hf-guess"><span class="ng-label">Your guess</span><div class="ng-big"><span id="bigNum">0</span> <span class="ng-unit" id="bigUnit">km</span></div></div>
+      </div>
+
+      <div id="controls">
+        <div class="controls">
+          <button class="step" id="minusBtn" aria-label="Shorter">−</button>
+          <input type="range" id="slider" min="0" max="1000" step="1" aria-label="Distance">
+          <button class="step" id="plusBtn" aria-label="Longer">+</button>
+        </div>
+        <div class="ng-type">
+          <label for="typeInput">Or type it</label>
+          <input type="text" id="typeInput" inputmode="decimal" autocomplete="off" placeholder="e.g. 1200">
+          <button class="primary" id="lockBtn">Lock in</button>
+        </div>
+        <p class="hint">The grey dots are other cities, to help you find your bearings. Switch km and miles with the unit button.</p>
+      </div>
+
+      <div class="reveal" id="reveal" hidden>
+        <div class="pts" id="revealPts"></div>
+        <div>
+          <div class="nums" id="revealNums"></div>
+          <div class="meter"><i id="revealMeter"></i></div>
+          <p class="fact" id="revealFact"></p>
+        </div>
+        <button class="primary" id="nextBtn"></button>
+      </div>
+    </section>
+
+    <section class="result" id="result" hidden>
+      <div class="kicker" id="resKicker">Your score</div>
+      <div class="rank" id="resRank"></div>
+      <div class="total"><b id="resTotal">0</b><span>/1000</span></div>
+      <div class="blocks" id="resBlocks"></div>
+      <ol class="rows ng-rows" id="resRows"></ol>
+      <div class="actions">
+        <button class="primary" id="shareBtn">Share result</button>
+        <button class="secondary" id="againBtn"></button>
+      </div>
+      <p class="countdown" id="countdown"></p>
+    </section>
+
+    <article class="seo guide">
+      <section>
+        <h2>How far is Delhi from Mumbai, really?</h2>
+        <p>Most of us know cities by how long the train or flight takes, not by how far apart they actually are. How Far? is a free daily distance guessing game that asks for the straight-line distance between two cities: two pairs in India, two in the USA and one around the world.</p>
+        <p>The map is deliberately bare, just dots for cities on a grid, so you have to rely on your own sense of the country and the planet. Then the line is drawn, the real distance appears, and you find out whether Chennai really is closer to Kolkata than Delhi is.</p>
+      </section>
+      <section>
+        <h2>How to play</h2>
+        <ol class="howto">
+          <li><b>Read the two cities.</b> The first is marked in blue-grey and the second in orange. Other cities appear as small dots for reference.</li>
+          <li><b>Guess the distance.</b> Slide, tap − and +, use the arrow keys, or type a number. Switch between km and miles with the unit button at the top.</li>
+          <li><b>Lock in.</b> The straight line appears with the real distance, plus how long a jet would take to fly it.</li>
+          <li><b>Score.</b> Within 5% earns the full 200 points, and three times too far or too short earns nothing. Five rounds make 1000.</li>
+        </ol>
+      </section>
+      <section>
+        <h2>Ways to play</h2>
+        <div class="modes-grid">
+          <div class="mode-card"><h3>Daily</h3><p>Five city pairs, the same for everyone that day: two in India, two in the USA and one somewhere in the world. It resets at midnight your time and keeps your streak going.</p></div>
+          <div class="mode-card"><h3>Unlimited</h3><p>Fresh pairs every game. Stick to India only, the USA only or the world, or keep the mix, and practise until you can feel the map.</p></div>
+          <div class="mode-card"><h3>Challenge a friend</h3><p>Share any result and the link becomes a challenge. Your friend plays the exact same five pairs and sees the score to beat.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>How scoring works</h2>
+        <p>Points depend on how many times too far or too short your guess was, not on how many kilometres you missed by. Being 200 km off on Delhi to Jaipur is a big miss; being 200 km off on London to Sydney is nearly perfect.</p>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>How far off you were</th><th>Points</th></tr></thead>
+            <tbody>
+              <tr><td>Within 5%</td><td>200</td></tr>
+              <tr><td>10% off</td><td>183</td></tr>
+              <tr><td>25% off</td><td>139</td></tr>
+              <tr><td>1.5 times too far or too short</td><td>87</td></tr>
+              <tr><td>Twice or half the real distance</td><td>30</td></tr>
+              <tr><td>Three times off or more</td><td>0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Guessing too far and too short cost the same. Five rounds make a possible 1000.</p>
+      </section>
+
+      <section>
+        <h2>Distances worth remembering</h2>
+        <p>Learn a handful of these and most puzzles become a comparison. All are straight-line distances between city centres, worked out the same way the game does it.</p>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>Cities</th><th>Straight line</th></tr></thead>
+            <tbody>
+              <tr><td>Delhi to Jaipur</td><td>about 235 km</td></tr>
+              <tr><td>Mumbai to Bengaluru</td><td>about 845 km</td></tr>
+              <tr><td>Mumbai to Chennai</td><td>about 1,030 km</td></tr>
+              <tr><td>Delhi to Mumbai</td><td>about 1,150 km</td></tr>
+              <tr><td>New York to Chicago</td><td>about 1,145 km</td></tr>
+              <tr><td>Delhi to Kolkata</td><td>about 1,300 km</td></tr>
+              <tr><td>Chennai to Kolkata</td><td>about 1,360 km</td></tr>
+              <tr><td>Delhi to Chennai</td><td>about 1,755 km</td></tr>
+              <tr><td>Mumbai to Dubai</td><td>about 1,935 km</td></tr>
+              <tr><td>Srinagar to Thiruvananthapuram</td><td>about 2,850 km</td></tr>
+              <tr><td>New York to Los Angeles</td><td>about 3,935 km</td></tr>
+              <tr><td>London to New York</td><td>about 5,570 km</td></tr>
+              <tr><td>Delhi to London</td><td>about 6,710 km</td></tr>
+              <tr><td>London to Sydney</td><td>about 16,990 km</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Two surprises hide in that list: New York to Chicago is almost exactly the same as Delhi to Mumbai, and Chennai to Kolkata is a little farther than Delhi to Kolkata.</p>
+      </section>
+
+      <section>
+        <h2>Tips for guessing distances</h2>
+        <ul class="tips">
+          <li><b>Learn one anchor.</b> Delhi to Mumbai is about 1,150 km in a straight line. Most Indian city pairs can be judged against it.</li>
+          <li><b>India is about 3,000 km tall.</b> From Srinagar to Thiruvananthapuram is roughly the whole length of the country.</li>
+          <li><b>The US is about 4,000 km wide.</b> New York to Los Angeles is roughly 3,940 km (2,450 miles) as the crow flies.</li>
+          <li><b>Straight lines are shorter than roads.</b> A road trip is usually 20 to 40% longer than the distance in this game.</li>
+          <li><b>The world is 40,000 km around.</b> No two cities on Earth are more than about 20,000 km apart.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>About this game</h2>
+        <p>How Far? grew out of a family argument about whether Bengaluru is closer to Mumbai or to Chennai. (Chennai, by a long way: about 290 km against 845.) Train times and flight times give us a feel for travel, but they hide the real shape of the map, and a quick game turned out to be the best way to rebuild it.</p>
+        <p>The game knows dozens of cities across India, the USA and the rest of the world, each with its latitude and longitude. Distances are never typed in by hand: they are worked out on the curved surface of the Earth every time, so they are exact for the city centres. A jet cruising at about 900 km/h is used for the flight times you see after each answer.</p>
+        <p>It runs in your browser with no account and no download, works on phones, and can be added to your home screen to play offline. Your scores and streaks stay on your device.</p>
+      </section>
+
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>Is How Far? free?</summary><p>Yes. The Daily, Unlimited and challenge links are all free, with nothing to sign up for.</p></details>
+        <details><summary>When does the Daily reset?</summary><p>At midnight in your local time. Everyone gets the same five pairs on the same date, so you can compare scores fairly.</p></details>
+        <details><summary>What is a good score?</summary><p>550 or more makes you a Good Guesser, 750 a Sharp Eye and 900 a Scale Master. A full 1000 means every guess was within 5%.</p></details>
+        <details><summary>Can I play against my friends?</summary><p>Yes. Share your result and your friend plays the same five pairs, or start a <a href="../league/">Friends League</a> for your WhatsApp group and compare every day.</p></details>
+        <details><summary>Is this road distance or straight-line distance?</summary><p>Straight-line distance, also called great-circle distance or "as the crow flies", measured between city centres. Driving distances are always longer.</p></details>
+        <details><summary>Can I play only Indian cities?</summary><p>Yes. In Unlimited, choose India only, USA only, World only, or a mix.</p></details>
+        <details><summary>Can I play past puzzles?</summary><p>Yes. Every past Daily is in the <a href="../archive/">archive</a>.</p></details>
+      </section>
+          <!-- more-games:start -->
+      <section class="more-games">
+        <h2>More free games</h2>
+        <ul>
+          <li><a href="../size-it-up/"><b>How Big?</b><span>Resize an object to its real size next to another.</span></a></li>
+          <li><a href="../which-is-heavier/"><b>Heavier or Lighter</b><span>Guess which of two things weighs more.</span></a></li>
+          <li><a href="../sort-it/"><b>Sort It</b><span>Put five things in order by size and by weight.</span></a></li>
+          <li><a href="../ballpark/"><b>Ballpark</b><span>Pick the range a real-world number falls in.</span></a></li>
+          <li><a href="../speed-race/"><b>Speed Race</b><span>Pick the faster racer, then watch them race.</span></a></li>
+          <li><a href="../number-guess/"><b>Number Guess</b><span>Guess a real-world number as closely as you can.</span></a></li>
+          <li><a href="../how-many-fit/"><b>How Many Fit?</b><span>Guess how many of one thing fit along another.</span></a></li>
+          <li><a href="../survival/"><b>Survival</b><span>Mixed questions against the clock, with three lives.</span></a></li>
+        </ul>
+      </section>
+      <!-- more-games:end -->
+    </article>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="../data/cities.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

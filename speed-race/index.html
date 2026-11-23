@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Size it up Speed Race: Which Is Faster? Daily Speed Guessing Game</title>
+  <meta name="description" content="Cheetah or scooter? Pick which is faster, guess by how much, then watch them race at true relative speed. A free daily speed guessing game.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/speed-race/">
+  <meta property="og:url" content="https://sizeit.games/speed-race/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Speed Race: Which Is Faster? Daily Speed Guessing Game">
+  <meta property="og:description" content="Cheetah or scooter? Pick which is faster, guess by how much, then watch them race at true relative speed. A free daily speed guessing game.">
+  <meta property="og:image" content="https://sizeit.games/og/speed-race.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Speed Race: Which Is Faster? Daily Speed Guessing Game">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Speed Race – which is faster?","applicationCategory":"GameApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A free daily speed guessing game: pick which of two racers is faster, guess by how much, then watch them race at true relative speed."}
+  </script>
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge r"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 10h14M6 16h16M3 22h12" class="l-stroke"/><circle cx="25" cy="16" r="5" class="l-guess"/></svg></span>
+        <div>
+          <h1>Size it up Speed Race</h1>
+          <div class="sub" id="sub"></div>
+        </div>
+      </div>
+      <nav class="modes" aria-label="Modes">
+        <button class="mode" data-mode="daily">Daily</button>
+        <button class="mode" data-mode="endless">Endless</button>
+      </nav>
+    </div>
+
+    <section class="game" id="game">
+      <div class="meta">
+        <span class="round-label" id="progress" style="margin:0"></span>
+        <span class="scorebox" id="scoreLine"></span>
+      </div>
+      <p class="prompt" id="prompt"></p>
+
+      <div class="sr-track" id="track">
+        <div class="sr-lane" data-lane="0"><button class="sr-racer" id="racerA" data-pick="0"></button><span class="sr-speed" id="speedA"></span></div>
+        <div class="sr-lane" data-lane="1"><button class="sr-racer" id="racerB" data-pick="1"></button><span class="sr-speed" id="speedB"></span></div>
+        <i class="sr-finish" aria-hidden="true"></i>
+      </div>
+
+      <div class="sr-gap" id="gapBox" hidden>
+        <p class="sr-q" id="gapQ"></p>
+        <div class="sr-gaps">
+          <button class="secondary" data-gap="0"><b>A little</b><span>less than 2×</span></button>
+          <button class="secondary" data-gap="1"><b>A lot</b><span>2× to 10×</span></button>
+          <button class="secondary" data-gap="2"><b>Way faster</b><span>more than 10×</span></button>
+        </div>
+      </div>
+      <p class="hint" id="hint"></p>
+
+      <div class="hl-reveal" id="reveal" hidden>
+        <div class="verdict" id="verdict"></div>
+        <div class="txt"><p id="ratio"></p><p id="fact"></p></div>
+        <button class="primary" id="nextBtn">Next</button>
+      </div>
+      <div class="dots" id="dots"></div>
+    </section>
+
+    <section class="result" id="result" hidden>
+      <div class="kicker" id="resTitle">Your score</div>
+      <div class="rank" id="resRank"></div>
+      <div class="total"><b id="resTotal">0</b><span id="resOf">/16</span></div>
+      <div class="blocks" id="resBlocks"></div>
+      <p id="resNote" class="countdown"></p>
+      <div class="actions">
+        <button class="primary" id="shareBtn">Share result</button>
+        <button class="secondary" id="againBtn"></button>
+      </div>
+      <p class="countdown" id="countdown"></p>
+    </section>
+
+    <article class="seo guide">
+      <section>
+        <h2>Which is faster? It's rarely as close as you think</h2>
+        <p>A house cat or Usain Bolt? A cheetah or a scooter? The International Space Station or the Earth itself, spinning on its axis? Speed is one of those things we all have a feel for, right up until two very different things are put side by side. Speed Race is a free daily game that asks you to pick the faster one, then guess just how much faster, and then lets them race so you can see the gap for yourself.</p>
+        <p>The racers range from a garden snail to the Earth flying around the Sun, with tigers, trains, falcons, Formula 1 cars and Concorde in between.</p>
+      </section>
+
+      <section>
+        <h2>How to play</h2>
+        <ol class="howto">
+          <li><b>Pick the faster racer.</b> Tap one of the two lanes, or press 1 or 2. That's worth a point if you're right.</li>
+          <li><b>Guess the gap.</b> Is it a little faster (less than twice as fast), a lot faster (two to ten times) or way faster (more than ten times)? Press 1, 2 or 3. That's a second point.</li>
+          <li><b>Watch the race.</b> Both racers set off together, moving at their true relative speeds. The faster one crosses the line, and the slower one stops exactly where it would be at that moment.</li>
+          <li><b>Eight races a day.</b> Two points each, so a perfect Daily scores 16. Share your result as a row of coloured squares.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Daily or Endless</h2>
+        <div class="modes-grid">
+          <div class="mode-card"><h3>Daily</h3><p>Eight races, the same for everyone, with a new set at midnight your time. Pick the winner and the gap for every race.</p></div>
+          <div class="mode-card"><h3>Endless</h3><p>Just pick the winner, and keep going until you get one wrong. The longer your streak, the closer the racers get.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>How scoring works</h2>
+        <p>Each Daily race is worth two points: one for picking the faster racer, one for the size of the gap. A perfect Daily is 16.</p>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>Gap you can pick</th><th>Means</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td>A little faster</td><td>less than 2 times as fast</td><td>Racehorse (70 km/h) vs Usain Bolt (44.7 km/h)</td></tr>
+              <tr><td>A lot faster</td><td>2 to 10 times as fast</td><td>Cheetah (110 km/h) vs Usain Bolt (44.7 km/h)</td></tr>
+              <tr><td>Way faster</td><td>more than 10 times as fast</td><td>Boeing 747 (910 km/h) vs auto rickshaw (50 km/h)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>In Endless there are no gap questions: pick the winner, and one wrong pick ends the run.</p>
+      </section>
+
+      <section>
+        <h2>The speed ladder</h2>
+        <p>Some of the racers you'll meet, from slowest to fastest. Animal speeds are short top-speed bursts, aircraft are cruising speeds.</p>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>Racer</th><th>Speed</th></tr></thead>
+            <tbody>
+              <tr><td>🐌 Garden snail</td><td>0.05 km/h</td></tr>
+              <tr><td>🚶 Person walking</td><td>5 km/h</td></tr>
+              <tr><td>🐘 Elephant</td><td>25 km/h</td></tr>
+              <tr><td>🏃 Usain Bolt at top speed</td><td>44.7 km/h</td></tr>
+              <tr><td>🐈 House cat</td><td>48 km/h</td></tr>
+              <tr><td>🛺 Auto rickshaw</td><td>50 km/h</td></tr>
+              <tr><td>🐅 Tiger</td><td>65 km/h</td></tr>
+              <tr><td>🐆 Cheetah</td><td>110 km/h</td></tr>
+              <tr><td>🚄 Vande Bharat Express</td><td>160 km/h</td></tr>
+              <tr><td>🦅 Peregrine falcon, diving</td><td>320 km/h</td></tr>
+              <tr><td>🏎️ Formula 1 car</td><td>350 km/h</td></tr>
+              <tr><td>✈️ Boeing 747, cruising</td><td>910 km/h</td></tr>
+              <tr><td>🔊 Sound in air</td><td>1,235 km/h</td></tr>
+              <tr><td>🌍 Earth's spin at the Equator</td><td>1,670 km/h</td></tr>
+              <tr><td>✈️ Concorde, cruising</td><td>2,180 km/h</td></tr>
+              <tr><td>🛰️ International Space Station</td><td>27,600 km/h</td></tr>
+              <tr><td>☀️ Earth around the Sun</td><td>107,000 km/h</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>A house cat outruns Usain Bolt, the ISS is about 30 times faster than a jumbo jet, and every one of us is moving at over 100,000 km/h around the Sun right now.</p>
+      </section>
+
+      <section>
+        <h2>Tips</h2>
+        <ul class="tips">
+          <li><b>Bursts aren't cruising.</b> A cheetah's top speed lasts a few hundred metres. A tiger's charge is even shorter. Many animal speeds are sprints, not steady speeds.</li>
+          <li><b>Big gaps hide in plain sight.</b> A walking person and a jet both "move", but the jet is nearly 200 times faster. When things are very different, the answer is usually "way faster".</li>
+          <li><b>Use sound as a ruler.</b> Sound in air does about 1,235 km/h. A cruising jet is a bit slower, and Concorde was about twice as fast.</li>
+          <li><b>Space is in another league.</b> Anything in orbit moves at tens of thousands of kilometres an hour.</li>
+          <li><b>Count the zeros.</b> For the gap, divide roughly: 900 against 50 is about 18, so "way faster". Two racers within a factor of two are "a little".</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>About this game</h2>
+        <p>Speed Race came from a simple question that turned into a long argument: is a cheetah faster than a scooter? (It is, in a sprint: about 110 km/h against 90.) Most of us have a decent feel for things that move at walking or driving pace, and almost no feel for anything beyond that, which is exactly where the fun is.</p>
+        <p>Every speed comes from a widely published figure, and the game never pairs two racers less than 1.3 times apart, so a fair guess is always possible. The race animation is true to the numbers: the slower racer stops exactly where it would be when the faster one finishes.</p>
+        <p>It's free, runs in your browser on phones and computers, switches between km/h and mph with one tap, and needs no account.</p>
+      </section>
+
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>Where do the speeds come from?</summary><p>From widely published figures. Animal speeds are typical top speeds in short bursts, aircraft use cruising speeds, and vehicles use typical top speeds. Because speeds vary, two racers are never less than 1.3 times apart.</p></details>
+        <details><summary>Can I see speeds in miles per hour?</summary><p>Yes. Tap the unit button in the top bar to switch between km/h and mph.</p></details>
+        <details><summary>Why does the slow racer barely move?</summary><p>Because that's the real gap. If a snail raced a jet for as long as the jet takes to cross the screen, the snail would have moved less than the width of a hair.</p></details>
+        <details><summary>Is Speed Race free?</summary><p>Yes. The Daily, Endless and challenge links are free, with no sign-up.</p></details>
+        <details><summary>When does the Daily reset?</summary><p>At midnight in your local time, with eight new races that are the same for everyone.</p></details>
+        <details><summary>Can I race my friends?</summary><p>Yes. Share any result and your friend gets the same races and your score to beat. An Endless link even gives them the same run. For a group, start a <a href="../league/">Friends League</a>.</p></details>
+        <details><summary>What else can I play?</summary><p>Try <a href="../which-is-heavier/">Heavier or Lighter</a> for weight, <a href="../size-it-up/">How Big?</a> for size, or <a href="../ballpark/">Ballpark</a> for big numbers.</p></details>
+      </section>
+              <!-- more-games:start -->
+      <section class="more-games">
+        <h2>More free games</h2>
+        <ul>
+          <li><a href="../size-it-up/"><b>How Big?</b><span>Resize an object to its real size next to another.</span></a></li>
+          <li><a href="../which-is-heavier/"><b>Heavier or Lighter</b><span>Guess which of two things weighs more.</span></a></li>
+          <li><a href="../sort-it/"><b>Sort It</b><span>Put five things in order by size and by weight.</span></a></li>
+          <li><a href="../ballpark/"><b>Ballpark</b><span>Pick the range a real-world number falls in.</span></a></li>
+          <li><a href="../number-guess/"><b>Number Guess</b><span>Guess a real-world number as closely as you can.</span></a></li>
+          <li><a href="../how-many-fit/"><b>How Many Fit?</b><span>Guess how many of one thing fit along another.</span></a></li>
+          <li><a href="../how-far/"><b>How Far?</b><span>Guess the straight-line distance between two cities.</span></a></li>
+          <li><a href="../survival/"><b>Survival</b><span>Mixed questions against the clock, with three lives.</span></a></li>
+        </ul>
+      </section>
+      <!-- more-games:end -->
+    </article>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="../data/speeds.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

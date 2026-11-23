@@ -1,0 +1,5 @@
+dist/
+__pycache__/
+.claude/settings.local.json
+node_modules/
+.wrangler/

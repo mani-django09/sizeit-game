@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sample C · Clean Daily</title>
+<style>
+@font-face { font-family: "Bricolage Grotesque"; src: url(../fonts/bricolage-latin.woff2) format("woff2"); font-weight: 200 800; }
+:root { --bg: #fbfaf7; --ink: #15131f; --muted: #77738a; --line: #e8e4dc; --orange: #f26a12; --green: #1f9d5c; --yellow: #e8b21c;
+  --d: "Bricolage Grotesque", system-ui, sans-serif; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 system-ui, sans-serif; }
+.wrap { max-width: 640px; margin: 0 auto; padding: 0 16px; }
+.top { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.brand { font: 800 1.25rem var(--d); letter-spacing: -.03em; display: flex; gap: 8px; align-items: center; }
+.brand i { width: 5px; background: var(--ink); border-radius: 2px; display: inline-block; vertical-align: bottom; }
+.marks { display: flex; gap: 2px; align-items: flex-end; height: 20px; } .marks i:nth-child(1) { height: 8px; } .marks i:nth-child(2) { height: 13px; } .marks i:nth-child(3) { height: 20px; background: var(--orange); }
+.icons { display: flex; gap: 6px; } .icons span { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 10px; border: 1px solid var(--line); background: #fff; }
+
+.date { text-align: center; color: var(--muted); font-weight: 600; margin: 34px 0 4px; letter-spacing: .02em; }
+h1 { text-align: center; font: 800 clamp(2.3rem, 7vw, 3.4rem)/1 var(--d); letter-spacing: -.045em; margin: 0 0 8px; }
+.lead { text-align: center; color: var(--muted); margin: 0 auto 26px; max-width: 28em; }
+
+.puzzle { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 22px; box-shadow: 0 1px 0 var(--line), 0 18px 40px -24px #15131f40; }
+.puzzle .q { font: 700 1.35rem/1.25 var(--d); letter-spacing: -.02em; margin: 0 0 16px; }
+.scale { height: 200px; border-radius: 14px; background: linear-gradient(#f3f0ea 1px, transparent 1px) 0 0 / 100% 25px, #faf8f4; position: relative; border: 1px solid var(--line); overflow: hidden; }
+.bar { position: absolute; bottom: 0; width: 70px; border-radius: 8px 8px 0 0; }
+.bar.ref { left: 22%; height: 46%; background: #cfcbe0; }
+.bar.you { left: 52%; height: 78%; background: var(--orange); transition: height .3s; }
+.bar.you::after { content: "↕"; position: absolute; top: -26px; left: 50%; transform: translateX(-50%); font-weight: 800; color: var(--orange); }
+.bar label { position: absolute; bottom: 8px; left: 0; right: 0; text-align: center; font: 700 .72rem var(--d); color: #fff; }
+.bar.ref label { color: var(--ink); }
+.slider { margin-top: 16px; display: flex; align-items: center; gap: 12px; }
+.slider input { flex: 1; accent-color: var(--orange); }
+.lock { background: var(--ink); color: #fff; border: 0; border-radius: 12px; padding: 12px 20px; font: 700 1rem var(--d); }
+
+.games { margin: 34px 0; }
+.games h2 { font: 800 1.15rem var(--d); margin: 0 0 10px; display: flex; justify-content: space-between; }
+.games h2 span { color: var(--muted); font-weight: 600; font-size: .95rem; }
+.list { border: 1px solid var(--line); border-radius: 16px; background: #fff; overflow: hidden; }
+.item { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); }
+.item:last-child { border: 0; }
+.item:hover { background: #faf8f4; }
+.item .ic { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 1.4rem; background: #f3f0ea; }
+.item b { font: 700 1rem var(--d); display: block; }
+.item small { color: var(--muted); }
+.st { font: 700 .85rem var(--d); }
+.st.done { color: var(--green); } .st.play { color: #fff; background: var(--orange); padding: 5px 12px; border-radius: 999px; }
+
+.share { text-align: center; border: 1px solid var(--line); border-radius: 20px; background: #fff; padding: 24px; }
+.tiles { display: flex; gap: 6px; justify-content: center; margin: 12px 0; }
+.tiles i { width: 38px; height: 38px; border-radius: 8px; display: block; animation: flip .5s ease backwards; }
+.tiles i:nth-child(2) { animation-delay: .1s; } .tiles i:nth-child(3) { animation-delay: .2s; } .tiles i:nth-child(4) { animation-delay: .3s; } .tiles i:nth-child(5) { animation-delay: .4s; }
+@keyframes flip { from { transform: rotateX(90deg); } }
+.big { font: 800 3rem/1 var(--d); letter-spacing: -.04em; }
+.share p { color: var(--muted); margin: 6px 0 16px; }
+.wa { display: inline-flex; gap: 8px; background: #25d366; color: #0b2e17; text-decoration: none; font: 800 1rem var(--d); padding: 12px 22px; border-radius: 999px; }
+.notes { color: var(--muted); margin: 34px 0 60px; } .notes h3 { color: var(--ink); font: 800 1.4rem var(--d); margin: 0 0 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top"><span class="brand"><span class="marks"><i></i><i></i><i></i></span>sizeit.games</span><div class="icons"><span>🔥</span><span>🏆</span><span>📊</span></div></header>
+
+  <p class="date">Sunday, 23 November · Daily #23</p>
+  <h1>How big is it, really?</h1>
+  <p class="lead">One puzzle in each game, the same for everyone. Two minutes.</p>
+
+  <div class="puzzle">
+    <p class="q">Make the <span style="color:var(--orange)">Statue of Unity</span> the right size next to the Statue of Liberty.</p>
+    <div class="scale"><div class="bar ref"><label>Liberty</label></div><div class="bar you"><label>Unity?</label></div></div>
+    <div class="slider"><input type="range" value="70" aria-label="Size"><button class="lock">Lock in</button></div>
+  </div>
+
+  <div class="games">
+    <h2>Today's games <span>3 of 8 · 296 pts</span></h2>
+    <div class="list">
+      <a class="item" href="#"><span class="ic">📏</span><div><b>Size It Up</b><small>Resize to real size</small></div><span class="st done">✓ 780</span></a>
+      <a class="item" href="#"><span class="ic">⚖️</span><div><b>Heavier or Lighter</b><small>10 quick calls</small></div><span class="st done">✓ 8/10</span></a>
+      <a class="item" href="#"><span class="ic">🐆</span><div><b>Speed Race</b><small>Who's faster, by how much?</small></div><span class="st play">Play</span></a>
+      <a class="item" href="#"><span class="ic">📍</span><div><b>How Far?</b><small>Distance between two cities</small></div><span class="st">~2 min</span></a>
+    </div>
+  </div>
+
+  <div class="share">
+    <strong>Size It Up #23</strong>
+    <div class="tiles"><i style="background:var(--green)"></i><i style="background:var(--green)"></i><i style="background:var(--yellow)"></i><i style="background:var(--green)"></i><i style="background:var(--orange)"></i></div>
+    <div class="big">780</div>
+    <p>Better than 82% of players today</p>
+    <a class="wa" href="#">Share on WhatsApp</a>
+  </div>
+
+  <div class="notes">
+    <h3>C · Clean Daily</h3>
+    <p>Calm, white, Wordle-style. Today's puzzle sits right on the home page, games are a tidy checklist, and the share card has flipping colour tiles. Fastest to load and easiest to understand at a glance: best for adults who play one quick game a day.</p>
+  </div>
+</div>
+</body>
+</html>

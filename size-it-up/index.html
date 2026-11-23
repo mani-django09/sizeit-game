@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Size It Up: How Big Is It Really? Daily Size Guessing Game</title>
+  <meta name="description" content="Stretch one object next to another until it matches its real size. A free daily size comparison game with animals, landmarks and vehicles.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/size-it-up/">
+  <meta property="og:url" content="https://sizeit.games/size-it-up/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Size It Up: How Big Is It Really? Daily Size Guessing Game">
+  <meta property="og:description" content="Stretch one object next to another until it matches its real size. A free daily size comparison game with animals, landmarks and vehicles.">
+  <meta property="og:image" content="https://sizeit.games/og/size-it-up.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Size It Up: How Big Is It Really? Daily Size Guessing Game">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"How Big? – Size It Up daily size game","applicationCategory":"GameApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A free daily game where you size up real objects by resizing one next to another, then see the true size drawn to scale."}
+  </script>
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="14" width="9" height="15" rx="2" class="l-ref"/><rect x="15" y="4" width="14" height="25" rx="2" class="l-guess"/></svg></span>
+        <div>
+          <h1>Size It Up</h1>
+          <div class="sub" id="sub">Resize it to its real size.</div>
+        </div>
+      </div>
+      <nav class="modes" aria-label="Modes">
+        <button class="mode" data-mode="daily">Daily</button>
+        <button class="mode" data-mode="unlimited">Unlimited</button>
+      </nav>
+    </div>
+    <div class="banner" id="banner" hidden></div>
+
+    <section class="game" id="game">
+      <div class="meta">
+        <div class="pips" id="pips"></div>
+        <span id="catWrap" hidden><select id="catSelect" class="cat-select" aria-label="Category"></select></span>
+        <span class="scorebox"><b id="scoreInfo">0</b> / 1000</span>
+      </div>
+      <p class="prompt" id="prompt"></p>
+
+      <div class="board-wrap">
+        <span class="drag-hint" id="dragHint">↔ drag to resize</span>
+        <svg id="board" role="img" aria-label="Game board">
+          <defs>
+            <pattern id="hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="10" class="hatch-line"/>
+            </pattern>
+          </defs>
+          <rect id="earth" class="earth"/>
+          <line id="ground" class="ground"/>
+          <g id="refG" class="obj ref"></g>
+          <g id="guessG" class="obj guess"></g>
+          <g id="trueG" class="obj outline"></g>
+          <g id="refM" class="measure ref"></g>
+          <g id="guessM" class="measure guess"></g>
+          <g id="trueM" class="measure true"></g>
+          <text id="refName" class="oname"></text>
+          <text id="tgtName" class="oname"></text>
+        </svg>
+      </div>
+
+      <div class="controls" id="controls">
+        <button class="step" id="minusBtn" aria-label="Smaller">−</button>
+        <input type="range" id="slider" aria-label="Size">
+        <button class="step" id="plusBtn" aria-label="Bigger">+</button>
+        <button class="primary" id="lockBtn">Lock in</button>
+      </div>
+      <p class="hint" id="hint">Drag on the board, use the slider, or press the arrow keys. Enter locks in.</p>
+
+      <div class="reveal" id="reveal" hidden>
+        <div class="pts" id="revealPts"></div>
+        <div>
+          <div class="nums" id="revealNums"></div>
+          <div class="meter"><i id="revealMeter"></i></div>
+          <p class="fact" id="revealFact"></p>
+        </div>
+        <button class="primary" id="nextBtn"></button>
+      </div>
+    </section>
+
+    <section class="result" id="result" hidden>
+      <div class="kicker" id="resKicker">Your score</div>
+      <div class="rank" id="resRank"></div>
+      <div class="total"><b id="resTotal">0</b><span>/1000</span></div>
+      <div class="blocks" id="resBlocks"></div>
+      <div class="vs" id="resVs" hidden></div>
+      <ol class="rows" id="resRows"></ol>
+      <div class="actions">
+        <button class="primary" id="shareBtn">Share result</button>
+      </div>
+      <div class="challenge-box">
+        <input type="text" id="nameInput" maxlength="20" autocomplete="nickname" placeholder="Your name (optional)">
+        <button class="secondary" id="challengeBtn">Challenge a friend</button>
+      </div>
+      <div class="actions">
+        <button class="secondary" id="againBtn"></button>
+      </div>
+      <p class="countdown" id="countdown"></p>
+    </section>
+
+    <article class="seo guide">
+      <section>
+        <h2>Size it up: how big is it, really?</h2>
+        <p>Quick question. A blue whale or a city bus: how many buses long is the whale? Most people say four or five. The real answer is about two. That gap between what we picture and what is actually out there is the whole idea behind How Big?, a free daily game where you size it up by eye and then see the truth drawn to scale.</p>
+        <p>Every round puts two things side by side. One is already at its real size. The other is yours to stretch or shrink until the pair looks right. Lock it in, and a green outline shows where it should have been. Some rounds you'll nail. Others will make you laugh at how far off you were, and that's usually the round you remember the next day.</p>
+      </section>
+
+      <section>
+        <h2>How to play Size It Up</h2>
+        <ol class="howto">
+          <li><b>Look at the grey object.</b> It's drawn at its true size, so treat it as your ruler. The label tells you whether you're comparing height, length or diameter.</li>
+          <li><b>Resize the orange one.</b> Drag left or right on the board, move the slider, tap the − and + buttons, or use the arrow keys. Hold Shift with an arrow key for bigger jumps. On a laptop, the scroll wheel works too.</li>
+          <li><b>Press Lock in</b> (or hit Enter) when it looks right. There's no timer, so take a second look if you want.</li>
+          <li><b>See the real size.</b> A green outline appears at the true size, along with both numbers, your points and a short fact about the object.</li>
+          <li><b>Play all five rounds.</b> Each is worth up to 200 points, so a perfect day is 1000. Then share your score, which shows coloured squares and no spoilers, or send a friend the same set.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Ways to play</h2>
+        <div class="modes-grid">
+          <div class="mode-card"><h3>Daily</h3><p>Five pairs, the same for everyone on the planet that day. It unlocks at midnight your time, keeps your streak going, and is the round your friends will be arguing about.</p></div>
+          <div class="mode-card"><h3>Unlimited</h3><p>No daily limit. Pick a category, such as animals, landmarks, vehicles, everyday things, sports or famous objects, and practise until your eye gets sharp.</p></div>
+          <div class="mode-card"><h3>Challenge a friend</h3><p>After any game, add your name and send a link. Your friend gets the exact same five pairs and sees the score they have to beat.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>How scoring works</h2>
+        <p>Points depend on how many times too big or too small your guess was, not on how many metres you missed by. Being 2 metres off on a giraffe is a big miss. Being 2 metres off on the Burj Khalifa is basically perfect. Because the score uses ratios, a tall tower and a tiny coin are scored the same way.</p>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>How far off you were</th><th>Points</th></tr></thead>
+            <tbody>
+              <tr><td>Within 5%</td><td>200</td></tr>
+              <tr><td>10% off</td><td>188</td></tr>
+              <tr><td>25% off</td><td>158</td></tr>
+              <tr><td>1.5 times too big or too small</td><td>119</td></tr>
+              <tr><td>Twice or half the real size</td><td>69</td></tr>
+              <tr><td>Three times off</td><td>21</td></tr>
+              <tr><td>Five times off or more</td><td>0</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Going too big and going too small cost the same. Guessing half the real size scores exactly like guessing double.</p>
+      </section>
+
+      <section>
+        <h2>Tips for sizing things up</h2>
+        <ul class="tips">
+          <li><b>Start from something you know.</b> A person is about 1.7 m, a door about 2.1 m, a car about 4 m. Picture that inside the scene before you start dragging.</li>
+          <li><b>Think in multiples, not metres.</b> Ask "is it twice as tall, or ten times?" first. Get that roughly right and you'll keep most of your points.</li>
+          <li><b>Check the measurement.</b> A cobra is measured nose to tail, a coin across its face, a statue from foot to top. Read the label so you're not comparing a length with a height.</li>
+          <li><b>Be wary of famous things.</b> Fame makes objects feel bigger. The Mona Lisa is only 77 cm tall, a little shorter than a kitchen counter.</li>
+          <li><b>Big things are bigger than you think.</b> The Titanic was about four jumbo jets long. The Burj Khalifa is roughly two and a half Eiffel Towers. When something is huge, people tend to guess too small.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>About this game</h2>
+        <p>How Big? started with a simple, slightly embarrassing discovery: most of us are terrible at scale. We know the Eiffel Tower is tall and an ostrich is big for a bird, but put them next to something else and our sense of size falls apart. A game turned out to be the most enjoyable way to fix that, a few minutes at a time.</p>
+        <p>There are around forty real-world objects in the library right now, from a ₹10 coin and a cricket ball to the Statue of Unity, Qutub Minar, the Great Pyramid and a Boeing 747. Every drawing is original and every size comes from a public reference, such as official landmark pages, the Laws of Cricket and manufacturer specifications. Animals and vehicles come in many sizes, so for those we use a typical adult or a standard model and say so in the fact.</p>
+        <p>The game runs in your browser with no account, and no download. It works on phones, tablets and desktops, switches between metric and imperial with one tap, and can be added to your home screen so it plays offline. Your scores and streaks stay on your own device.</p>
+      </section>
+
+      <section class="faq">
+        <h2>Questions people ask</h2>
+        <details><summary>Is Size It Up free to play?</summary><p>Yes. Every mode, including Daily, Unlimited and challenges, is free. There's nothing to sign up for.</p></details>
+        <details><summary>Who makes this game?</summary><p>It's made by sizeit.games, an independent site, with its own artwork, objects and scoring. Add it to your morning along with <a href="../which-is-heavier/">Heavier or Lighter</a>, <a href="../sort-it/">Sort It</a> and <a href="../ballpark/">Ballpark</a> on the same site.</p></details>
+        <details><summary>When does the daily puzzle reset?</summary><p>At midnight in your local time. Everyone gets the same five pairs on the same date, so you can compare scores fairly.</p></details>
+        <details><summary>What counts as a good score?</summary><p>Your result comes with a title. 550 or more makes you a Good Guesser, 750 a Sharp Eye, and 900 a Scale Master. A full 1000 means every guess was within 5%, which is rare enough to be worth a screenshot.</p></details>
+        <details><summary>How do I keep my streak?</summary><p>Finish the Daily once a day. The flame counter at the top shows your current streak, and the stats panel keeps your best streak, average and high score.</p></details>
+        <details><summary>Can I play on my phone?</summary><p>Yes. Drag with your finger on the board or use the slider. Add the page to your home screen and it opens like an app.</p></details>
+        <details><summary>What other games are like this?</summary><p>Daily estimation games have become a small genre of their own: size comparison games, weight guessing games and number guessing games. On this site you can play seven more, each with its own Daily: <a href="../which-is-heavier/">Heavier or Lighter</a>, <a href="../sort-it/">Sort It</a>, <a href="../ballpark/">Ballpark</a>, <a href="../speed-race/">Speed Race</a>, <a href="../how-many-fit/">How Many Fit?</a>, <a href="../how-far/">How Far?</a> and <a href="../number-guess/">Number Guess</a>, plus a themed <a href="../weekly/">Weekly Challenge</a> every Monday and an endless <a href="../survival/">Survival</a> mode.</p></details>
+      </section>
+              <!-- more-games:start -->
+      <section class="more-games">
+        <h2>More free games</h2>
+        <ul>
+          <li><a href="../which-is-heavier/"><b>Heavier or Lighter</b><span>Guess which of two things weighs more.</span></a></li>
+          <li><a href="../sort-it/"><b>Sort It</b><span>Put five things in order by size and by weight.</span></a></li>
+          <li><a href="../ballpark/"><b>Ballpark</b><span>Pick the range a real-world number falls in.</span></a></li>
+          <li><a href="../speed-race/"><b>Speed Race</b><span>Pick the faster racer, then watch them race.</span></a></li>
+          <li><a href="../number-guess/"><b>Number Guess</b><span>Guess a real-world number as closely as you can.</span></a></li>
+          <li><a href="../how-many-fit/"><b>How Many Fit?</b><span>Guess how many of one thing fit along another.</span></a></li>
+          <li><a href="../how-far/"><b>How Far?</b><span>Guess the straight-line distance between two cities.</span></a></li>
+          <li><a href="../survival/"><b>Survival</b><span>Mixed questions against the clock, with three lives.</span></a></li>
+        </ul>
+      </section>
+      <!-- more-games:end -->
+    </article>
+  </main>
+
+  <dialog id="helpDlg">
+    <h2>How to play</h2>
+    <ol class="help">
+      <li>Each round shows two objects. The <b class="c-ref">grey</b> one is drawn at its real size.</li>
+      <li>Resize the <b class="c-guess">orange</b> one until it looks right next to it. Drag on the board, use the slider, or press the arrow keys.</li>
+      <li>Press <b>Lock in</b>. The <b class="c-true">green outline</b> shows the real size.</li>
+      <li>Within 5% earns the full 200 points. Five rounds, 1000 points.</li>
+      <li>A new Daily unlocks at midnight. Unlimited never runs out, and you can pick a category.</li>
+    </ol>
+    <form method="dialog"><button class="primary">Close</button></form>
+  </dialog>
+
+  <dialog id="statsDlg">
+    <h2>Statistics</h2>
+    <div class="stats" id="statsGrid"></div>
+    <form method="dialog"><button class="primary">Close</button></form>
+  </dialog>
+
+  <script src="../assets/common.js"></script>
+  <script src="../data/objects.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

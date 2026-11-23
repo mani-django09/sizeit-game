@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Contact Us | sizeit.games</title>
+  <meta name="description" content="Get in touch with sizeit.games: report a wrong number or a bug, suggest an idea, ask about a league, or talk to us about press and partnerships.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/contact/">
+  <meta property="og:url" content="https://sizeit.games/contact/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Contact sizeit.games">
+  <meta property="og:description" content="Report a wrong number or a bug, share an idea, or say hello.">
+  <meta property="og:image" content="https://sizeit.games/og/home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="sizeit.games">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge">✉️</span>
+        <div>
+          <h1>Contact us</h1>
+          <div class="sub">We read every message.</div>
+        </div>
+      </div>
+    </div>
+
+    <section class="panel ct-main">
+      <p class="ct-k">Email</p>
+      <a class="ct-mail" id="mail" href="mailto:contact@sizeit.games">contact@sizeit.games</a>
+      <div class="actions">
+        <a class="primary big" id="mailBtn" href="mailto:contact@sizeit.games">✉️ Write to us</a>
+        <button class="secondary big" id="copyBtn" type="button">📋 Copy address</button>
+      </div>
+    </section>
+
+    <article class="prose ct-topics">
+      <h2>What to write about</h2>
+      <div class="modes-grid">
+        <div class="mode-card"><h3>🔢 A number looks wrong</h3><p>Tell us the game, the date of the Daily and the object, and if you can, a link to a source. We check every report and fix mistakes quickly.</p></div>
+        <div class="mode-card"><h3>🐞 Something broke</h3><p>Say what you were doing, which game, and your phone or browser. A screenshot helps a lot.</p></div>
+        <div class="mode-card"><h3>💡 An idea for a game or object</h3><p>Objects have their own <a href="../suggest/">suggestion form</a>, no email needed. Ideas for new games or features are welcome by email.</p></div>
+        <div class="mode-card"><h3>🏆 Leagues and schools</h3><p>Running a league for a class, an office or a club? Tell us how it's going and what would make it better.</p></div>
+        <div class="mode-card"><h3>📰 Press and partnerships</h3><p>Writing about the games, or want a themed Weekly for an event? Email us with "Press" or "Partnership" in the subject.</p></div>
+        <div class="mode-card"><h3>🔒 Your data</h3><p>Want something removed, such as a league name? See the <a href="../privacy/">privacy policy</a>, then email us.</p></div>
+      </div>
+
+      <h2>Before you write</h2>
+      <ul>
+        <li><b>Looking for today's answers?</b> They're on the <a href="../answers/">answers page</a>, for any date.</li>
+        <li><b>Missed a day?</b> Every past Daily is in the <a href="../archive/">archive</a>.</li>
+        <li><b>Lost your streak or stats?</b> They're saved in your browser, so clearing site data or switching phones starts them fresh. We can't restore them, because we never store them.</li>
+        <li><b>Want feet and pounds?</b> Tap the units button at the top of any game.</li>
+      </ul>
+    </article>
+  </main>
+  <script src="../assets/common.js"></script>
+  <script>
+    SG.header('contact');
+    // keep the address in one place: SITE.contact in assets/common.js
+    const addr = SG.SITE.contact;
+    for (const id of ['mail', 'mailBtn']) document.getElementById(id).href = 'mailto:' + addr;
+    document.getElementById('mail').textContent = addr;
+    document.getElementById('copyBtn').addEventListener('click', () => SG.copyText(addr));
+  </script>
+</body>
+</html>

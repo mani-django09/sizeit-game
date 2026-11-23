@@ -1,0 +1,7 @@
+# Cloudflare Pages: permanent redirects from the old URLs (query strings are kept)
+/how-big        /size-it-up/        301
+/how-big/*      /size-it-up/:splat  301
+/heavier        /which-is-heavier/  301
+/heavier/*      /which-is-heavier/:splat  301
+/number         /number-guess/        301
+/number/*       /number-guess/:splat  301

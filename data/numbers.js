@@ -1,0 +1,213 @@
+// Question bank for Number Guess.
+// q:    the question
+// a:    the answer (a positive number)
+// unit: shown after the number ('' for plain counts)
+// int:  true when the answer is a whole-number count (the guess range then starts at 1)
+// fact: shown after the reveal
+// src:  a page that backs up the answer. since: only joins puzzles from that date.
+// Keep a reliable source for every number. Avoid answers that change often (records, populations that move fast).
+
+(() => {
+  const NEW = '2026-11-24';
+  const W = 'https://en.wikipedia.org/wiki/';
+  window.NUMBER_CATS = [
+    { id: 'all', name: 'All' },
+    { id: 'body', name: 'Human body' },
+    { id: 'nature', name: 'Animals & nature' },
+    { id: 'space', name: 'Space' },
+    { id: 'world', name: 'Earth & world' },
+    { id: 'india', name: 'India' },
+    { id: 'sports', name: 'Sports & games' },
+    { id: 'everyday', name: 'Everyday maths' },
+    { id: 'usa', name: 'USA' }
+  ];
+
+  window.QUESTIONS = [
+    // ----- Human body -----
+    { id: 'bones', cat: 'body', q: 'How many bones are in an adult human body?', a: 206, unit: '', int: true,
+      fact: 'Babies are born with around 300. Many of them fuse together as we grow.' },
+    { id: 'teeth', cat: 'body', q: 'How many teeth does an adult have, wisdom teeth included?', a: 32, unit: '', int: true,
+      fact: 'Children have only 20 milk teeth.' },
+    { id: 'blood', cat: 'body', q: 'About how many litres of blood are in an adult body?', a: 5, unit: 'litres', int: false,
+      fact: 'That is about 7% of your body weight, or roughly half a bucket.' },
+    { id: 'heartbeats', cat: 'body', q: 'About how many times does a resting heart beat in one day?', a: 100000, unit: '', int: true,
+      fact: 'At about 70 beats a minute, it adds up to around 100,000 beats every day.' },
+    { id: 'hairs', cat: 'body', q: 'About how many hairs are on a typical human head?', a: 100000, unit: '', int: true,
+      fact: 'Most people lose somewhere between 50 and 100 of them every day, and that is normal.' },
+    { id: 'baby-bones', cat: 'body', q: 'About how many bones is a newborn baby born with?', a: 300, unit: '', int: true,
+      fact: 'Many of them fuse over childhood, which is how an adult ends up with 206.' },
+
+    // ----- Animals & nature -----
+    { id: 'octopus-hearts', cat: 'nature', q: 'How many hearts does an octopus have?', a: 3, unit: '', int: true,
+      fact: 'Two pump blood through the gills, and one pumps it around the rest of the body.' },
+    { id: 'bee-eyes', cat: 'nature', q: 'How many eyes does a honeybee have?', a: 5, unit: '', int: true,
+      fact: 'Two big compound eyes, plus three tiny simple eyes on top of its head.' },
+    { id: 'giraffe-neck', cat: 'nature', q: 'How many bones are in a giraffe\'s neck?', a: 7, unit: '', int: true,
+      fact: 'The same number as in yours. Each one is just much longer.' },
+    { id: 'elephant-preg', cat: 'nature', q: 'How many months is an elephant pregnant for?', a: 22, unit: 'months', int: true,
+      fact: 'It is the longest pregnancy of any land animal, almost two years.' },
+    { id: 'spider-legs', cat: 'nature', q: 'How many legs does a spider have?', a: 8, unit: '', int: true,
+      fact: 'That is why spiders are not insects. Insects have six.' },
+    { id: 'lobster-legs', cat: 'nature', q: 'How many legs does a lobster have, counting its claws?', a: 10, unit: '', int: true,
+      fact: 'Lobsters are decapods, which literally means "ten feet".' },
+    { id: 'insect-legs', cat: 'nature', q: 'How many legs does an ant have?', a: 6, unit: '', int: true,
+      fact: 'Every adult insect has six legs, from ants to butterflies.' },
+    { id: 'starfish-arms', cat: 'nature', q: 'How many arms does a common starfish have?', a: 5, unit: '', int: true,
+      fact: 'Most sea stars have five, but some species have 20 or more.' },
+
+    // ----- Space -----
+    { id: 'planets', cat: 'space', q: 'How many planets are in our solar system?', a: 8, unit: '', int: true,
+      fact: 'Pluto was reclassified as a dwarf planet in 2006.' },
+    { id: 'mars-year', cat: 'space', q: 'How many Earth days does it take Mars to go around the Sun?', a: 687, unit: 'days', int: true,
+      fact: 'A year on Mars is almost twice as long as ours.' },
+    { id: 'moon-dist', cat: 'space', q: 'How far away is the Moon, on average?', a: 384400, unit: 'km', int: true,
+      fact: 'Light crosses that distance in about 1.3 seconds.' },
+    { id: 'light-speed', cat: 'space', q: 'How fast does light travel, in kilometres per second?', a: 299792, unit: 'km/s', int: true,
+      fact: 'Fast enough to go around the Earth about seven and a half times in one second.' },
+    { id: 'earth-diameter', cat: 'space', q: 'How wide is the Earth, measured through the middle?', a: 12742, unit: 'km', int: true,
+      fact: 'The Moon is a bit over a quarter of that, about 3,474 km.' },
+    { id: 'sun-earths', cat: 'space', q: 'How many Earths could you line up across the face of the Sun?', a: 109, unit: '', int: true,
+      fact: 'And about 1.3 million Earths would fit inside it.' },
+    { id: 'sunlight', cat: 'space', q: 'How many seconds does sunlight take to reach Earth?', a: 499, unit: 'seconds', int: true,
+      fact: 'About 8 minutes and 20 seconds. The Sun you see is always slightly in the past.' },
+    { id: 'venus-day', cat: 'space', q: 'How many Earth days does Venus take to spin around once?', a: 243, unit: 'days', int: true,
+      fact: 'That is longer than its year of 225 days.' },
+    { id: 'jupiter-day', cat: 'space', q: 'How many hours long is one day on Jupiter?', a: 10, unit: 'hours', int: true,
+      fact: 'The biggest planet spins the fastest, in just under ten hours.' },
+    { id: 'mars-moons', cat: 'space', q: 'How many moons does Mars have?', a: 2, unit: '', int: true,
+      fact: 'Phobos and Deimos, both small and potato-shaped.' },
+    { id: 'earth-age', cat: 'space', q: 'How old is the Earth, in years?', a: 4.54e9, unit: 'years', int: true,
+      fact: 'About 4.5 billion years, worked out from the oldest rocks and meteorites.' },
+
+    // ----- Earth & world -----
+    { id: 'everest', cat: 'world', q: 'How tall is Mount Everest?', a: 8849, unit: 'm', int: true,
+      fact: 'This height was announced jointly by Nepal and China in 2020.' },
+    { id: 'un-members', cat: 'world', q: 'How many countries are members of the United Nations?', a: 193, unit: '', int: true,
+      fact: 'South Sudan was the most recent to join, in 2011.' },
+    { id: 'africa', cat: 'world', q: 'How many countries are in Africa?', a: 54, unit: '', int: true,
+      fact: 'Africa has more countries than any other continent.' },
+    { id: 'nile', cat: 'world', q: 'How long is the River Nile?', a: 6650, unit: 'km', int: true,
+      fact: 'It flows through or along eleven countries on the way to the Mediterranean.' },
+    { id: 'trench', cat: 'world', q: 'How deep is the deepest point of the ocean?', a: 10935, unit: 'm', int: true,
+      fact: 'Challenger Deep in the Mariana Trench. Everest would sink with about 2 km of water to spare.' },
+    { id: 'great-wall', cat: 'world', q: 'How long is the Great Wall of China, counting all its sections?', a: 21196, unit: 'km', int: true,
+      fact: 'That figure comes from a Chinese government survey published in 2012.' },
+    { id: 'equator', cat: 'world', q: 'How long is the Equator?', a: 40075, unit: 'km', int: true,
+      fact: 'Driving it non-stop at 100 km/h would take almost 17 days.' },
+    { id: 'continents', cat: 'world', q: 'How many continents are there, in the most common count?', a: 7, unit: '', int: true,
+      fact: 'Some countries teach six, by joining the Americas or Europe and Asia.' },
+    { id: 'us-states', cat: 'world', q: 'How many states are in the United States?', a: 50, unit: '', int: true,
+      fact: 'Hawaii was the last to join, in 1959.' },
+    { id: 'sound-speed', cat: 'world', q: 'How fast does sound travel through air, in metres per second?', a: 343, unit: 'm/s', int: true,
+      fact: 'That is at 20 °C. Count the seconds between lightning and thunder and divide by three to get kilometres.' },
+    { id: 'boil-f', cat: 'world', q: 'At what temperature does water boil, in degrees Fahrenheit?', a: 212, unit: '°F', int: true,
+      fact: 'That is 100 °C at sea level. High up a mountain, water boils at a lower temperature.' },
+
+    // ----- India -----
+    { id: 'india-states', cat: 'india', q: 'How many states does India have?', a: 28, unit: '', int: true,
+      fact: 'Plus 8 union territories, including Delhi.' },
+    { id: 'chakra', cat: 'india', q: 'How many spokes are on the Ashoka Chakra in India\'s flag?', a: 24, unit: '', int: true,
+      fact: 'The wheel is drawn in navy blue at the centre of the white band.' },
+    { id: 'languages', cat: 'india', q: 'How many languages are listed in the Eighth Schedule of India\'s Constitution?', a: 22, unit: '', int: true,
+      fact: 'The list started with 14 in 1950 and has grown over the years.' },
+    { id: 'lok-sabha', cat: 'india', q: 'How many Lok Sabha seats are filled by election?', a: 543, unit: '', int: true,
+      fact: 'A party or alliance needs 272 of them for a majority.' },
+    { id: 'india-pop', cat: 'india', q: 'About how many people lived in India in 2023?', a: 1.43e9, unit: '', int: true,
+      fact: 'In 2023 the UN estimated that India had become the most populous country in the world.' },
+    { id: 'qutub', cat: 'india', q: 'How tall is the Qutub Minar?', a: 72.5, unit: 'm', int: false,
+      fact: 'It is the tallest brick minaret in the world, about as tall as a 24-storey building.' },
+    { id: 'rupee-paise', cat: 'india', q: 'How many paise make one rupee?', a: 100, unit: '', int: true,
+      fact: 'India switched to this decimal system in 1957. Before that, a rupee was 16 annas.' },
+
+    // ----- Sports & games -----
+    { id: 'cricket-xi', cat: 'sports', q: 'How many players does a cricket team have on the field?', a: 11, unit: '', int: true,
+      fact: 'The same as a football team.' },
+    { id: 'marathon', cat: 'sports', q: 'How long is a marathon?', a: 42.195, unit: 'km', int: false,
+      fact: 'The odd 195 metres dates back to the 1908 London Olympics route.' },
+    { id: 'chess-squares', cat: 'sports', q: 'How many squares are on a chessboard?', a: 64, unit: '', int: true,
+      fact: 'Eight rows of eight, half light and half dark.' },
+    { id: 'chess-pieces', cat: 'sports', q: 'How many pieces are on a chessboard at the start of a game?', a: 32, unit: '', int: true,
+      fact: 'Sixteen each: eight pawns and eight other pieces.' },
+    { id: 'football-mins', cat: 'sports', q: 'How many minutes long is a football match, before added time?', a: 90, unit: 'minutes', int: true,
+      fact: 'Two halves of 45 minutes.' },
+    { id: 'sachin', cat: 'sports', q: 'How many international centuries did Sachin Tendulkar score?', a: 100, unit: '', int: true,
+      fact: '51 in Tests and 49 in one-day internationals.' },
+    { id: 'snooker', cat: 'sports', q: 'What is the highest possible normal break in snooker?', a: 147, unit: 'points', int: true,
+      fact: 'Fifteen reds, each with a black, then all the colours.' },
+    { id: 'pitch-yards', cat: 'sports', q: 'How long is a cricket pitch, in yards?', a: 22, unit: 'yards', int: true,
+      fact: 'About 20.12 m, the same as the length of a railway coach.' },
+    { id: 'golf-holes', cat: 'sports', q: 'How many holes are in a standard round of golf?', a: 18, unit: '', int: true,
+      fact: 'The number was settled at St Andrews in Scotland in the 1700s.' },
+    { id: 'dart-max', cat: 'sports', q: 'What is the most points one dart can score?', a: 60, unit: 'points', int: true,
+      fact: 'The treble 20, not the bullseye, which is worth 50.' },
+    { id: 'rubik', cat: 'sports', q: 'How many different positions can a Rubik\'s Cube be twisted into?', a: 4.3e19, unit: '', int: true,
+      fact: 'About 43 quintillion. Yet every one of them can be solved in 20 moves or fewer.' },
+    { id: 'rubik-stickers', cat: 'sports', q: 'How many coloured stickers are on a classic Rubik\'s Cube?', a: 54, unit: '', int: true,
+      fact: 'Nine on each of the six faces.' },
+
+    // ----- Everyday maths -----
+    { id: 'piano', cat: 'everyday', q: 'How many keys does a standard piano have?', a: 88, unit: '', int: true,
+      fact: '52 white keys and 36 black ones.' },
+    { id: 'cards', cat: 'everyday', q: 'How many cards are in a deck, not counting jokers?', a: 52, unit: '', int: true,
+      fact: 'The same as the number of weeks in a year.' },
+    { id: 'day-seconds', cat: 'everyday', q: 'How many seconds are in one day?', a: 86400, unit: 'seconds', int: true,
+      fact: '24 × 60 × 60. Easy to work out, but most people guess far too low.' },
+    { id: 'year-hours', cat: 'everyday', q: 'How many hours are in a year (not a leap year)?', a: 8760, unit: 'hours', int: true,
+      fact: '365 × 24. A full night\'s sleep each day uses about a third of them.' },
+    { id: 'year-seconds', cat: 'everyday', q: 'About how many seconds are in a year?', a: 31536000, unit: 'seconds', int: true,
+      fact: 'Around 31.5 million. A billion seconds is nearly 32 years.' },
+    { id: 'mile-feet', cat: 'everyday', q: 'How many feet are in a mile?', a: 5280, unit: 'feet', int: true,
+      fact: 'A mile is about 1.6 km.' },
+    { id: 'eiffel-steps', cat: 'everyday', q: 'How many steps does it take to climb to the top of the Eiffel Tower?', a: 1665, unit: 'steps', int: true,
+      fact: 'Visitors can only climb the first 674. A lift does the rest.' },
+    { id: 'burj-floors', cat: 'everyday', q: 'How many floors does the Burj Khalifa have?', a: 163, unit: '', int: true,
+      fact: 'Not counting the spire, which adds more than 200 m on top.' },
+    { id: 'teaspoon', cat: 'everyday', q: 'How many millilitres does a measuring teaspoon hold?', a: 5, unit: 'ml', int: true,
+      fact: 'A tablespoon holds three times as much, 15 ml.' },
+    { id: 'guitar', cat: 'everyday', q: 'How many strings does a standard guitar have?', a: 6, unit: '', int: true,
+      fact: 'A violin has four. A concert harp has 47.' },
+    { id: 'avogadro', cat: 'everyday', q: 'About how many water molecules are in 18 grams of water, a little more than a tablespoon?', a: 6.022e23, unit: '', int: true,
+      fact: "That is Avogadro's number, about 602 sextillion: a 6 followed by 23 more digits." },
+    // ----- USA (from 24 Nov 2026) -----
+    { id: 'flag-stripes', cat: 'usa', since: NEW, q: 'How many stripes are on the flag of the United States?', a: 13, unit: '', int: true,
+      fact: 'One for each of the 13 original colonies. The 50 stars are for the states.', src: W + 'Flag_of_the_United_States' },
+    { id: 'mississippi', cat: 'usa', since: NEW, q: 'About how long is the Mississippi River, in kilometres?', a: 3770, unit: 'km', int: true,
+      fact: 'About 2,340 miles from Lake Itasca in Minnesota to the Gulf of Mexico.', src: W + 'Mississippi_River' },
+    { id: 'denali', cat: 'usa', since: NEW, q: 'How tall is Denali, the highest mountain in North America, in metres?', a: 6190, unit: 'm', int: true,
+      fact: 'Denali in Alaska rises to 6,190 m (20,310 ft) above sea level.', src: W + 'Denali' },
+    { id: 'grand-canyon', cat: 'usa', since: NEW, q: 'About how deep is the Grand Canyon at its deepest, in metres?', a: 1857, unit: 'm', int: true,
+      fact: 'More than a mile deep: about 1,857 m (6,093 ft) in places.', src: W + 'Grand_Canyon' },
+    { id: 'empire-floors', cat: 'usa', since: NEW, q: 'How many floors does the Empire State Building have?', a: 102, unit: '', int: true,
+      fact: 'There are 102 floors. The observation deck on the 86th is the famous one.', src: W + 'Empire_State_Building' },
+    { id: 'nba-court', cat: 'usa', since: NEW, q: 'How long is an NBA basketball court, in feet?', a: 94, unit: 'ft', int: true,
+      fact: 'An NBA court is 94 ft long and 50 ft wide, about 28.7 m by 15.2 m.', src: W + 'Basketball_court' },
+    { id: 'pitcher', cat: 'usa', since: NEW, q: 'In baseball, how far is it from the pitcher\'s rubber to home plate, in feet?', a: 60.5, unit: 'ft', int: false,
+      fact: 'It is 60 ft 6 in (18.44 m), a distance set in 1893.', src: W + 'Baseball_field' },
+    { id: 'nfl-field', cat: 'usa', since: NEW, q: 'How many yards are there between the goal lines of an American football field?', a: 100, unit: 'yards', int: true,
+      fact: 'With a 10-yard end zone at each end, the whole field is 120 yards long.', src: W + 'American_football_field' },
+    { id: 'golden-gate-len', cat: 'usa', since: NEW, q: 'How long is the Golden Gate Bridge, end to end, in metres?', a: 2737, unit: 'm', int: true,
+      fact: 'The whole bridge is 2,737 m (1.7 miles) long. Its main span is 1,280 m.', src: W + 'Golden_Gate_Bridge' },
+    { id: 'lincoln-columns', cat: 'usa', since: NEW, q: 'How many columns surround the Lincoln Memorial in Washington, D.C.?', a: 36, unit: '', int: true,
+      fact: 'There are 36, one for each state in the Union when Lincoln died in 1865.', src: W + 'Lincoln_Memorial' },
+  ];
+
+  const NUM_SRC = {
+    bones: 'Human_skeleton', teeth: 'Human_tooth', blood: 'Blood_volume', heartbeats: 'Heart_rate', hairs: 'Hair', 'baby-bones': 'Human_skeleton',
+    'octopus-hearts': 'Octopus', 'bee-eyes': 'Western_honey_bee', 'giraffe-neck': 'Giraffe', 'elephant-preg': 'Elephant', 'spider-legs': 'Spider',
+    'lobster-legs': 'Lobster', 'insect-legs': 'Insect', 'starfish-arms': 'Starfish', planets: 'Solar_System', 'mars-year': 'Mars',
+    'moon-dist': 'Lunar_distance', 'light-speed': 'Speed_of_light', 'earth-diameter': 'Earth', 'sun-earths': 'Sun', sunlight: 'Sunlight',
+    'venus-day': 'Venus', 'jupiter-day': 'Jupiter', 'mars-moons': 'Moons_of_Mars', 'earth-age': 'Age_of_Earth', everest: 'Mount_Everest',
+    'un-members': 'Member_states_of_the_United_Nations', africa: 'Africa', nile: 'Nile', trench: 'Mariana_Trench', 'great-wall': 'Great_Wall_of_China',
+    equator: 'Equator', continents: 'Continent', 'us-states': 'U.S._state', 'sound-speed': 'Speed_of_sound', 'boil-f': 'Fahrenheit',
+    'india-states': 'States_and_union_territories_of_India', chakra: 'Ashoka_Chakra', languages: 'Languages_with_official_status_in_India',
+    'lok-sabha': 'Lok_Sabha', 'india-pop': 'Demographics_of_India', qutub: 'Qutb_Minar', 'rupee-paise': 'Indian_rupee', 'cricket-xi': 'Cricket',
+    marathon: 'Marathon', 'chess-squares': 'Chessboard', 'chess-pieces': 'Chess', 'football-mins': 'Association_football', sachin: 'Sachin_Tendulkar',
+    snooker: 'Snooker', 'pitch-yards': 'Cricket_pitch', 'golf-holes': 'Golf', 'dart-max': 'Darts', rubik: "Rubik's_Cube", 'rubik-stickers': "Rubik's_Cube",
+    piano: 'Piano', cards: 'Standard_52-card_deck', 'day-seconds': 'Day', 'year-hours': 'Year', 'year-seconds': 'Year', 'mile-feet': 'Mile',
+    'eiffel-steps': 'Eiffel_Tower', 'burj-floors': 'Burj_Khalifa', teaspoon: 'Teaspoon', guitar: 'Guitar', avogadro: 'Avogadro_constant'
+  };
+  for (const q of window.QUESTIONS) if (!q.src && NUM_SRC[q.id]) q.src = W + NUM_SRC[q.id];
+  // New questions join puzzles from their `since` date; empty categories are hidden
+  if (window.SG) window.QUESTIONS = SG.fresh(window.QUESTIONS);
+  window.NUMBER_CATS = window.NUMBER_CATS.filter(c => c.id === 'all' || window.QUESTIONS.some(q => q.cat === c.id));
+})();

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Privacy Policy | sizeit.games</title>
+  <meta name="description" content="What sizeit.games stores, what it sends, and what it never collects. No accounts, no emails, no tracking cookies.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/privacy/">
+  <meta property="og:url" content="https://sizeit.games/privacy/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Privacy Policy | sizeit.games">
+  <meta property="og:description" content="What sizeit.games stores, what it sends, and what it never collects.">
+  <meta property="og:image" content="https://sizeit.games/og/home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="sizeit.games">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <main class="wrap narrow">
+    <article class="prose">
+      <h1>Privacy Policy</h1>
+      <p>Last updated: 23 November 2026.</p>
+      <p>sizeit.games is a set of free browser games. You don't need an account, and we never ask for your email or phone number. A display name is optional and only used where you choose to share it. This page explains the little that is stored or sent, and why.</p>
+
+      <h2>Stored in your browser</h2>
+      <p>Your scores, streaks, badges, settings (such as kilometres or miles) and a random device ID are kept in your browser's local storage. They never leave your device unless described below. Clearing your browser data deletes them.</p>
+      <p>Your time zone is read in the browser to pick sensible defaults, such as feet and pounds in the US. It isn't stored or sent anywhere.</p>
+
+      <h2>Sent when you finish a Daily</h2>
+      <p>To show how your score compares with other players, finishing a Daily sends:</p>
+      <ul>
+        <li>the game and the date of the puzzle,</li>
+        <li>your score, and</li>
+        <li>the random device ID, so the same result isn't counted twice.</li>
+      </ul>
+      <p>To slow down cheating, the server also keeps a one-way hash of your IP address combined with the date. The IP address itself is not stored, and because the date is mixed in, the hash can't be used to follow you from one day to the next.</p>
+      <p>These results are stored with Supabase, our database provider. Puzzles you replay from the archive are compared but never sent.</p>
+
+      <h2>Friends Leagues</h2>
+      <p>If you create or join a <a href="../league/">Friends League</a>, we store the league's name and code, the display name you type, and your random device ID, with Supabase. Anyone who has the league's code can see the league name, the members' display names and their Daily points. Device IDs are never shown. Leaving a league deletes your membership. Use a nickname if you prefer.</p>
+
+      <h2>Challenge links</h2>
+      <p>When you share a result, the link contains your score and, if you typed one, your display name, so your friend can see who challenged them. Anyone you send the link to can see it. Nothing is stored on our side when you share.</p>
+
+      <h2>Sent when you suggest an object</h2>
+      <p>The <a href="../suggest/">Suggest an object</a> form sends only what you type into it. As with scores, the server keeps a one-way hash of your IP address combined with the date, only to limit how many suggestions one network can send in a day.</p>
+
+      <h2>Hosting and fonts</h2>
+      <p>The site is served by Cloudflare. Like any web host, it handles your IP address to deliver pages and protect the site from attacks. Fonts are served from this site, so no font provider sees your visit. Each provider follows its own privacy policy.</p>
+
+      <h2>What we don't do</h2>
+      <ul>
+        <li>No accounts, emails or phone numbers. Display names are optional.</li>
+        <li>No advertising or tracking cookies.</li>
+        <li>No selling or sharing of data.</li>
+      </ul>
+
+      <h2>Your choices</h2>
+      <p>You can play without anything being sent by playing past puzzles from the archive, or by using Unlimited and Endless modes, which are never sent. To remove the data on your device, clear this site's data in your browser settings.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about this policy, or want something removed? Email <a id="contactLink" href="mailto:contact@sizeit.games">contact@sizeit.games</a>.</p>
+    </article>
+  </main>
+  <script src="../assets/common.js"></script>
+  <script>
+    SG.header('');
+    // keep the address in one place: SITE.contact in assets/common.js
+    const c = document.getElementById('contactLink');
+    c.href = 'mailto:' + SG.SITE.contact; c.textContent = SG.SITE.contact;
+  </script>
+</body>
+</html>

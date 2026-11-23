@@ -1,0 +1,14 @@
+{
+  "name": "scale-games",
+  "private": true,
+  "description": "Cloudflare Pages Functions for link previews. The site itself has no build step; see README.md.",
+  "scripts": {
+    "dev": "wrangler pages dev . --port 8788"
+  },
+  "dependencies": {
+    "@cf-wasm/og": "0.5.0"
+  },
+  "devDependencies": {
+    "wrangler": "4.166.0"
+  }
+}

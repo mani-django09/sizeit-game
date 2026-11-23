@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en" data-root="./">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>sizeit.games: Free Daily Size, Weight and Number Games</title>
+  <meta name="description" content="Eight free daily guessing games about size, weight, speed, distance and numbers, plus a weekly themed challenge. Two minutes a day, no sign-up.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/">
+  <meta property="og:url" content="https://sizeit.games/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="sizeit.games: Free Daily Size, Weight and Number Games">
+  <meta property="og:description" content="Eight free daily guessing games about size, weight, speed, distance and numbers, plus a weekly themed challenge. Two minutes a day, no sign-up.">
+  <meta property="og:image" content="https://sizeit.games/og/home.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="sizeit.games: Free Daily Size, Weight and Number Games">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preload" href="fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/style.css">
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "WebSite", "name": "sizeit.games", "url": "https://sizeit.games/", "description": "Free daily guessing games about size, weight, speed, distance and numbers.", "inLanguage": "en"}
+  </script>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="dot"></span><span id="dailyChip">Today's puzzles are live</span></span>
+        <h1>How big is it, <span class="hl">really?</span></h1>
+        <p class="lead">Quick daily games about the real size and weight of things. Whales, dinosaurs, planets, monuments, cricket balls and jumbo jets. Two minutes a day, no sign-up.</p>
+        <div class="cta">
+          <a class="primary big" href="size-it-up/">Play How Big? →</a>
+          <a class="secondary big" href="./" data-random>🎲 Random Challenge</a>
+        </div>
+      </div>
+      <div class="parade">
+        <div id="parade"></div>
+        <div class="cap">Drawn to true scale. The grey ones are what you know; the orange one is what you guess.</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Today's games</h2>
+        <p id="countdown"></p>
+      </div>
+      <section class="tt" id="total" aria-label="Today's total" style="margin-bottom:16px"></section>
+      <div class="cards" id="cards"></div>
+      <div class="soon-row" id="soon"></div>
+      <div class="extras">
+        <a class="extra extra-hot" href="league/"><span>🏆</span><div><b>Friends League</b>One code for your WhatsApp group. See who wins every day.</div></a>
+        <a class="extra" href="categories/"><span>🗂️</span><div><b>Play by category</b>Animals, dinosaurs, space, food and more. A Daily for every topic.</div></a>
+        <a class="extra" href="./" data-random><span>🎲</span><div><b>Random Challenge</b>Can't pick? Jump into a random game.</div></a>
+        <a class="extra" href="weekly/"><span>🗓️</span><div><b>Weekly Challenge</b>A new theme every Monday: ten mixed rounds, one try.</div></a>
+        <a class="extra" href="archive/"><span>📅</span><div><b>Archive</b>Missed a day? Replay every past Daily.</div></a>
+        <a class="extra" href="stats/" id="statsLink"><span>📊</span><div><b>Your stats &amp; badges</b>Streaks, averages and 15 badges to earn.</div></a>
+        <a class="extra" href="answers/"><span>🔑</span><div><b>Daily answers</b>Stuck, or want to check? Every answer, explained.</div></a>
+        <a class="extra" href="suggest/"><span>💡</span><div><b>Suggest an object</b>Know something surprisingly big? Tell us.</div></a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <h2>Scale is surprising</h2>
+        <p>A few from the game library.</p>
+      </div>
+      <div class="facts" id="facts"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>How it works</h2></div>
+      <div class="steps">
+        <div class="step-card"><h3>One puzzle a day</h3><p>Each game has a Daily that is the same for everyone. It resets at midnight, your time.</p></div>
+        <div class="step-card"><h3>Guess, then see the truth</h3><p>Every answer comes with the real number drawn to scale, plus a fact to remember.</p></div>
+        <div class="step-card"><h3>Share and challenge</h3><p>Share your score without spoilers, or send a friend a link to the exact same set.</p></div>
+      </div>
+    </section>
+
+    <section class="section faq">
+      <div class="section-head"><h2>Questions</h2></div>
+      <details><summary>Is it free?</summary><p>Yes. Every game runs in your browser for free, with no account and no download.</p></details>
+      <details><summary>Where do the sizes and weights come from?</summary><p>From public references such as official landmark pages, the Laws of Cricket and manufacturer specifications. Every fact in the games links to its source. Animals and vehicles vary, so we use typical values.</p></details>
+      <details><summary>What is Today's total?</summary><p>Every Daily is worth up to 100 points, so the eight games add up to a total out of 800. Share it to show how your whole day went, and come back tomorrow to beat it.</p></details>
+      <details><summary>Can I play against my friends?</summary><p>Yes. Start a Friends League, send its code to your WhatsApp group, and everyone's Daily scores add up on one table, today and for the week. No account needed: just a name. You can also share any result as a challenge link, and your friend plays the exact same puzzles.</p></details>
+      <details><summary>Can I play in feet and pounds?</summary><p>Yes. Press the units button at the top of any game to switch between metres and kilograms or feet and pounds. Players in the US start in feet and pounds.</p></details>
+      <details><summary>Can I play on my phone?</summary><p>Yes. Every game works on phones, and you can add the site to your home screen to use it like an app.</p></details>
+      <details><summary>Will there be more games?</summary><p>Yes. New games are added regularly, and every game gets a Daily so there's always something fresh.</p></details>
+      <details><summary>Who makes sizeit.games?</summary><p>sizeit.games is an independent site. Every game, drawing and puzzle here is our own, and every number links to a public source.</p></details>
+    </section>
+  </main>
+
+  <script src="assets/common.js"></script>
+  <script src="data/objects.js"></script>
+  <script>
+    (() => {
+      const { SITE, esc, icon, header, store, todayKey, dayNumber, untilMidnight, lineup, shapeSvg, fmtLen, fmtKg } = SG;
+      header('');
+      SG.measureShapes(OBJECTS);
+      const O = id => OBJECTS.find(o => o.id === id);
+      const today = todayKey();
+
+      // Hero: a parade of familiar things at true scale
+      document.getElementById('parade').innerHTML = lineup([
+        { o: O('cat'), cls: 'oa', label: 'Cat' },
+        { o: O('human'), cls: 'oa', label: 'Person' },
+        { o: O('ostrich'), cls: 'oa', label: 'Ostrich' },
+        { o: O('elephant'), cls: 'oa', label: 'Elephant' },
+        { o: O('giraffe'), cls: 'ob', label: 'Giraffe' },
+        { o: O('car'), cls: 'oa', label: 'Car' }
+      ], { w: 560, h: 300, gap: 14, labels: true, ruler: true, top: 6 });
+
+      // Daily chip and countdown
+      document.getElementById('dailyChip').textContent = `Daily #${dayNumber(today)} is live`;
+      const cd = document.getElementById('countdown');
+      SG.renderTotal(document.getElementById('total'));
+      const tick = () => { cd.textContent = `New puzzles in ${untilMidnight()}`; };
+      tick(); setInterval(tick, 1000);
+
+      // Game cards
+      const placed = (o, x, y, w, h, cls) => shapeSvg(o, cls).replace('<svg ', `<svg x="${x}" y="${y}" width="${w}" height="${h}" `);
+      const art = {
+        'how-big': () => lineup([{ o: O('bus'), cls: 'oa' }, { o: O('whale'), cls: 'ob' }], { w: 480, h: 190, pad: 24, gap: 22 }),
+        'heavier': () => `<svg viewBox="0 0 480 190" aria-hidden="true">
+            <rect x="234" y="40" width="12" height="130" rx="4" fill="var(--edge)"/><rect x="190" y="164" width="100" height="12" rx="6" fill="var(--edge)"/>
+            <g transform="rotate(-9 240 44)"><rect x="80" y="40" width="320" height="9" rx="4" fill="var(--edge)"/></g>
+            <line x1="106" y1="66" x2="106" y2="118" stroke="var(--edge)" stroke-width="2"/><line x1="374" y1="22" x2="374" y2="74" stroke="var(--edge)" stroke-width="2"/>
+            <path d="M60 118 h92 a46 14 0 0 1 -92 0z" fill="var(--panel)" stroke="var(--edge)" stroke-width="2.5"/>
+            <path d="M328 74 h92 a46 14 0 0 1 -92 0z" fill="var(--panel)" stroke="var(--edge)" stroke-width="2.5"/>
+            ${placed(O('elephant'), 66, 64, 80, 54, 'pfig oa')}${placed(O('car'), 334, 40, 80, 34, 'pfig ob')}
+            <circle cx="240" cy="44" r="9" fill="var(--guess)" stroke="var(--edge)" stroke-width="2"/></svg>`,
+        'number': () => `<svg viewBox="0 0 480 190" aria-hidden="true">
+            <text x="240" y="92" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="62" fill="var(--guess)" stroke="var(--edge)" stroke-width="2">384,400?</text>
+            <line x1="40" x2="440" y1="140" y2="140" stroke="var(--edge)" stroke-width="3" stroke-linecap="round"/>
+            ${[40, 120, 200, 280, 360, 440].map(x => `<line x1="${x}" x2="${x}" y1="133" y2="147" stroke="var(--edge)" stroke-width="2"/>`).join('')}
+            <circle cx="318" cy="140" r="9" fill="var(--guess)" stroke="var(--edge)" stroke-width="2"/>
+            <circle cx="338" cy="140" r="9" fill="var(--true)" stroke="var(--edge)" stroke-width="2"/></svg>`,
+        'sort': () => lineup([{ o: O('cat'), cls: 'oa' }, { o: O('human'), cls: 'oa' }, { o: O('elephant'), cls: 'oa' }, { o: O('giraffe'), cls: 'ob' }], { w: 480, h: 190, pad: 24, gap: 26 }),
+        'speed': () => `<svg viewBox="0 0 480 190" aria-hidden="true">
+            <line x1="40" x2="440" y1="95" y2="95" stroke="var(--line)" stroke-width="2" stroke-dasharray="8 6"/>
+            <rect x="436" y="24" width="8" height="142" rx="4" fill="var(--edge)" opacity=".6"/>
+            <circle cx="400" cy="58" r="28" fill="var(--panel)" stroke="var(--edge)" stroke-width="2.5"/><text x="400" y="69" text-anchor="middle" font-size="30">🐆</text>
+            <circle cx="250" cy="132" r="28" fill="var(--panel)" stroke="var(--edge)" stroke-width="2.5"/><text x="250" y="143" text-anchor="middle" font-size="30">🛵</text>
+            <path d="M330 52h-60M318 64h-40M200 126h-60M188 138h-40" stroke="var(--guess)" stroke-width="5" stroke-linecap="round"/></svg>`,
+        'fit': () => `<svg viewBox="0 0 480 190" aria-hidden="true">
+            <rect x="40" y="40" width="400" height="44" rx="10" fill="var(--guess)" stroke="var(--edge)" stroke-width="2.5"/>
+            ${[0, 1, 2, 3, 4].map(i => `<rect x="${40 + i * 80}" y="104" width="76" height="44" rx="8" fill="var(--panel)" stroke="var(--edge)" stroke-width="2.5"/>`).join('')}
+            <text x="240" y="178" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="16" fill="var(--muted)">× 5 ?</text></svg>`,
+        'far': () => `<svg viewBox="0 0 480 190" aria-hidden="true">
+            ${[[90, 60], [150, 120], [220, 70], [300, 140], [360, 90], [410, 50], [120, 160], [260, 40]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="4" fill="var(--muted)" opacity=".5"/>`).join('')}
+            <line x1="110" y1="140" x2="380" y2="60" stroke="var(--true)" stroke-width="4" stroke-dasharray="10 8"/>
+            <circle cx="110" cy="140" r="12" fill="var(--ref)" stroke="var(--edge)" stroke-width="2.5"/><circle cx="380" cy="60" r="12" fill="var(--guess)" stroke="var(--edge)" stroke-width="2.5"/>
+            <text x="245" y="88" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="22" fill="var(--true)">? km</text></svg>`,
+        'survival': () => `<svg viewBox="0 0 480 190" aria-hidden="true">
+            ${[0, 1, 2].map(i => `<path transform="translate(${150 + i * 64} 46) scale(1.6)" d="M16 28 C6 21 2 15 2 10 a6.5 6.5 0 0 1 14 -2 a6.5 6.5 0 0 1 14 2 c0 5 -4 11 -14 18Z" fill="${i < 2 ? 'var(--bad)' : 'var(--panel)'}" stroke="var(--edge)" stroke-width="1.6"/>`).join('')}
+            <rect x="80" y="134" width="320" height="14" rx="7" fill="var(--panel)" stroke="var(--edge)" stroke-width="2.5"/><rect x="82" y="136" width="190" height="10" rx="5" fill="var(--true)"/></svg>`,
+        'ballpark': () => `<svg viewBox="0 0 480 190" aria-hidden="true">
+            ${['10–99', '100–999', '1k–9.9k', '10k–99k'].map((t, i) => `<g transform="translate(${30 + i * 108} 62)"><rect width="96" height="66" rx="14" fill="${i === 2 ? 'var(--guess)' : 'var(--panel)'}" stroke="var(--edge)" stroke-width="2.5"/>
+            <text x="48" y="40" text-anchor="middle" font-family="var(--display)" font-weight="800" font-size="17" fill="${i === 2 ? '#1b1740' : 'var(--text)'}">${t}</text></g>`).join('')}</svg>`
+      };
+      // today's result for any game, from the Daily record it keeps (see SITE.games in assets/common.js)
+      const statusOf = g => { if (!g.daily) return ''; const r = store.get(g.daily.key, {})[today]; return r && r.done ? `Done · ${g.daily.score(r)}/${g.daily.max}` : ''; };
+      const chips = {
+        'how-big': ['Daily', 'Unlimited', 'Challenge a friend', '~2 min'],
+        'heavier': ['Daily', 'Endless streak', '~1 min'],
+        'number': ['Daily', 'Unlimited', '7 categories', '~2 min'],
+        'sort': ['Daily', 'Size + weight', 'Unlimited', '~2 min'],
+        'speed': ['Daily', 'Endless streak', '~2 min'],
+        'ballpark': ['Daily', '60s Rush', '~1 min'],
+        'fit': ['Daily', 'Unlimited', '~2 min'],
+        'far': ['Daily', 'India + USA + world', 'km or miles', '~2 min'],
+        'survival': ['Endless', '3 lives', 'Beat the clock']
+      };
+      const live = SITE.games.filter(g => g.status === 'live');
+      document.getElementById('cards').innerHTML = live.map(g => {
+        const st = statusOf(g);
+        return `<a class="gcard ${g.icon === 'weight' ? 't-weight' : 't-size'}" href="${g.path}">
+          <div class="art">${art[g.id] ? art[g.id]() : ''}</div>
+          <div class="body">
+            <div class="chips">${st ? `<span class="chip done">✓ ${esc(st)}</span>` : ''}${(chips[g.id] || []).map(c => `<span class="chip">${esc(c)}</span>`).join('')}</div>
+            <h3>${esc(g.name)}</h3>
+            <p>${esc(g.desc)}</p>
+            <div class="go"><span></span><span>${!g.daily ? 'Start a run →' : st ? 'Play Unlimited →' : 'Play today →'}</span></div>
+          </div></a>`;
+      }).join('');
+      document.getElementById('soon').innerHTML = SITE.games.filter(g => g.status !== 'live').map(g =>
+        `<div class="scard">${icon(g.icon, 'gicon')}<div><b>${esc(g.name)}</b>${esc(g.desc)}</div><span class="sticker">Soon</span></div>`).join('');
+
+      // Facts, with numbers computed from the same data the games use
+      const unity = O('unity'), liberty = O('liberty'), mona = O('monalisa'), a4 = O('a4'), whale = O('whale'), jet = O('b747');
+      const facts = [
+        { svg: lineup([{ o: liberty, cls: 'oa' }, { o: unity, cls: 'ob' }], { w: 300, h: 120, pad: 10 }),
+          num: `${(unity.size / liberty.size).toFixed(1)}×`, text: `The Statue of Unity (${fmtLen(unity.size)}) is about four times as tall as the Statue of Liberty without its pedestal.` },
+        { svg: lineup([{ o: a4, cls: 'oa' }, { o: mona, cls: 'ob' }], { w: 300, h: 120, pad: 10 }),
+          num: fmtLen(mona.size), text: 'The Mona Lisa is smaller than most people expect: only about two and a half A4 sheets tall.' },
+        { svg: lineup([{ o: whale, cls: 'oa' }, { o: jet, cls: 'ob' }], { w: 300, h: 120, pad: 10 }),
+          num: `${fmtKg(jet.kg)}`, text: `An empty Boeing 747 weighs more than a blue whale (about ${fmtKg(whale.kg)}), even though the whale is the heaviest animal ever.` }
+      ];
+      document.getElementById('facts').innerHTML = facts.map(f =>
+        `<div class="fcard">${f.svg}<div class="num">${esc(f.num)}</div><p>${esc(f.text)}</p></div>`).join('');
+    })();
+  </script>
+</body>
+</html>

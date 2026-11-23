@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Size it up Number Guess: Free Daily Number Guessing Game</title>
+  <meta name="description" content="How many bones are in your body? How far away is the Moon? Guess the number, see how close you got and learn a fact. Five questions a day.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/number-guess/">
+  <meta property="og:url" content="https://sizeit.games/number-guess/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Number Guess: Free Daily Number Guessing Game">
+  <meta property="og:description" content="How many bones are in your body? How far away is the Moon? Guess the number, see how close you got and learn a fact. Five questions a day.">
+  <meta property="og:image" content="https://sizeit.games/og/number.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Number Guess: Free Daily Number Guessing Game">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Number Guess – daily estimation game","applicationCategory":"GameApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A free daily game where you guess real-world numbers, from bones in the body to the distance to the Moon, and score points for getting close."}
+  </script>
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge n"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="5" width="26" height="22" rx="4" class="l-ref"/><text x="16" y="22" text-anchor="middle" font-size="14" font-weight="800" class="l-text">42</text></svg></span>
+        <div>
+          <h1>Size it up Number Guess</h1>
+          <div class="sub" id="sub">One question, one number. How close can you get?</div>
+        </div>
+      </div>
+      <nav class="modes" aria-label="Modes">
+        <button class="mode" data-mode="daily">Daily</button>
+        <button class="mode" data-mode="unlimited">Unlimited</button>
+      </nav>
+    </div>
+    <div class="banner" id="banner" hidden></div>
+
+    <section class="game" id="game">
+      <div class="meta">
+        <div class="pips" id="pips"></div>
+        <span id="catWrap" hidden><select id="catSelect" class="cat-select" aria-label="Category"></select></span>
+        <span class="scorebox"><b id="scoreInfo">0</b> / 1000</span>
+      </div>
+      <p class="prompt" id="prompt"></p>
+
+      <div class="ng-board">
+        <div class="ng-guess">
+          <span class="ng-label">Your guess</span>
+          <div class="ng-big"><span id="bigNum">0</span> <span class="ng-unit" id="bigUnit"></span></div>
+          <div class="ng-words" id="bigWords"></div>
+        </div>
+        <svg id="line" class="ng-line" viewBox="0 0 600 96" role="img" aria-label="Number line"></svg>
+      </div>
+
+      <div id="controls">
+        <div class="controls">
+          <button class="step" id="minusBtn" aria-label="Smaller">−</button>
+          <input type="range" id="slider" min="0" max="1000" step="1" aria-label="Guess">
+          <button class="step" id="plusBtn" aria-label="Bigger">+</button>
+        </div>
+        <div class="ng-type">
+          <label for="typeInput">Or type it</label>
+          <input type="text" id="typeInput" inputmode="decimal" autocomplete="off" placeholder="e.g. 250, 1.5k, 3 million">
+          <button class="primary" id="lockBtn">Lock in</button>
+        </div>
+        <p class="hint">Slide, tap − and +, or type a number. Arrow keys nudge it, Enter locks in.</p>
+      </div>
+
+      <div class="reveal" id="reveal" hidden>
+        <div class="pts" id="revealPts"></div>
+        <div>
+          <div class="nums" id="revealNums"></div>
+          <div class="meter"><i id="revealMeter"></i></div>
+          <p class="fact" id="revealFact"></p>
+        </div>
+        <button class="primary" id="nextBtn"></button>
+      </div>
+    </section>
+
+    <section class="result" id="result" hidden>
+      <div class="kicker" id="resKicker">Your score</div>
+      <div class="rank" id="resRank"></div>
+      <div class="total"><b id="resTotal">0</b><span>/1000</span></div>
+      <div class="blocks" id="resBlocks"></div>
+      <div class="vs" id="resVs" hidden></div>
+      <ol class="rows ng-rows" id="resRows"></ol>
+      <div class="actions">
+        <button class="primary" id="shareBtn">Share result</button>
+      </div>
+      <div class="challenge-box">
+        <input type="text" id="nameInput" maxlength="20" autocomplete="nickname" placeholder="Your name (optional)">
+        <button class="secondary" id="challengeBtn">Challenge a friend</button>
+      </div>
+      <div class="actions">
+        <button class="secondary" id="againBtn"></button>
+      </div>
+      <p class="countdown" id="countdown"></p>
+    </section>
+
+    <article class="seo guide">
+      <section>
+        <h2>A daily number guessing game</h2>
+        <p>How many bones are in your body? How far away is the Moon? How many seconds are there in a day? You've probably heard most of these numbers before, and almost nobody remembers them. Number Guess is a free daily estimation game that asks five of these questions every day and rewards you for getting close, not for being exactly right.</p>
+        <p>It's a gentle workout for the part of your brain that deals with big numbers, small numbers and everything in between. Some answers you'll half-remember from school. Others you'll have to work out on the spot, and a few will genuinely surprise you.</p>
+      </section>
+
+      <section>
+        <h2>How to play</h2>
+        <ol class="howto">
+          <li><b>Read the question.</b> Each one has a single number for an answer, sometimes with a unit such as km, days or metres.</li>
+          <li><b>Make your guess.</b> Drag the slider, tap − and +, use the arrow keys, or just type it. Typing understands shortcuts like <i>1.5k</i>, <i>3 million</i> or <i>2e9</i>.</li>
+          <li><b>Lock it in.</b> The number line shows your guess in orange and the real answer in green, along with a short fact.</li>
+          <li><b>Five questions, 1000 points.</b> Each question is worth up to 200. Share your score with coloured squares, or send a friend a link to the same five questions.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>How scoring works</h2>
+        <p>What counts is how many times too high or too low you were, not the raw difference. Guessing 300,000 km for the Moon's distance is a near miss, while being 300 off on the number of bones in your body is a disaster. Because the score uses ratios, small and huge answers are judged the same way.</p>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>How far off you were</th><th>Points</th></tr></thead>
+            <tbody>
+              <tr><td>Within 5%</td><td>200</td></tr>
+              <tr><td>10% off</td><td>188</td></tr>
+              <tr><td>25% off</td><td>158</td></tr>
+              <tr><td>1.5 times too high or too low</td><td>119</td></tr>
+              <tr><td>Double or half</td><td>69</td></tr>
+              <tr><td>Three times off</td><td>21</td></tr>
+              <tr><td>Five times off or more</td><td>0</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <h2>Tips for better guesses</h2>
+        <ul class="tips">
+          <li><b>Get the number of digits right first.</b> Is it in the hundreds, thousands or millions? That decision is worth far more points than the exact figure.</li>
+          <li><b>Work it out when you can.</b> Seconds in a day is just 24 × 60 × 60. A surprising number of questions give in to a bit of quick multiplication.</li>
+          <li><b>Use what you know.</b> If you remember that light from the Sun takes about eight minutes, you're already close to the answer in seconds.</li>
+          <li><b>Don't over-correct.</b> When a number feels too big, it's often right. Big things in space and time are bigger than our gut expects.</li>
+        </ul>
+      </section>
+
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>Is Number Guess free?</summary><p>Yes. Daily, Unlimited and challenges are all free, with no sign-up and nothing to download.</p></details>
+        <details><summary>When is there a new daily?</summary><p>Every day at midnight, your local time. Everyone gets the same five questions on the same date.</p></details>
+        <details><summary>What are the categories in Unlimited?</summary><p>Human body, animals and nature, space, Earth and the world, India, sports and games, and everyday maths. Pick one, or play them all mixed together.</p></details>
+        <details><summary>Where do the answers come from?</summary><p>Every answer comes from a well-established public source, such as official surveys, scientific references and the rules of each sport. We stick to facts that don't change from month to month.</p></details>
+        <details><summary>Are there other games like this?</summary><p>On this site you can also play <a href="../size-it-up/">How Big?</a>, where you resize objects to their real size, and <a href="../which-is-heavier/">Heavier or Lighter</a>, where you guess which thing weighs more.</p></details>
+      </section>
+              <!-- more-games:start -->
+      <section class="more-games">
+        <h2>More free games</h2>
+        <ul>
+          <li><a href="../size-it-up/"><b>How Big?</b><span>Resize an object to its real size next to another.</span></a></li>
+          <li><a href="../which-is-heavier/"><b>Heavier or Lighter</b><span>Guess which of two things weighs more.</span></a></li>
+          <li><a href="../sort-it/"><b>Sort It</b><span>Put five things in order by size and by weight.</span></a></li>
+          <li><a href="../ballpark/"><b>Ballpark</b><span>Pick the range a real-world number falls in.</span></a></li>
+          <li><a href="../speed-race/"><b>Speed Race</b><span>Pick the faster racer, then watch them race.</span></a></li>
+          <li><a href="../how-many-fit/"><b>How Many Fit?</b><span>Guess how many of one thing fit along another.</span></a></li>
+          <li><a href="../how-far/"><b>How Far?</b><span>Guess the straight-line distance between two cities.</span></a></li>
+          <li><a href="../survival/"><b>Survival</b><span>Mixed questions against the clock, with three lives.</span></a></li>
+        </ul>
+      </section>
+      <!-- more-games:end -->
+    </article>
+  </main>
+
+  <dialog id="helpDlg">
+    <h2>How to play</h2>
+    <ol class="help">
+      <li>Each round asks a question with a number for an answer.</li>
+      <li>Set your guess with the slider, the − and + buttons, the arrow keys, or by typing (1.5k, 3 million and 2e9 all work).</li>
+      <li>Press <b>Lock in</b>. The <b class="c-true">green</b> marker shows the real answer.</li>
+      <li>Within 5% earns the full 200 points. Five rounds, 1000 points.</li>
+      <li>A new Daily unlocks at midnight. Unlimited never runs out, and you can pick a category.</li>
+    </ol>
+    <form method="dialog"><button class="primary">Close</button></form>
+  </dialog>
+
+  <dialog id="statsDlg">
+    <h2>Statistics</h2>
+    <div class="stats" id="statsGrid"></div>
+    <form method="dialog"><button class="primary">Close</button></form>
+  </dialog>
+
+  <script src="../assets/common.js"></script>
+  <script src="../data/numbers.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

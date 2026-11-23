@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en" data-root="../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Size it up Ballpark: Guess the Range, Not the Number | Daily Game</title>
+  <meta name="description" content="Tens, thousands or billions? Pick the right range for real-world numbers. Ten a day, or race the clock in a 60-second Rush. Free, no sign-up.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/ballpark/">
+  <meta property="og:url" content="https://sizeit.games/ballpark/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Ballpark: Guess the Range, Not the Number | Daily Game">
+  <meta property="og:description" content="Tens, thousands or billions? Pick the right range for real-world numbers. Ten a day, or race the clock in a 60-second Rush. Free, no sign-up.">
+  <meta property="og:image" content="https://sizeit.games/og/ballpark.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Ballpark: Guess the Range, Not the Number | Daily Game">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Ballpark – order-of-magnitude estimation game","applicationCategory":"GameApplication","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A free daily estimation game: instead of guessing an exact number, pick the range it falls in, from single digits to the billions and beyond."}
+  </script>
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge b"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="10" width="7" height="12" rx="2" class="l-ref"/><rect x="12.5" y="10" width="7" height="12" rx="2" class="l-guess"/><rect x="23" y="10" width="7" height="12" rx="2" class="l-ref"/></svg></span>
+        <div>
+          <h1>Size it up Ballpark</h1>
+          <div class="sub" id="sub"></div>
+        </div>
+      </div>
+      <nav class="modes" aria-label="Modes">
+        <button class="mode" data-mode="daily">Daily</button>
+        <button class="mode" data-mode="rush">60s Rush</button>
+      </nav>
+    </div>
+
+    <section class="game" id="game">
+      <div class="meta">
+        <span class="round-label" id="progress" style="margin:0"></span>
+        <span class="scorebox" id="scoreLine"></span>
+      </div>
+      <div class="bp-timer" id="timerWrap" hidden><i id="timerBar"></i></div>
+      <p class="prompt" id="prompt"></p>
+
+      <div class="bp-choices" id="choices"></div>
+      <p class="hint" id="hint">Pick the range the answer falls in. Keys 1 to 5 work too.</p>
+
+      <div class="reveal" id="reveal" hidden>
+        <div class="pts" id="revealPts"></div>
+        <div>
+          <div class="nums" id="revealNums"></div>
+          <p class="fact" id="revealFact"></p>
+        </div>
+        <button class="primary" id="nextBtn"></button>
+      </div>
+      <div class="dots" id="dots"></div>
+
+      <div class="bp-start" id="rushStart" hidden>
+        <p><b>60 seconds.</b> A point for every range you get exactly right. A wrong answer costs you 3 seconds.</p>
+        <button class="primary big" id="goBtn">Start the clock</button>
+      </div>
+    </section>
+
+    <section class="result" id="result" hidden>
+      <div class="kicker" id="resKicker">Your score</div>
+      <div class="rank" id="resRank"></div>
+      <div class="total"><b id="resTotal">0</b><span id="resOf">/30</span></div>
+      <div class="blocks" id="resBlocks"></div>
+      <p class="countdown" id="resNote"></p>
+      <div class="actions">
+        <button class="primary" id="shareBtn">Share result</button>
+        <button class="secondary" id="againBtn"></button>
+      </div>
+      <p class="countdown" id="countdown"></p>
+    </section>
+
+    <article class="seo guide">
+      <section>
+        <h2>Close enough is the whole point</h2>
+        <p>Nobody remembers that the Earth is 12,742 km across, or that a blue whale weighs about 150 tonnes. But plenty of people could tell you the Earth is "thousands of kilometres" across and a whale weighs "a hundred-odd tonnes". That sense of the right ballpark is what Ballpark tests.</p>
+        <p>Every question has a real number for an answer, but you never type it. You just pick the range it falls in: single digits, tens, hundreds, thousands, and all the way up to the billions and beyond. It's quick, it's forgiving, and it's surprisingly hard to get ten in a row.</p>
+      </section>
+
+      <section>
+        <h2>How to play</h2>
+        <ol class="howto">
+          <li><b>Read the question.</b> It might be about space, the human body, animals, landmarks, sport or everyday maths, and it always says which unit to think in.</li>
+          <li><b>Pick a range.</b> Five buttons show neighbouring ranges, each ten times bigger than the last, such as 10–99, 100–999 and 1,000–9,999. Tap one, or press 1 to 5.</li>
+          <li><b>See the real number.</b> The right range lights up green, along with the exact answer and a short fact.</li>
+          <li><b>Score.</b> The exact range earns 3 points and the range next to it earns 1. Ten questions a day, 30 points in total.</li>
+        </ol>
+      </section>
+
+      <section>
+        <h2>Daily or Rush</h2>
+        <div class="modes-grid">
+          <div class="mode-card"><h3>Daily</h3><p>Ten questions, the same for everyone, with a new set at midnight. Take your time, then share your score as a row of coloured squares.</p></div>
+          <div class="mode-card"><h3>60-second Rush</h3><p>As many as you can in a minute. Every exact range scores a point, and every miss takes three seconds off the clock. Your best score is saved.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>The ranges, with an example for each</h2>
+        <p>Each range is ten times bigger than the one before. These examples come from the same facts as the game.</p>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>Range</th><th>Example</th></tr></thead>
+            <tbody>
+              <tr><td>1–9</td><td>A giraffe's height in metres (5.5)</td></tr>
+              <tr><td>10–99</td><td>A city bus's length in metres (12)</td></tr>
+              <tr><td>100–999</td><td>The Eiffel Tower's height in metres (330)</td></tr>
+              <tr><td>1,000–9,999</td><td>An elephant's weight in kilograms (about 4,000)</td></tr>
+              <tr><td>10k–99k</td><td>The Earth's width in kilometres (12,742), or the seconds in a day (86,400)</td></tr>
+              <tr><td>100k–999k</td><td>A blue whale's weight in kilograms (about 150,000)</td></tr>
+              <tr><td>1M–9.9M</td><td>The Sun's width in kilometres (about 1.39 million)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section>
+        <h2>How scoring works</h2>
+        <div class="table-wrap">
+          <table class="score-table">
+            <thead><tr><th>Your pick</th><th>Daily points</th><th>Rush</th></tr></thead>
+            <tbody>
+              <tr><td>The exact range</td><td>3</td><td>1 point</td></tr>
+              <tr><td>One range too high or too low</td><td>1</td><td>3 seconds off the clock</td></tr>
+              <tr><td>Two or more ranges off</td><td>0</td><td>3 seconds off the clock</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Ten Daily questions make 30 points. 17 makes you a Good Guesser, 23 a Sharp Eye and 27 a Scale Master.</p>
+      </section>
+      <section>
+        <h2>Tips</h2>
+        <ul class="tips">
+          <li><b>Count the zeros.</b> Every range is one more digit than the one before it. "Is it a three-digit number or a four-digit number?" is the only question you need to answer.</li>
+          <li><b>Mind the unit.</b> A distance in kilometres and the same distance in metres are three ranges apart. Read the unit before you tap.</li>
+          <li><b>Do a little maths.</b> Seconds in a day? 24 × 60 × 60 is "about a hundred thousand" before you've even finished multiplying.</li>
+          <li><b>When torn, go bigger.</b> People almost always underestimate huge numbers: distances in space, the age of the Earth, the weight of buildings.</li>
+        </ul>
+      </section>
+
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>Is Ballpark free?</summary><p>Yes. The Daily and the Rush are both free, with no account and nothing to download.</p></details>
+        <details><summary>What does "10k–99k" mean?</summary><p>Ten thousand up to just under a hundred thousand. Above that, M means million, B means billion and T means trillion. Ranges beyond that are written as powers of ten.</p></details>
+        <details><summary>Where do the questions come from?</summary><p>From the same well-sourced facts used in <a href="../number-guess/">Number Guess</a>, plus the sizes and weights from the object library behind <a href="../size-it-up/">How Big?</a> and <a href="../which-is-heavier/">Heavier or Lighter</a>.</p></details>
+        <details><summary>When is the next Daily?</summary><p>At midnight your local time. Everyone gets the same ten questions that day.</p></details>
+        <details><summary>Can I challenge a friend?</summary><p>Yes. Share any result and the link becomes a challenge. A Rush link even gives your friend the same questions in the same order. For your whole group, start a <a href="../league/">Friends League</a>.</p></details>
+        <details><summary>Can I play past Dailies?</summary><p>Yes. Every past Ballpark Daily is in the <a href="../archive/">archive</a>.</p></details>
+      </section>
+              <!-- more-games:start -->
+      <section class="more-games">
+        <h2>More free games</h2>
+        <ul>
+          <li><a href="../size-it-up/"><b>How Big?</b><span>Resize an object to its real size next to another.</span></a></li>
+          <li><a href="../which-is-heavier/"><b>Heavier or Lighter</b><span>Guess which of two things weighs more.</span></a></li>
+          <li><a href="../sort-it/"><b>Sort It</b><span>Put five things in order by size and by weight.</span></a></li>
+          <li><a href="../speed-race/"><b>Speed Race</b><span>Pick the faster racer, then watch them race.</span></a></li>
+          <li><a href="../number-guess/"><b>Number Guess</b><span>Guess a real-world number as closely as you can.</span></a></li>
+          <li><a href="../how-many-fit/"><b>How Many Fit?</b><span>Guess how many of one thing fit along another.</span></a></li>
+          <li><a href="../how-far/"><b>How Far?</b><span>Guess the straight-line distance between two cities.</span></a></li>
+          <li><a href="../survival/"><b>Survival</b><span>Mixed questions against the clock, with three lives.</span></a></li>
+        </ul>
+      </section>
+      <!-- more-games:end -->
+    </article>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="../data/objects.js"></script>
+  <script src="../data/numbers.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

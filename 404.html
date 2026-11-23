@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en" data-root="/">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Page not found | sizeit.games</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="This page doesn't exist. Head back to the free daily size, weight, speed and distance games on sizeit.games.">
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <main class="wrap narrow">
+    <section class="result" style="margin-top:32px">
+      <div class="kicker">Error 404</div>
+      <h1 class="rank">This page is off the scale</h1>
+      <p class="countdown">The page you were looking for doesn't exist or has moved. Try one of the games instead.</p>
+      <div class="actions" id="links"></div>
+    </section>
+  </main>
+  <script src="/assets/common.js"></script>
+  <script>
+    SG.header('');
+    document.getElementById('links').innerHTML = SG.SITE.games.filter(g => g.status === 'live')
+      .map((g, i) => `<a class="${i ? 'secondary' : 'primary'}" href="/${g.path}">${SG.esc(g.name)}</a>`).join('');
+  </script>
+</body>
+</html>
