@@ -60,3 +60,6 @@ export async function onRequestGet(ctx) {
     return Response.redirect(new URL(`/og/${own}.png`, ctx.request.url).href, 302);
   }
 }
+
+// Link checkers and some crawlers ask with HEAD first: answer it the same way as GET
+export const onRequestHead = onRequestGet;
