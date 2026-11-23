@@ -83,6 +83,13 @@ Add an entry to `data/objects.js`:
 
 Keep a reliable source for every number you add.
 
+## Where it is hosted now
+
+- Live at **https://sizeit.games**, a Cloudflare Pages project named `sizeit`, connected to GitHub `mani-django09/sizeit-game` (branch `main`). Every `git push` to `main` redeploys.
+- Pages build settings: framework None, build command `python3 tools/build.py`, output directory `dist`, root directory empty. Cloudflare builds `functions/` itself and installs `package.json`.
+- The domain's DNS is on Cloudflare (registered at Hostinger, nameservers pointed to Cloudflare).
+- Before the first push of a change, run `python tools/build.py` and the checks you care about locally. The build also needs no network.
+
 ## Going live on Cloudflare Pages
 
 1. Set `SITE.contact` in `assets/common.js` to a public email address. It is shown in the footer and on the Privacy page.
@@ -100,7 +107,7 @@ Keep a reliable source for every number you add.
 
 4. Deploy, either way:
    - **From GitHub (recommended):** push the project, then in Cloudflare go to Workers & Pages → Create → Pages → Connect to Git. Use build command `python3 tools/build.py` and output directory `dist`. Every push then redeploys.
-   - **Direct upload:** `npx wrangler pages deploy dist --project-name scale-games`
+   - **Direct upload:** `npx wrangler pages deploy dist --project-name sizeit`
 5. In the Pages project, go to Custom domains and add your domain.
 
 `_redirects` sends `/how-big/` and `/heavier/` to their new URLs with real 301s. `_headers` adds security headers and caching. `404.html` is used automatically for missing pages.
