@@ -83,6 +83,10 @@
     mode: 'daily', seed: '', cat: store.get('sg_howbig_cat', 'all'), date: '', pairs: [], i: 0, lr: 0,
     scores: [], guesses: [], phase: 'guess', scale: null, challenge: null, dirty: true
   };
+  // A category's own game page (<html data-cat="pop">) plays only that category:
+  // its Daily is the category Daily and Unlimited stays in the category.
+  const FIXED = CATEGORIES.some(c => c.id !== 'all' && c.id === document.documentElement.dataset.cat) ? document.documentElement.dataset.cat : '';
+  if (FIXED) S.cat = FIXED;
   el.catSelect.value = S.cat;
   const pair = () => S.pairs[S.i];
   const guessSize = () => pair().ref.size * Math.exp(S.lr);
@@ -92,6 +96,7 @@
 
   // ---------- Flow ----------
   function start(mode, opts = {}) {
+    if (FIXED && mode === 'daily') { mode = 'catdaily'; opts = { ...opts, cat: FIXED }; }
     S.mode = mode;
     S.challenge = opts.challenge || null;
     S.date = mode === 'daily' && SG.archiveDate ? SG.archiveDate : todayKey();
@@ -265,11 +270,12 @@
   setInterval(tick, 1000);
 
   function updateChrome() {
-    document.querySelectorAll('.mode').forEach(b => b.classList.toggle('active', b.dataset.mode === S.mode));
+    const shownMode = FIXED && S.mode === 'catdaily' ? 'daily' : S.mode;
+    document.querySelectorAll('.mode').forEach(b => b.classList.toggle('active', b.dataset.mode === shownMode));
     const st = streakInfo(loadDaily('daily'));
     streakEl.textContent = st.cur ? `🔥 ${st.cur}` : '';
     streakEl.title = 'Daily streak';
-    el.catWrap.hidden = S.mode !== 'unlimited';
+    el.catWrap.hidden = S.mode !== 'unlimited' || !!FIXED;
     el.sub.innerHTML = S.mode === 'catdaily' ? `<b>${esc(catName(S.dcat))} Daily</b> #${dayNumber(S.date)} · 5 rounds · same for everyone · <a href="../categories/">all categories</a>`
       : S.mode === 'daily' ? `Daily #${dayNumber(S.date)} · 5 rounds · same for everyone · <a href="../categories/">play by category</a>`
       : S.mode === 'challenge' ? 'Challenge · the same five pairs your friend played'
@@ -414,7 +420,7 @@
   el.againBtn.addEventListener('click', () => {
     if (S.mode === 'challenge') { history.replaceState(null, '', location.pathname); start('daily'); }
     else {
-      if (S.mode === 'catdaily') { S.cat = S.dcat; el.catSelect.value = S.cat; store.set('sg_howbig_cat', S.cat); history.replaceState(null, '', location.pathname); }
+      if (S.mode === 'catdaily' && !FIXED) { S.cat = S.dcat; el.catSelect.value = S.cat; store.set('sg_howbig_cat', S.cat); history.replaceState(null, '', location.pathname); }
       start('unlimited');
     }
   });

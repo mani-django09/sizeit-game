@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en" data-root="../" data-cat="pop">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pop Culture Size Game: Pokémon, Star Wars &amp; Gundam | sizeit.games</title>
+  <meta name="description" content="How tall is Pikachu next to Yoda, or Godzilla next to a Gundam? Play the free daily pop culture size game with characters at their stated size.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/pop-culture/">
+  <meta property="og:url" content="https://sizeit.games/pop-culture/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Pop Culture Size Comparison Game: a Daily every day">
+  <meta property="og:description" content="How tall is Pikachu next to Yoda, or Godzilla next to a Gundam? Play the free daily pop culture size game with characters at their stated size.">
+  <meta property="og:image" content="https://sizeit.games/og/size-it-up.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Pop Culture Size Comparison Game">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../manifest.webmanifest">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge">⚡</span>
+        <div>
+          <h1>Pop Culture Size Comparison Game</h1>
+          <div class="sub" id="sub">9 objects at true scale · a new Daily every midnight</div>
+        </div>
+      </div>
+      <nav class="modes" aria-label="Modes">
+        <button class="mode" data-mode="daily">Daily</button>
+        <button class="mode" data-mode="unlimited">Unlimited</button>
+      </nav>
+    </div>
+    <div class="banner" id="banner" hidden></div>
+
+    <section class="game" id="game">
+      <div class="meta">
+        <div class="pips" id="pips"></div>
+        <span id="catWrap" hidden><select id="catSelect" class="cat-select" aria-label="Category"></select></span>
+        <span class="scorebox"><b id="scoreInfo">0</b> / 1000</span>
+      </div>
+      <p class="prompt" id="prompt"></p>
+
+      <div class="board-wrap">
+        <span class="drag-hint" id="dragHint">↔ drag to resize</span>
+        <svg id="board" role="img" aria-label="Game board">
+          <defs>
+            <pattern id="hatch" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="10" class="hatch-line"/>
+            </pattern>
+          </defs>
+          <rect id="earth" class="earth"/>
+          <line id="ground" class="ground"/>
+          <g id="refG" class="obj ref"></g>
+          <g id="guessG" class="obj guess"></g>
+          <g id="trueG" class="obj outline"></g>
+          <g id="refM" class="measure ref"></g>
+          <g id="guessM" class="measure guess"></g>
+          <g id="trueM" class="measure true"></g>
+          <text id="refName" class="oname"></text>
+          <text id="tgtName" class="oname"></text>
+        </svg>
+      </div>
+
+      <div class="controls" id="controls">
+        <button class="step" id="minusBtn" aria-label="Smaller">−</button>
+        <input type="range" id="slider" aria-label="Size">
+        <button class="step" id="plusBtn" aria-label="Bigger">+</button>
+        <button class="primary" id="lockBtn">Lock in</button>
+      </div>
+      <p class="hint" id="hint">Drag on the board, use the slider, or press the arrow keys. Enter locks in.</p>
+
+      <div class="reveal" id="reveal" hidden>
+        <div class="pts" id="revealPts"></div>
+        <div>
+          <div class="nums" id="revealNums"></div>
+          <div class="meter"><i id="revealMeter"></i></div>
+          <p class="fact" id="revealFact"></p>
+        </div>
+        <button class="primary" id="nextBtn"></button>
+      </div>
+    </section>
+
+    <section class="result" id="result" hidden>
+      <div class="kicker" id="resKicker">Your score</div>
+      <div class="rank" id="resRank"></div>
+      <div class="total"><b id="resTotal">0</b><span>/1000</span></div>
+      <div class="blocks" id="resBlocks"></div>
+      <div class="vs" id="resVs" hidden></div>
+      <ol class="rows" id="resRows"></ol>
+      <div class="actions">
+        <button class="primary" id="shareBtn">Share result</button>
+      </div>
+      <div class="challenge-box">
+        <input type="text" id="nameInput" maxlength="20" autocomplete="nickname" placeholder="Your name (optional)">
+        <button class="secondary" id="challengeBtn">Challenge a friend</button>
+      </div>
+      <div class="actions">
+        <button class="secondary" id="againBtn"></button>
+      </div>
+      <p class="countdown" id="countdown"></p>
+    </section>
+
+    <article class="seo guide">
+      <section>
+        <h2>How to play the pop culture size game</h2>
+        <p>Characters, creatures and machines from games, films and anime, drawn at the size their official sources state. Fictional sizes are a fun test: Pikachu is smaller than most people guess, and Ultraman is as tall as a 13-storey building.</p>
+        <p>These sizes are the ones stated by the creators or the official guides, not measurements. The drawings are our own simple silhouettes, and the characters belong to their respective owners.</p>
+        <p>It plays like <a href="../size-it-up/">Size It Up</a>, with every round from this category. You can also browse <a href="../categories/">every category</a>.</p>
+      </section>
+      <section>
+        <h2>Every object in this category</h2>
+        <ul class="obj-list">
+          <li><b>Pikachu</b> <span>40 cm tall</span></li>
+          <li><b>Yoda</b> <span>66 cm tall</span></li>
+          <li><b>Darth Vader</b> <span>2.03 m tall</span></li>
+          <li><b>Snorlax</b> <span>2.1 m tall</span></li>
+          <li><b>Chewbacca</b> <span>2.28 m tall</span></li>
+          <li><b>RX-78-2 Gundam</b> <span>18 m tall</span></li>
+          <li><b>Millennium Falcon</b> <span>34.75 m long</span></li>
+          <li><b>Ultraman</b> <span>40 m tall</span></li>
+          <li><b>Godzilla (1954)</b> <span>50 m tall</span></li>
+        </ul>
+      </section>
+      <section>
+        <h2>A few things worth knowing</h2>
+        <ul>
+          <li>Pikachu is officially 0.4 m (1 ft 4 in) tall, about the height of a house cat sitting up.</li>
+          <li>Yoda stands about 66 cm (2 ft 2 in) tall, shorter than a bar stool.</li>
+          <li>Darth Vader is 2.03 m (6 ft 7 in) tall, a head taller than most adults.</li>
+        </ul>
+      </section>
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>How does the pop culture Daily work?</summary><p>You get five pairs from this category, the same for everyone that day. The grey object is drawn at its real size and you resize the orange one until the pair looks right. A green outline shows the truth, and each round is worth up to 200 points. A new set arrives at midnight, your time.</p></details>
+        <details><summary>Where do the sizes come from?</summary><p>From public references such as official pages and standard encyclopaedia figures. Every answer in the game links to its source after you lock in your guess.</p></details>
+        <details><summary>Can I practise before the Daily?</summary><p>Yes. Unlimited gives you fresh pop culture pairs as many times as you like, with no score pressure.</p></details>
+      </section>
+      <section>
+        <h2>More categories</h2>
+        <ul class="obj-list">
+          <li><a href="../categories/animals/">🐘 Animals</a></li>
+          <li><a href="../categories/dinosaurs/">🦖 Dinosaurs</a></li>
+          <li><a href="../categories/space/">🪐 Space</a></li>
+          <li><a href="../categories/landmarks/">🗼 Landmarks</a></li>
+          <li><a href="../categories/vehicles/">🚌 Vehicles</a></li>
+          <li><a href="../categories/everyday-objects/">📱 Everyday Objects</a></li>
+          <li><a href="../categories/food/">🥭 Food</a></li>
+          <li><a href="../categories/insects/">🐞 Bugs &amp; tiny things</a></li>
+          <li><a href="../categories/geography/">🏔️ Geography</a></li>
+          <li><a href="../categories/sports/">🏏 Sports</a></li>
+          <li><a href="../categories/famous/">🖼️ Famous</a></li>
+          <li><a href="../categories/india/">🇮🇳 India</a></li>
+          <li><a href="../categories/usa/">🇺🇸 USA</a></li>
+          <li><a href="../categories/">All categories</a></li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <dialog id="helpDlg">
+    <h2>How to play</h2>
+    <ol class="help">
+      <li>Each round shows two objects. The <b class="c-ref">grey</b> one is drawn at its real size.</li>
+      <li>Resize the <b class="c-guess">orange</b> one until it looks right next to it. Drag on the board, use the slider, or press the arrow keys.</li>
+      <li>Press <b>Lock in</b>. The <b class="c-true">green outline</b> shows the real size.</li>
+      <li>Within 5% earns the full 200 points. Five rounds, 1000 points.</li>
+      <li>A new Daily unlocks at midnight. Unlimited never runs out, and you can pick a category.</li>
+    </ol>
+    <form method="dialog"><button class="primary">Close</button></form>
+  </dialog>
+
+  <dialog id="statsDlg">
+    <h2>Statistics</h2>
+    <div class="stats" id="statsGrid"></div>
+    <form method="dialog"><button class="primary">Close</button></form>
+  </dialog>
+
+  <script src="../assets/common.js"></script>
+  <script src="../data/objects.js"></script>
+  <script src="../size-it-up/game.js"></script>
+</body>
+</html>

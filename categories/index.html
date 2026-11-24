@@ -88,7 +88,7 @@
         india: { emoji: '🇮🇳', art: ['auto', 'hawamahal', 'gateway', 'charminar'], blurb: 'Autos, rotis, the Taj Mahal, Charminar, cricket and Indian wildlife.' },
         usa: { emoji: '🇺🇸', art: ['schoolbus', 'rushmore', 'liberty', 'sherman'], blurb: 'School buses, Mount Rushmore, the Golden Gate Bridge and the Empire State.' }
       };
-      const PAGE_SLUGS = { animals: 'animals', dinos: 'dinosaurs', space: 'space', landmarks: 'landmarks', vehicles: 'vehicles', pop: 'pop-culture', everyday: 'everyday-objects', food: 'food', tiny: 'insects', geo: 'geography', sports: 'sports', famous: 'famous', india: 'india', usa: 'usa' };
+      const PAGE_SLUGS = { animals: 'animals', dinos: 'dinosaurs', space: 'space', landmarks: 'landmarks', vehicles: 'vehicles', pop: '../pop-culture', everyday: 'everyday-objects', food: 'food', tiny: 'insects', geo: 'geography', sports: 'sports', famous: 'famous', india: 'india', usa: 'usa' };
       const order = ['all', 'animals', 'dinos', 'space', 'geo', 'landmarks', 'vehicles', 'everyday', 'food', 'tiny', 'sports', 'famous', 'pop', 'india', 'usa'];
       const live = order.filter(id => CATEGORIES.some(c => c.id === id));
       const today = todayKey();
@@ -102,8 +102,9 @@
         const done = rec && rec.done;
         const objs = info.art.map(O).filter(Boolean);
         const art = objs.length ? lineup(objs.map((o, i) => ({ o, cls: i === objs.length - 1 ? 'ob' : 'oa' })), { w: 480, h: 180, pad: 18, gap: 18 }) : '';
-        const daily = id === 'all' ? '../size-it-up/' : `../size-it-up/?daily=${id}`;
-        const unl = id === 'all' ? '../size-it-up/?mode=unlimited&cat=all' : `../size-it-up/?mode=unlimited&cat=${id}`;
+        const GAME_PAGES = { pop: '../pop-culture/' };   // categories with their own game page
+        const daily = GAME_PAGES[id] || (id === 'all' ? '../size-it-up/' : `../size-it-up/?daily=${id}`);
+        const unl = GAME_PAGES[id] ? GAME_PAGES[id] + '?mode=unlimited' : id === 'all' ? '../size-it-up/?mode=unlimited&cat=all' : `../size-it-up/?mode=unlimited&cat=${id}`;
         const count = OBJECTS.filter(o => inCategory(o, id)).length;
         return `<div class="gcard cat-card">
           <div class="art">${art}</div>

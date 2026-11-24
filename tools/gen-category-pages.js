@@ -46,7 +46,7 @@ const PAGES = [
     art: ['scooter', 'auto', 'car', 'pickup'],
     intro: ['From a scooter to an ocean liner, vehicles are measured end to end. This category pairs everyday vehicles you see on the road with jets and ships you only see from far away, and asks you to resize one until it matches the other.',
       'Lengths are standard figures for a typical model, with a public source linked after each answer.'] },
-  { id: 'pop', slug: 'pop-culture', emoji: '⚡', h1: 'Pop Culture Size Comparison Game',
+  { id: 'pop', slug: 'pop-culture', game: 'pop-culture', emoji: '⚡', h1: 'Pop Culture Size Comparison Game',
     title: 'Pop Culture Size Game: Pokémon, Star Wars & Gundam | sizeit.games',
     desc: 'How tall is Pikachu next to Yoda, or Godzilla next to a Gundam? Play the free daily pop culture size game with characters at their stated size.',
     art: ['yoda', 'vader', 'chewie'],
@@ -66,25 +66,35 @@ function fmt(m) {
 const LABEL = { animals: 'Animals', dinos: 'Dinosaurs', space: 'Space', landmarks: 'Landmarks', vehicles: 'Vehicles', pop: 'Pop Culture', everyday: 'Everyday Objects', food: 'Food', tiny: 'Bugs & tiny things', geo: 'Geography', sports: 'Sports', famous: 'Famous', india: 'India', usa: 'USA' };
 const DIM = { h: 'tall', l: 'long', d: 'across' };
 
+// A page with `game: '<folder>'` becomes a playable game page at /<folder>/ (Size It Up locked to that
+// category) instead of a landing page under /categories/. Its old /categories/<slug>/ URL redirects there.
+const TEMPLATE = fs.readFileSync(path.join(ROOT, 'size-it-up', 'index.html'), 'utf8').replace(/\r\n/g, '\n');
+const between = (s, a, b) => { const i = s.indexOf(a), j = s.indexOf(b, i); if (i < 0 || j < 0) throw new Error('template changed: ' + a); return s.slice(i, j); };
+const GAME_MARKUP = between(TEMPLATE, '    <div class="banner" id="banner" hidden></div>', '    <article class="seo guide">');
+const DIALOGS = between(TEMPLATE, '  <dialog id="helpDlg">', '  <script src="../assets/common.js">');
+const target = q => q.game ? q.game + '/' : 'categories/' + q.slug + '/';
+
 for (const p of PAGES) {
+  const isGame = !!p.game;
+  const R = isGame ? '../' : '../../';                  // from this page back to the site root
   const objs = OBJECTS.filter(o => inCategory(o, p.id)).sort((a, b) => a.size - b.size);
   const facts = objs.filter(o => o.fact).slice(0, 3);
-  const url = `${SITE}/categories/${p.slug}/`;
+  const url = `${SITE}/${target(p)}`;
   const others = PAGES.filter(q => q.id !== p.id);
+  const topic = p.h1.replace(' Size Comparison Game', '').toLowerCase();
   const li = objs.map(o => `          <li><b>${esc(o.name)}</b> <span>${esc(fmt(o.size))} ${DIM[o.dim]}</span></li>`).join('\n');
   const factHtml = facts.map(o => `<li>${esc(o.fact)}</li>`).join('\n          ');
   const faq = [
-    [`How does the ${p.h1.replace(' Size Comparison Game', '').toLowerCase()} Daily work?`,
+    [`How does the ${topic} Daily work?`,
       `You get five pairs from this category, the same for everyone that day. The grey object is drawn at its real size and you resize the orange one until the pair looks right. A green outline shows the truth, and each round is worth up to 200 points. A new set arrives at midnight, your time.`],
     [`Where do the sizes come from?`,
       `From public references such as official pages and standard encyclopaedia figures. Every answer in the game links to its source after you lock in your guess.`],
     [`Can I practise before the Daily?`,
-      `Yes. Unlimited gives you fresh ${p.h1.replace(' Size Comparison Game', '').toLowerCase()} pairs as many times as you like, with no score pressure.`]
+      `Yes. Unlimited gives you fresh ${topic} pairs as many times as you like, with no score pressure.`]
   ].map(([q, a]) => `        <details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('\n');
-  const daily = '../../size-it-up/?daily=' + p.id, unl = '../../size-it-up/?mode=unlimited&cat=' + p.id;
 
-  const html = `<!doctype html>
-<html lang="en" data-root="../../">
+  const head = `<!doctype html>
+<html lang="en" data-root="${R}"${isGame ? ` data-cat="${p.id}"` : ''}>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -102,41 +112,21 @@ for (const p of PAGES) {
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="${esc(p.h1)}">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png">
+  <link rel="apple-touch-icon" href="${R}icons/apple-touch-icon.png">
   <!-- seo:end -->
   <meta name="theme-color" content="#ff7a1a">
-  <link rel="icon" href="../../icon.svg" type="image/svg+xml">
-  <link rel="manifest" href="../../manifest.webmanifest">
-  <link rel="preload" href="../../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="../../assets/style.css">
+  <link rel="icon" href="${R}icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="${R}manifest.webmanifest">
+  <link rel="preload" href="${R}fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="${R}assets/style.css">
 </head>
-<body>
-  <main class="wrap">
-    <div class="ghero">
-      <div class="title">
-        <span class="badge">${p.emoji}</span>
-        <div>
-          <h1>${esc(p.h1)}</h1>
-          <div class="sub">${objs.length} objects at true scale · a new Daily every midnight · five rounds</div>
-        </div>
-      </div>
-    </div>
+<body>`;
 
-    <div class="gcard cat-card cat-page-card">
-      <div class="art" id="art"></div>
-      <div class="body">
-        <div class="cat-actions">
-          <a class="primary" href="${daily}">Play Daily</a>
-          <a class="secondary" href="${unl}">Play Unlimited</a>
-        </div>
-      </div>
-    </div>
-
-    <article class="seo guide">
+  const article = `    <article class="seo guide">
       <section>
-        <h2>About this category</h2>
+        <h2>${isGame ? `How to play the ${esc(topic)} size game` : 'About this category'}</h2>
 ${p.intro.map(t => `        <p>${esc(t)}</p>`).join('\n')}
-        <p>New to the game? Read how <a href="../../size-it-up/">Size It Up</a> works, or see <a href="../">every category</a>.</p>
+        <p>${isGame ? `It plays like <a href="${R}size-it-up/">Size It Up</a>, with every round from this category. You can also browse <a href="${R}categories/">every category</a>.` : `New to the game? Read how <a href="${R}size-it-up/">Size It Up</a> works, or see <a href="${R}categories/">every category</a>.`}</p>
       </section>
       <section>
         <h2>Every object in this category</h2>
@@ -157,15 +147,66 @@ ${faq}
       <section>
         <h2>More categories</h2>
         <ul class="obj-list">
-${others.map(q => `          <li><a href="../${q.slug}/">${q.emoji} ${esc(LABEL[q.id])}</a></li>`).join('\n')}
-          <li><a href="../">All categories</a></li>
+${others.map(q => `          <li><a href="${R}${target(q)}">${q.emoji} ${esc(LABEL[q.id])}</a></li>`).join('\n')}
+          <li><a href="${R}categories/">All categories</a></li>
         </ul>
       </section>
-    </article>
+    </article>`;
+
+  let html;
+  if (isGame) {
+    html = `${head}
+  <main class="wrap narrow">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge">${p.emoji}</span>
+        <div>
+          <h1>${esc(p.h1)}</h1>
+          <div class="sub" id="sub">${objs.length} objects at true scale · a new Daily every midnight</div>
+        </div>
+      </div>
+      <nav class="modes" aria-label="Modes">
+        <button class="mode" data-mode="daily">Daily</button>
+        <button class="mode" data-mode="unlimited">Unlimited</button>
+      </nav>
+    </div>
+${GAME_MARKUP}${article}
   </main>
 
-  <script src="../../assets/common.js"></script>
-  <script src="../../data/objects.js"></script>
+${DIALOGS}  <script src="${R}assets/common.js"></script>
+  <script src="${R}data/objects.js"></script>
+  <script src="${R}size-it-up/game.js"></script>
+</body>
+</html>
+`;
+  } else {
+    html = `${head}
+  <main class="wrap">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge">${p.emoji}</span>
+        <div>
+          <h1>${esc(p.h1)}</h1>
+          <div class="sub">${objs.length} objects at true scale · a new Daily every midnight · five rounds</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard cat-card cat-page-card">
+      <div class="art" id="art"></div>
+      <div class="body">
+        <div class="cat-actions">
+          <a class="primary" href="${R}size-it-up/?daily=${p.id}">Play Daily</a>
+          <a class="secondary" href="${R}size-it-up/?mode=unlimited&cat=${p.id}">Play Unlimited</a>
+        </div>
+      </div>
+    </div>
+
+${article}
+  </main>
+
+  <script src="${R}assets/common.js"></script>
+  <script src="${R}data/objects.js"></script>
   <script>
     (() => {
       const { header, lineup } = SG;
@@ -178,8 +219,10 @@ ${others.map(q => `          <li><a href="../${q.slug}/">${q.emoji} ${esc(LABEL[
 </body>
 </html>
 `;
-  const dir = path.join(ROOT, 'categories', p.slug);
+  }
+  const dir = path.join(ROOT, ...target(p).split('/').filter(Boolean));
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'index.html'), html);
-  console.log(p.slug, objs.length, 'objects');
+  if (isGame) fs.rmSync(path.join(ROOT, 'categories', p.slug), { recursive: true, force: true });
+  console.log(target(p), objs.length, 'objects');
 }

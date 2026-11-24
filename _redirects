@@ -5,3 +5,5 @@
 /heavier/*      /which-is-heavier/:splat  301
 /number         /number-guess/        301
 /number/*       /number-guess/:splat  301
+/categories/pop-culture   /pop-culture/   301
+/categories/pop-culture/*   /pop-culture/   301

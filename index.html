@@ -214,7 +214,7 @@
       const CAT_EMOJI = { all: '🎲', animals: '🐘', dinos: '🦖', space: '🪐', landmarks: '🗼', vehicles: '🚌', everyday: '📱', food: '🥭', geo: '🏔️', tiny: '🐞', sports: '🏏', famous: '🖼️', pop: '⚡', india: '🇮🇳', usa: '🇺🇸' };
       document.getElementById('catTiles').innerHTML = CATEGORIES.map(c => {
         const n = OBJECTS.filter(o => inCategory(o, c.id)).length;
-        const href = c.id === 'all' ? 'size-it-up/' : `size-it-up/?daily=${c.id}`;
+        const href = c.id === 'all' ? 'size-it-up/' : c.id === 'pop' ? 'pop-culture/' : `size-it-up/?daily=${c.id}`;
         return `<a class="cat-tile" href="${href}"><span>${CAT_EMOJI[c.id] || '🗂️'}</span><b>${esc(c.id === 'all' ? 'Mixed' : c.name)}</b>${n} objects</a>`;
       }).join('');
 
