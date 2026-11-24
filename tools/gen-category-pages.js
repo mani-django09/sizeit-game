@@ -54,6 +54,7 @@ const PAGES = [
       'These sizes are the ones stated by the creators or the official guides, not measurements. The drawings are our own simple silhouettes, and the characters belong to their respective owners.'] }
 ];
 
+PAGES.push(...require('./category-pages-more.js'));
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const num = (x, d) => Number(x.toFixed(d)).toLocaleString('en-US');
 function fmt(m) {
@@ -62,7 +63,7 @@ function fmt(m) {
   if (m >= 0.01) return num(m * 100, 1) + ' cm';
   return num(m * 1000, 1) + ' mm';
 }
-const LABEL = { animals: 'Animals', dinos: 'Dinosaurs', space: 'Space', landmarks: 'Landmarks', vehicles: 'Vehicles', pop: 'Pop Culture' };
+const LABEL = { animals: 'Animals', dinos: 'Dinosaurs', space: 'Space', landmarks: 'Landmarks', vehicles: 'Vehicles', pop: 'Pop Culture', everyday: 'Everyday Objects', food: 'Food', tiny: 'Bugs & tiny things', geo: 'Geography', sports: 'Sports', famous: 'Famous', india: 'India', usa: 'USA' };
 const DIM = { h: 'tall', l: 'long', d: 'across' };
 
 for (const p of PAGES) {

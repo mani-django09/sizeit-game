@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en" data-root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Insect &amp; Bug Size Comparison Game | sizeit.games</title>
+  <meta name="description" content="Ants, bees, ladybirds and the Atlas moth at true scale. Play the free daily insect size game, from a few millimetres to a full wingspan.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/categories/insects/">
+  <meta property="og:url" content="https://sizeit.games/categories/insects/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Insect Size Comparison Game: a Daily every day">
+  <meta property="og:description" content="Ants, bees, ladybirds and the Atlas moth at true scale. Play the free daily insect size game, from a few millimetres to a full wingspan.">
+  <meta property="og:image" content="https://sizeit.games/og/size-it-up.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Insect Size Comparison Game">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="preload" href="../../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <main class="wrap">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge">🐞</span>
+        <div>
+          <h1>Insect Size Comparison Game</h1>
+          <div class="sub">6 objects at true scale · a new Daily every midnight · five rounds</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard cat-card cat-page-card">
+      <div class="art" id="art"></div>
+      <div class="body">
+        <div class="cat-actions">
+          <a class="primary" href="../../size-it-up/?daily=tiny">Play Daily</a>
+          <a class="secondary" href="../../size-it-up/?mode=unlimited&cat=tiny">Play Unlimited</a>
+        </div>
+      </div>
+    </div>
+
+    <article class="seo guide">
+      <section>
+        <h2>About this category</h2>
+        <p>Insects range from a couple of millimetres to wingspans wider than your hand. Drawing them at true scale is a good reminder of how small an ant is next to a bee, and how big the biggest moths get.</p>
+        <p>Sizes are typical adult measurements, and a source is linked after each answer. Bugs vary, so we use the commonly quoted figure.</p>
+        <p>New to the game? Read how <a href="../../size-it-up/">Size It Up</a> works, or see <a href="../">every category</a>.</p>
+      </section>
+      <section>
+        <h2>Every object in this category</h2>
+        <ul class="obj-list">
+          <li><b>Black garden ant</b> <span>4 mm long</span></li>
+          <li><b>Ladybird (ladybug)</b> <span>7 mm long</span></li>
+          <li><b>Honeybee</b> <span>1.3 cm long</span></li>
+          <li><b>Monarch butterfly (wingspan)</b> <span>9.5 cm long</span></li>
+          <li><b>Goliath beetle</b> <span>11 cm long</span></li>
+          <li><b>Atlas moth (wingspan)</b> <span>24 cm long</span></li>
+        </ul>
+      </section>
+      <section>
+        <h2>A few things worth knowing</h2>
+        <ul>
+          <li>A black garden ant worker is only about 3 to 5 mm long.</li>
+          <li>The seven-spot ladybird is about 5 to 8 mm long.</li>
+          <li>A worker honeybee is about 12 to 15 mm long and weighs about a tenth of a gram.</li>
+        </ul>
+      </section>
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>How does the insect Daily work?</summary><p>You get five pairs from this category, the same for everyone that day. The grey object is drawn at its real size and you resize the orange one until the pair looks right. A green outline shows the truth, and each round is worth up to 200 points. A new set arrives at midnight, your time.</p></details>
+        <details><summary>Where do the sizes come from?</summary><p>From public references such as official pages and standard encyclopaedia figures. Every answer in the game links to its source after you lock in your guess.</p></details>
+        <details><summary>Can I practise before the Daily?</summary><p>Yes. Unlimited gives you fresh insect pairs as many times as you like, with no score pressure.</p></details>
+      </section>
+      <section>
+        <h2>More categories</h2>
+        <ul class="obj-list">
+          <li><a href="../animals/">🐘 Animals</a></li>
+          <li><a href="../dinosaurs/">🦖 Dinosaurs</a></li>
+          <li><a href="../space/">🪐 Space</a></li>
+          <li><a href="../landmarks/">🗼 Landmarks</a></li>
+          <li><a href="../vehicles/">🚌 Vehicles</a></li>
+          <li><a href="../pop-culture/">⚡ Pop Culture</a></li>
+          <li><a href="../everyday-objects/">📱 Everyday Objects</a></li>
+          <li><a href="../food/">🥭 Food</a></li>
+          <li><a href="../geography/">🏔️ Geography</a></li>
+          <li><a href="../sports/">🏏 Sports</a></li>
+          <li><a href="../famous/">🖼️ Famous</a></li>
+          <li><a href="../india/">🇮🇳 India</a></li>
+          <li><a href="../usa/">🇺🇸 USA</a></li>
+          <li><a href="../">All categories</a></li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script src="../../assets/common.js"></script>
+  <script src="../../data/objects.js"></script>
+  <script>
+    (() => {
+      const { header, lineup } = SG;
+      header('categories');
+      SG.measureShapes(OBJECTS);
+      const objs = ["ant","ladybird","bee","monarch"].map(id => OBJECTS.find(o => o.id === id)).filter(Boolean);
+      document.getElementById('art').innerHTML = lineup(objs.map((o, i) => ({ o, cls: i === objs.length - 1 ? 'ob' : 'oa' })), { w: 480, h: 180, pad: 18, gap: 18 });
+    })();
+  </script>
+</body>
+</html>

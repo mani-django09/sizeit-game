@@ -29,7 +29,15 @@
     "/categories/space/",
     "/categories/landmarks/",
     "/categories/vehicles/",
-    "/categories/pop-culture/"
+    "/categories/pop-culture/",
+    "/categories/everyday-objects/",
+    "/categories/food/",
+    "/categories/insects/",
+    "/categories/geography/",
+    "/categories/sports/",
+    "/categories/famous/",
+    "/categories/india/",
+    "/categories/usa/"
   ],
   "exclude": []
 }
