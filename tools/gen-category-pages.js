@@ -49,7 +49,7 @@ const PAGES = [
   { id: 'pop', slug: 'pop-culture', emoji: '⚡', h1: 'Pop Culture Size Comparison Game',
     title: 'Pop Culture Size Game: Pokémon, Star Wars & Gundam | sizeit.games',
     desc: 'How tall is Pikachu next to Yoda, or Godzilla next to a Gundam? Play the free daily pop culture size game with characters at their stated size.',
-    art: ['pikachu', 'vader', 'gundam', 'godzilla'],
+    art: ['yoda', 'vader', 'chewie'],
     intro: ['Characters, creatures and machines from games, films and anime, drawn at the size their official sources state. Fictional sizes are a fun test: Pikachu is smaller than most people guess, and Ultraman is as tall as a 13-storey building.',
       'These sizes are the ones stated by the creators or the official guides, not measurements. The drawings are our own simple silhouettes, and the characters belong to their respective owners.'] }
 ];

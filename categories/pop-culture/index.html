@@ -111,7 +111,7 @@
       const { header, lineup } = SG;
       header('categories');
       SG.measureShapes(OBJECTS);
-      const objs = ["pikachu","vader","gundam","godzilla"].map(id => OBJECTS.find(o => o.id === id)).filter(Boolean);
+      const objs = ["yoda","vader","chewie"].map(id => OBJECTS.find(o => o.id === id)).filter(Boolean);
       document.getElementById('art').innerHTML = lineup(objs.map((o, i) => ({ o, cls: i === objs.length - 1 ? 'ob' : 'oa' })), { w: 480, h: 180, pad: 18, gap: 18 });
     })();
   </script>
