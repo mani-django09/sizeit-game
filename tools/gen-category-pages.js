@@ -227,3 +227,18 @@ ${article}
   if (isGame) fs.rmSync(path.join(ROOT, 'categories', p.slug), { recursive: true, force: true });
   console.log(target(p), objs.length, 'objects');
 }
+
+// Homepage: one plain-HTML tile per category game, so the links are in the page source for search engines
+{
+  const file = path.join(ROOT, 'index.html');
+  const src = fs.readFileSync(file, 'utf8');
+  const nl = src.includes('\r\n') ? '\r\n' : '\n';
+  const tile = (href, emoji, name, n) => `        <a class="cat-tile" href="${href}"><span>${emoji}</span><b>${esc(name)}</b>${n} objects</a>`;
+  const tiles = [tile('size-it-up/', '🎲', 'Mixed', OBJECTS.length),
+    ...PAGES.map(p => tile(target(p), p.emoji, LABEL[p.id], OBJECTS.filter(o => inCategory(o, p.id)).length))];
+  const block = ['<!-- cat-tiles:start (written by tools/gen-category-pages.js) -->', '      <div class="cat-tiles">', ...tiles, '      </div>', '      <!-- cat-tiles:end -->'].join(nl);
+  const out = src.replace(/<!-- cat-tiles:start[\s\S]*?<!-- cat-tiles:end -->/, block);
+  if (out === src && !src.includes(block)) throw new Error('homepage cat-tiles markers not found');
+  fs.writeFileSync(file, out);
+  console.log('homepage tiles:', tiles.length);
+}

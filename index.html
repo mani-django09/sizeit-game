@@ -81,7 +81,25 @@
         <h2>Play by category</h2>
         <p><a href="categories/">See all categories →</a></p>
       </div>
-      <div class="cat-tiles" id="catTiles"></div>
+      <!-- cat-tiles:start (written by tools/gen-category-pages.js) -->
+      <div class="cat-tiles">
+        <a class="cat-tile" href="size-it-up/"><span>🎲</span><b>Mixed</b>130 objects</a>
+        <a class="cat-tile" href="animals/"><span>🐘</span><b>Animals</b>12 objects</a>
+        <a class="cat-tile" href="dinosaurs/"><span>🦖</span><b>Dinosaurs</b>7 objects</a>
+        <a class="cat-tile" href="space/"><span>🪐</span><b>Space</b>10 objects</a>
+        <a class="cat-tile" href="landmarks/"><span>🗼</span><b>Landmarks</b>21 objects</a>
+        <a class="cat-tile" href="vehicles/"><span>🚌</span><b>Vehicles</b>9 objects</a>
+        <a class="cat-tile" href="pop-culture/"><span>⚡</span><b>Pop Culture</b>9 objects</a>
+        <a class="cat-tile" href="everyday-objects/"><span>📱</span><b>Everyday Objects</b>8 objects</a>
+        <a class="cat-tile" href="food/"><span>🥭</span><b>Food</b>6 objects</a>
+        <a class="cat-tile" href="insects/"><span>🐞</span><b>Bugs &amp; tiny things</b>6 objects</a>
+        <a class="cat-tile" href="geography/"><span>🏔️</span><b>Geography</b>28 objects</a>
+        <a class="cat-tile" href="sports/"><span>🏏</span><b>Sports</b>9 objects</a>
+        <a class="cat-tile" href="famous/"><span>🖼️</span><b>Famous</b>5 objects</a>
+        <a class="cat-tile" href="india/"><span>🇮🇳</span><b>India</b>34 objects</a>
+        <a class="cat-tile" href="usa/"><span>🇺🇸</span><b>USA</b>30 objects</a>
+      </div>
+      <!-- cat-tiles:end -->
     </section>
 
     <section class="section">
@@ -209,15 +227,6 @@
       }).join('');
       document.getElementById('soon').innerHTML = SITE.games.filter(g => g.status !== 'live').map(g =>
         `<div class="scard">${icon(g.icon, 'gicon')}<div><b>${esc(g.name)}</b>${esc(g.desc)}</div><span class="sticker">Soon</span></div>`).join('');
-
-      // Every category, linking to its own Daily (the Mixed one is the main Daily)
-      const CAT_EMOJI = { all: '🎲', animals: '🐘', dinos: '🦖', space: '🪐', landmarks: '🗼', vehicles: '🚌', everyday: '📱', food: '🥭', geo: '🏔️', tiny: '🐞', sports: '🏏', famous: '🖼️', pop: '⚡', india: '🇮🇳', usa: '🇺🇸' };
-      document.getElementById('catTiles').innerHTML = CATEGORIES.map(c => {
-        const n = OBJECTS.filter(o => inCategory(o, c.id)).length;
-        const GAME_PAGES = { animals: 'animals/', dinos: 'dinosaurs/', space: 'space/', landmarks: 'landmarks/', vehicles: 'vehicles/', everyday: 'everyday-objects/', food: 'food/', tiny: 'insects/', geo: 'geography/', sports: 'sports/', famous: 'famous/', india: 'india/', usa: 'usa/', pop: 'pop-culture/' };   // each category's own game page
-        const href = c.id === 'all' ? 'size-it-up/' : GAME_PAGES[c.id] || `size-it-up/?daily=${c.id}`;
-        return `<a class="cat-tile" href="${href}"><span>${CAT_EMOJI[c.id] || '🗂️'}</span><b>${esc(c.id === 'all' ? 'Mixed' : c.name)}</b>${n} objects</a>`;
-      }).join('');
 
       // Facts, with numbers computed from the same data the games use
       const unity = O('unity'), liberty = O('liberty'), mona = O('monalisa'), a4 = O('a4'), whale = O('whale'), jet = O('b747');
