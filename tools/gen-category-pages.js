@@ -65,6 +65,8 @@ function fmt(m) {
   return num(m * 1000, 1) + ' mm';
 }
 const LABEL = { animals: 'Animals', dinos: 'Dinosaurs', space: 'Space', landmarks: 'Landmarks', vehicles: 'Vehicles', pop: 'Pop Culture', everyday: 'Everyday Objects', food: 'Food', tiny: 'Bugs & tiny things', geo: 'Geography', sports: 'Sports', famous: 'Famous', india: 'India', usa: 'USA' };
+// The category's icon: an emoji, or a flag image (Windows shows flag emoji as two letters)
+const mark = (p, R) => p.flag ? `<img class="flag" src="${R}icons/${p.flag}.svg" alt="" width="30" height="20">` : p.emoji;
 const DIM = { h: 'tall', l: 'long', d: 'across' };
 
 // A page with `game: '<folder>'` becomes a playable game page at /<folder>/ (Size It Up locked to that
@@ -148,7 +150,7 @@ ${faq}
       <section>
         <h2>More categories</h2>
         <ul class="obj-list">
-${others.map(q => `          <li><a href="${R}${target(q)}">${q.emoji} ${esc(LABEL[q.id])}</a></li>`).join('\n')}
+${others.map(q => `          <li><a href="${R}${target(q)}">${mark(q, R)} ${esc(LABEL[q.id])}</a></li>`).join('\n')}
           <li><a href="${R}categories/">All categories</a></li>
         </ul>
       </section>
@@ -160,7 +162,7 @@ ${others.map(q => `          <li><a href="${R}${target(q)}">${q.emoji} ${esc(LAB
   <main class="wrap narrow">
     <div class="ghero">
       <div class="title">
-        <span class="badge">${p.emoji}</span>
+        <span class="badge">${mark(p, R)}</span>
         <div>
           <h1>${esc(p.h1)}</h1>
           <div class="sub" id="sub">${objs.length} objects at true scale · a new Daily every midnight</div>
@@ -185,7 +187,7 @@ ${DIALOGS}  <script src="${R}assets/common.js"></script>
   <main class="wrap">
     <div class="ghero">
       <div class="title">
-        <span class="badge">${p.emoji}</span>
+        <span class="badge">${mark(p, R)}</span>
         <div>
           <h1>${esc(p.h1)}</h1>
           <div class="sub">${objs.length} objects at true scale · a new Daily every midnight · five rounds</div>
@@ -235,7 +237,7 @@ ${article}
   const nl = src.includes('\r\n') ? '\r\n' : '\n';
   const tile = (href, emoji, name, n) => `        <a class="cat-tile" href="${href}"><span>${emoji}</span><b>${esc(name)}</b>${n} objects</a>`;
   const tiles = [tile('size-it-up/', '🎲', 'Mixed', OBJECTS.length),
-    ...PAGES.map(p => tile(target(p), p.emoji, LABEL[p.id], OBJECTS.filter(o => inCategory(o, p.id)).length))];
+    ...PAGES.map(p => tile(target(p), mark(p, ''), LABEL[p.id], OBJECTS.filter(o => inCategory(o, p.id)).length))];
   const block = ['<!-- cat-tiles:start (written by tools/gen-category-pages.js) -->', '      <div class="cat-tiles">', ...tiles, '      </div>', '      <!-- cat-tiles:end -->'].join(nl);
   const out = src.replace(/<!-- cat-tiles:start[\s\S]*?<!-- cat-tiles:end -->/, block);
   if (out === src && !src.includes(block)) throw new Error('homepage cat-tiles markers not found');
