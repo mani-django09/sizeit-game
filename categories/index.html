@@ -84,10 +84,11 @@
         tiny: { emoji: '🐞', art: ['ant', 'ladybird', 'bee', 'monarch'], blurb: 'Ants, bees, ladybirds and the Atlas moth, from millimetres to wingspans.' },
         sports: { emoji: '🏏', art: ['cball', 'football', 'bat', 'hoop'], blurb: 'Cricket bats and balls, stumps, footballs and a basketball hoop.' },
         famous: { emoji: '🖼️', art: ['monalisa', 'wadlow', 'redeemer', 'pisa'], blurb: 'The Mona Lisa, the tallest man ever, Christ the Redeemer and Pisa.' },
+        pop: { emoji: '⚡', art: ['pikachu', 'vader', 'gundam', 'godzilla'], blurb: 'Pikachu, Yoda, the Millennium Falcon, Gundam and Godzilla at their stated sizes.' },
         india: { emoji: '🇮🇳', art: ['auto', 'hawamahal', 'gateway', 'charminar'], blurb: 'Autos, rotis, the Taj Mahal, Charminar, cricket and Indian wildlife.' },
         usa: { emoji: '🇺🇸', art: ['schoolbus', 'rushmore', 'liberty', 'sherman'], blurb: 'School buses, Mount Rushmore, the Golden Gate Bridge and the Empire State.' }
       };
-      const order = ['all', 'animals', 'dinos', 'space', 'geo', 'landmarks', 'vehicles', 'everyday', 'food', 'tiny', 'sports', 'famous', 'india', 'usa'];
+      const order = ['all', 'animals', 'dinos', 'space', 'geo', 'landmarks', 'vehicles', 'everyday', 'food', 'tiny', 'sports', 'famous', 'pop', 'india', 'usa'];
       const live = order.filter(id => CATEGORIES.some(c => c.id === id));
       const today = todayKey();
       const main = store.get('sg_howbig_daily', {})[today];
