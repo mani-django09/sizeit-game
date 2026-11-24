@@ -55,6 +55,7 @@ const PAGES = [
 ];
 
 PAGES.push(...require('./category-pages-more.js'));
+for (const p of PAGES) p.game = p.game || p.slug;   // every category gets a playable page at /<slug>/
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const num = (x, d) => Number(x.toFixed(d)).toLocaleString('en-US');
 function fmt(m) {
