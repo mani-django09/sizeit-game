@@ -23,7 +23,13 @@
     "/about/",
     "/contact/",
     "/terms/",
-    "/categories/"
+    "/categories/",
+    "/categories/animals/",
+    "/categories/dinosaurs/",
+    "/categories/space/",
+    "/categories/landmarks/",
+    "/categories/vehicles/",
+    "/categories/pop-culture/"
   ],
   "exclude": []
 }

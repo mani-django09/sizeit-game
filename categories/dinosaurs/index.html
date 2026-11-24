@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en" data-root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Dinosaur Size Comparison Game: How Big Were They? | sizeit.games</title>
+  <meta name="description" content="Velociraptor, Stegosaurus, Spinosaurus and Argentinosaurus at true scale. Play the free daily dinosaur size game and test how well you know their size.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/categories/dinosaurs/">
+  <meta property="og:url" content="https://sizeit.games/categories/dinosaurs/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Dinosaur Size Comparison Game: a Daily every day">
+  <meta property="og:description" content="Velociraptor, Stegosaurus, Spinosaurus and Argentinosaurus at true scale. Play the free daily dinosaur size game and test how well you know their size.">
+  <meta property="og:image" content="https://sizeit.games/og/size-it-up.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Dinosaur Size Comparison Game">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="preload" href="../../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <main class="wrap">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge">🦖</span>
+        <div>
+          <h1>Dinosaur Size Comparison Game</h1>
+          <div class="sub">7 objects at true scale · a new Daily every midnight · five rounds</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard cat-card cat-page-card">
+      <div class="art" id="art"></div>
+      <div class="body">
+        <div class="cat-actions">
+          <a class="primary" href="../../size-it-up/?daily=dinos">Play Daily</a>
+          <a class="secondary" href="../../size-it-up/?mode=unlimited&cat=dinos">Play Unlimited</a>
+        </div>
+      </div>
+    </div>
+
+    <article class="seo guide">
+      <section>
+        <h2>About this category</h2>
+        <p>Dinosaurs in films are rarely the right size. The real Velociraptor was about the size of a turkey, while the biggest plant-eaters were longer than a tennis court. This category lets you guess dinosaur against dinosaur and then shows the real size drawn to scale.</p>
+        <p>Dinosaur sizes come from fossils, so they are estimates that scientists keep refining. We use commonly quoted figures and link a source after every answer.</p>
+        <p>New to the game? Read how <a href="../../size-it-up/">Size It Up</a> works, or see <a href="../">every category</a>.</p>
+      </section>
+      <section>
+        <h2>Every object in this category</h2>
+        <ul class="obj-list">
+          <li><b>Velociraptor</b> <span>2 m long</span></li>
+          <li><b>Pteranodon (wingspan)</b> <span>6 m long</span></li>
+          <li><b>Triceratops</b> <span>9 m long</span></li>
+          <li><b>Stegosaurus</b> <span>9 m long</span></li>
+          <li><b>Spinosaurus</b> <span>14 m long</span></li>
+          <li><b>Brachiosaurus</b> <span>20 m long</span></li>
+          <li><b>Argentinosaurus</b> <span>35 m long</span></li>
+        </ul>
+      </section>
+      <section>
+        <h2>A few things worth knowing</h2>
+        <ul>
+          <li>Movies made it huge, but Velociraptor was only about 2 m long, tail included, and weighed about 15 kg.</li>
+          <li>Large male Pteranodon had wings about 6 m from tip to tip. Strictly, it was a flying reptile, not a dinosaur.</li>
+          <li>Triceratops grew to about 8 to 9 m long. Weight estimates range from about 6 to 12 t.</li>
+        </ul>
+      </section>
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>How does the dinosaur Daily work?</summary><p>You get five pairs from this category, the same for everyone that day. The grey object is drawn at its real size and you resize the orange one until the pair looks right. A green outline shows the truth, and each round is worth up to 200 points. A new set arrives at midnight, your time.</p></details>
+        <details><summary>Where do the sizes come from?</summary><p>From public references such as official pages and standard encyclopaedia figures. Every answer in the game links to its source after you lock in your guess.</p></details>
+        <details><summary>Can I practise before the Daily?</summary><p>Yes. Unlimited gives you fresh dinosaur pairs as many times as you like, with no score pressure.</p></details>
+      </section>
+      <section>
+        <h2>More categories</h2>
+        <ul class="obj-list">
+          <li><a href="../animals/">🐘 Animals</a></li>
+          <li><a href="../space/">🪐 Space</a></li>
+          <li><a href="../landmarks/">🗼 Landmarks</a></li>
+          <li><a href="../vehicles/">🚌 Vehicles</a></li>
+          <li><a href="../pop-culture/">⚡ Pop Culture</a></li>
+          <li><a href="../">All categories</a></li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script src="../../assets/common.js"></script>
+  <script src="../../data/objects.js"></script>
+  <script>
+    (() => {
+      const { header, lineup } = SG;
+      header('categories');
+      SG.measureShapes(OBJECTS);
+      const objs = ["raptor","ptera","stego","trike"].map(id => OBJECTS.find(o => o.id === id)).filter(Boolean);
+      document.getElementById('art').innerHTML = lineup(objs.map((o, i) => ({ o, cls: i === objs.length - 1 ? 'ob' : 'oa' })), { w: 480, h: 180, pad: 18, gap: 18 });
+    })();
+  </script>
+</body>
+</html>

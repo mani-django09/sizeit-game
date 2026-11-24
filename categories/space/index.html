@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" data-root="../../">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Space Size Comparison Game: Planets, Moons &amp; Rockets | sizeit.games</title>
+  <meta name="description" content="Compare planets, the Moon, the Sun, rockets and the International Space Station. Play the free daily space size game and see how far off your guess was.">
+  <!-- seo:start -->
+  <link rel="canonical" href="https://sizeit.games/categories/space/">
+  <meta property="og:url" content="https://sizeit.games/categories/space/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sizeit.games">
+  <meta property="og:title" content="Space Size Comparison Game: a Daily every day">
+  <meta property="og:description" content="Compare planets, the Moon, the Sun, rockets and the International Space Station. Play the free daily space size game and see how far off your guess was.">
+  <meta property="og:image" content="https://sizeit.games/og/size-it-up.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Space Size Comparison Game">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png">
+  <!-- seo:end -->
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../../icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="preload" href="../../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+  <main class="wrap">
+    <div class="ghero">
+      <div class="title">
+        <span class="badge">🪐</span>
+        <div>
+          <h1>Space Size Comparison Game</h1>
+          <div class="sub">10 objects at true scale · a new Daily every midnight · five rounds</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gcard cat-card cat-page-card">
+      <div class="art" id="art"></div>
+      <div class="body">
+        <div class="cat-actions">
+          <a class="primary" href="../../size-it-up/?daily=space">Play Daily</a>
+          <a class="secondary" href="../../size-it-up/?mode=unlimited&cat=space">Play Unlimited</a>
+        </div>
+      </div>
+    </div>
+
+    <article class="seo guide">
+      <section>
+        <h2>About this category</h2>
+        <p>Space is where size intuition breaks completely. The Sun is far bigger than Jupiter, which is far bigger than Earth, and a rocket that looks enormous on the launch pad is a speck next to any planet. Each pair here is chosen to be close enough to compare by eye.</p>
+        <p>Planets and stars are measured by diameter, rockets and stations by height or length. Every answer shows the real number and links to its source.</p>
+        <p>New to the game? Read how <a href="../../size-it-up/">Size It Up</a> works, or see <a href="../">every category</a>.</p>
+      </section>
+      <section>
+        <h2>Every object in this category</h2>
+        <ul class="obj-list">
+          <li><b>Hubble Space Telescope</b> <span>13.2 m long</span></li>
+          <li><b>Space Shuttle orbiter</b> <span>37.2 m long</span></li>
+          <li><b>ISRO PSLV rocket</b> <span>44 m tall</span></li>
+          <li><b>International Space Station</b> <span>109 m long</span></li>
+          <li><b>Saturn V rocket</b> <span>110.6 m tall</span></li>
+          <li><b>Moon</b> <span>3,475 km across</span></li>
+          <li><b>Mars</b> <span>6,779 km across</span></li>
+          <li><b>Earth</b> <span>12,742 km across</span></li>
+          <li><b>Jupiter</b> <span>139,820 km across</span></li>
+          <li><b>Sun</b> <span>1,392,700 km across</span></li>
+        </ul>
+      </section>
+      <section>
+        <h2>A few things worth knowing</h2>
+        <ul>
+          <li>Hubble is 13.2 m long, about the length of a city bus, and weighs about 11 t.</li>
+          <li>A Space Shuttle orbiter was 37.2 m long and weighed about 78 t empty.</li>
+          <li>ISRO&#39;s PSLV is 44 m tall and weighs about 320 t at lift-off in its XL version.</li>
+        </ul>
+      </section>
+      <section class="faq">
+        <h2>Questions</h2>
+        <details><summary>How does the space Daily work?</summary><p>You get five pairs from this category, the same for everyone that day. The grey object is drawn at its real size and you resize the orange one until the pair looks right. A green outline shows the truth, and each round is worth up to 200 points. A new set arrives at midnight, your time.</p></details>
+        <details><summary>Where do the sizes come from?</summary><p>From public references such as official pages and standard encyclopaedia figures. Every answer in the game links to its source after you lock in your guess.</p></details>
+        <details><summary>Can I practise before the Daily?</summary><p>Yes. Unlimited gives you fresh space pairs as many times as you like, with no score pressure.</p></details>
+      </section>
+      <section>
+        <h2>More categories</h2>
+        <ul class="obj-list">
+          <li><a href="../animals/">🐘 Animals</a></li>
+          <li><a href="../dinosaurs/">🦖 Dinosaurs</a></li>
+          <li><a href="../landmarks/">🗼 Landmarks</a></li>
+          <li><a href="../vehicles/">🚌 Vehicles</a></li>
+          <li><a href="../pop-culture/">⚡ Pop Culture</a></li>
+          <li><a href="../">All categories</a></li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <script src="../../assets/common.js"></script>
+  <script src="../../data/objects.js"></script>
+  <script>
+    (() => {
+      const { header, lineup } = SG;
+      header('categories');
+      SG.measureShapes(OBJECTS);
+      const objs = ["moon","mars","earth"].map(id => OBJECTS.find(o => o.id === id)).filter(Boolean);
+      document.getElementById('art').innerHTML = lineup(objs.map((o, i) => ({ o, cls: i === objs.length - 1 ? 'ob' : 'oa' })), { w: 480, h: 180, pad: 18, gap: 18 });
+    })();
+  </script>
+</body>
+</html>

@@ -88,6 +88,7 @@
         india: { emoji: '🇮🇳', art: ['auto', 'hawamahal', 'gateway', 'charminar'], blurb: 'Autos, rotis, the Taj Mahal, Charminar, cricket and Indian wildlife.' },
         usa: { emoji: '🇺🇸', art: ['schoolbus', 'rushmore', 'liberty', 'sherman'], blurb: 'School buses, Mount Rushmore, the Golden Gate Bridge and the Empire State.' }
       };
+      const PAGE_SLUGS = { animals: 'animals', dinos: 'dinosaurs', space: 'space', landmarks: 'landmarks', vehicles: 'vehicles', pop: 'pop-culture' };
       const order = ['all', 'animals', 'dinos', 'space', 'geo', 'landmarks', 'vehicles', 'everyday', 'food', 'tiny', 'sports', 'famous', 'pop', 'india', 'usa'];
       const live = order.filter(id => CATEGORIES.some(c => c.id === id));
       const today = todayKey();
@@ -108,7 +109,7 @@
           <div class="art">${art}</div>
           <div class="body">
             <div class="chips">${done ? `<span class="chip done">✓ Today: ${sum(rec.scores)}/1000</span>` : ''}<span class="chip">${count} objects</span><span class="chip">5 rounds</span></div>
-            <h3>${info.emoji} ${esc(name)}</h3>
+            <h3>${PAGE_SLUGS[id] ? `<a href="${PAGE_SLUGS[id]}/">${info.emoji} ${esc(name)}</a>` : `${info.emoji} ${esc(name)}`}</h3>
             <p>${esc(info.blurb)}</p>
             <div class="cat-actions">
               <a class="primary" href="${daily}">${done ? 'See today\'s result' : 'Play Daily'}</a>
