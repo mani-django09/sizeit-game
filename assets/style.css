@@ -787,6 +787,17 @@ button.so-card:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 v
 .extra b { display: block; color: var(--text); font-family: var(--display); font-size: 1.05rem; margin-bottom: 2px; }
 @media (max-width: 820px) { .extras { grid-template-columns: 1fr; } }
 
+/* Home: every category, one tile each */
+.cat-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.cat-tile {
+  display: flex; flex-direction: column; gap: 2px; padding: 14px; border-radius: 20px; text-decoration: none; color: var(--muted);
+  background: var(--panel); border: 2px solid var(--edge); box-shadow: var(--shadow-sm); font-size: .85rem;
+  transition: transform .14s cubic-bezier(.3, 1.6, .5, 1), box-shadow .14s;
+}
+.cat-tile:hover { transform: translate(-2px, -2px); box-shadow: var(--shadow); }
+.cat-tile > span { font-size: 1.8rem; line-height: 1; margin-bottom: 4px; }
+.cat-tile b { color: var(--text); font-family: var(--display); font-size: 1.05rem; }
+
 /* ===== Leaderboard line on result screens ===== */
 .lb { margin: 14px auto 4px; max-width: 360px; }
 .lb-line { margin: 0 0 8px; font-weight: 700; }

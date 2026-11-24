@@ -78,6 +78,14 @@
 
     <section class="section">
       <div class="section-head">
+        <h2>Play by category</h2>
+        <p><a href="categories/">See all categories →</a></p>
+      </div>
+      <div class="cat-tiles" id="catTiles"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
         <h2>Size and weight facts that surprise people</h2>
         <p>A few from the game library.</p>
       </div>
@@ -201,6 +209,14 @@
       }).join('');
       document.getElementById('soon').innerHTML = SITE.games.filter(g => g.status !== 'live').map(g =>
         `<div class="scard">${icon(g.icon, 'gicon')}<div><b>${esc(g.name)}</b>${esc(g.desc)}</div><span class="sticker">Soon</span></div>`).join('');
+
+      // Every category, linking to its own Daily (the Mixed one is the main Daily)
+      const CAT_EMOJI = { all: '🎲', animals: '🐘', dinos: '🦖', space: '🪐', landmarks: '🗼', vehicles: '🚌', everyday: '📱', food: '🥭', geo: '🏔️', tiny: '🐞', sports: '🏏', famous: '🖼️', pop: '⚡', india: '🇮🇳', usa: '🇺🇸' };
+      document.getElementById('catTiles').innerHTML = CATEGORIES.map(c => {
+        const n = OBJECTS.filter(o => inCategory(o, c.id)).length;
+        const href = c.id === 'all' ? 'size-it-up/' : `size-it-up/?daily=${c.id}`;
+        return `<a class="cat-tile" href="${href}"><span>${CAT_EMOJI[c.id] || '🗂️'}</span><b>${esc(c.id === 'all' ? 'Mixed' : c.name)}</b>${n} objects</a>`;
+      }).join('');
 
       // Facts, with numbers computed from the same data the games use
       const unity = O('unity'), liberty = O('liberty'), mona = O('monalisa'), a4 = O('a4'), whale = O('whale'), jet = O('b747');
