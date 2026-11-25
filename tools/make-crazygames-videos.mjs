@@ -35,8 +35,12 @@ const ROUNDS = [
 const LAYOUTS = [
   // CSS size × scale = video size. 1280×720 is about the CrazyGames frame on a laptop. CrazyGames wants the portrait
   // video at 2:3 (not 9:16), so it is 450×675 of phone-sized page, tall enough to keep Lock in on screen.
-  { name: 'landscape-1920x1080', w: 1280, h: 720, scale: 1.5 },
-  { name: 'portrait-1080x1620', w: 450, h: 675, scale: 2.4 }
+  // `capture` is how sharply the page is drawn while recording; ffmpeg scales up to the video size. The big landscape
+  // frame is slow to capture, and a smooth video matters more than razor-sharp text in a hover preview.
+  { name: 'landscape-1920x1080', w: 1280, h: 720, scale: 1.5, capture: 1.2 },
+  { name: 'portrait-1080x1620', w: 450, h: 675, scale: 2.4 },
+  // Playgama takes the portrait video at 9:16
+  { name: 'portrait-1080x1920', w: 450, h: 800, scale: 2.4 }
 ];
 
 const browserPath = [
@@ -86,7 +90,7 @@ async function openBrowser() {
     if (res.exceptionDetails) throw new Error(res.exceptionDetails.exception?.description || res.exceptionDetails.text);
     return res.result.value;
   };
-  const close = () => { try { ws.close(); } catch { /* ignore */ } proc.kill(); setTimeout(() => rmSync(profile, { recursive: true, force: true }), 1500); };
+  const close = () => { try { ws.close(); } catch { /* ignore */ } proc.kill(); setTimeout(() => { try { rmSync(profile, { recursive: true, force: true }); } catch { /* Chrome may still hold a file; the temp folder is cleaned up later */ } }, 2500); };
   return { send, evaluate, on: f => listeners.push(f), close };
 }
 
@@ -101,7 +105,7 @@ const PRELOAD = seed => `
 async function load(b, layout, seed) {
   await b.send('Page.enable');
   await b.send('Runtime.enable');
-  await b.send('Emulation.setDeviceMetricsOverride', { width: layout.w, height: layout.h, deviceScaleFactor: layout.scale, mobile: layout.w < 600 });
+  await b.send('Emulation.setDeviceMetricsOverride', { width: layout.w, height: layout.h, deviceScaleFactor: layout.capture || layout.scale, mobile: layout.w < 600 });
   await b.send('Page.addScriptToEvaluateOnNewDocument', { source: PRELOAD(seed) });
   await b.send('Page.navigate', { url: base + '?mode=unlimited' });
   for (let i = 0; i < 100; i++) {
@@ -168,7 +172,7 @@ for (const layout of LAYOUTS) {
     frames.push({ file, t: m.params.metadata.timestamp });
     b.send('Page.screencastFrameAck', { sessionId: m.params.sessionId }).catch(() => {});
   });
-  await b.send('Page.startScreencast', { format: 'jpeg', quality: 92, maxWidth: layout.w * layout.scale, maxHeight: layout.h * layout.scale, everyNthFrame: 1 });
+  await b.send('Page.startScreencast', { format: 'jpeg', quality: 70, maxWidth: layout.w * (layout.capture || layout.scale), maxHeight: layout.h * (layout.capture || layout.scale), everyNthFrame: 1 });
   const scores = await b.evaluate(PLAY);
   await b.send('Page.stopScreencast');
   await sleep(300);

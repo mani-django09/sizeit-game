@@ -2,7 +2,7 @@
 //
 //   node tools/make-crazygames-covers.mjs
 //
-// Output: dist/crazygames-covers/{landscape-1920x1080,portrait-800x1200,square-800x800}.png
+// Output: dist/crazygames-covers/{landscape-1920x1080,portrait-800x1200,square-800x800,portrait-1080x1920}.png (the last is for Playgama)
 import { mkdirSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { dirname, join, resolve } from 'node:path';
@@ -20,7 +20,9 @@ const browser = [
 if (!browser) throw new Error('Install Chrome or Edge to render the covers.');
 
 const page = pathToFileURL(join(root, 'crazygames', 'cover.html')).href;
-for (const [layout, w, h] of [['landscape', 1920, 1080], ['portrait', 800, 1200], ['square', 800, 800]]) {
+for (const [layout, w, h] of [['landscape', 1920, 1080], ['portrait', 800, 1200], ['square', 800, 800],
+  // Playgama wants its portrait cover at 9:16 (1080x1920); CrazyGames wants 2:3 (800x1200)
+  ['portrait', 1080, 1920]]) {
   const file = join(out, `${layout}-${w}x${h}.png`);
   execFileSync(browser, ['--headless=new', '--disable-gpu', '--hide-scrollbars', '--allow-file-access-from-files',
     `--window-size=${w},${h}`, '--force-device-scale-factor=1', '--virtual-time-budget=4000',
