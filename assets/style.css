@@ -288,6 +288,11 @@ a.gcard:hover { transform: translate(-3px, -3px); box-shadow: 7px 7px 0 var(--ed
 .scorebox { font-family: var(--display); font-weight: 800; background: var(--bg2); border-radius: 999px; padding: 3px 12px; font-size: .95rem; }
 .scorebox b { font-size: 1.1rem; }
 .prompt { font-family: var(--display); font-size: clamp(1.2rem, 2.6vw, 1.55rem); font-weight: 700; margin: 12px 0 12px; line-height: 1.25; letter-spacing: -.01em; }
+/* Game pages fill these in with JavaScript just after the first paint. Keep room for their usual size
+   (one line on wide screens, two on phones), so the game below doesn't jump down when they appear. */
+.ghero .sub:empty, .game .prompt:empty { min-height: 1lh; }
+.game > .meta { min-height: 33px; }
+@media (max-width: 560px) { .ghero .sub:empty, .game .prompt:empty { min-height: 2lh; } }
 .prompt small { display: block; font-family: system-ui, sans-serif; color: var(--muted); font-size: .85rem; font-weight: 600; margin-top: 4px; letter-spacing: 0; }
 
 /* Board */
