@@ -8,6 +8,12 @@
       "port": 5173
     },
     {
+      "name": "crazygames",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "5174", "--directory", "dist/crazygames"],
+      "port": 5174
+    },
+    {
       "name": "pages",
       "runtimeExecutable": "npx",
       "runtimeArgs": ["wrangler", "pages", "dev", ".", "--port", "8788"],

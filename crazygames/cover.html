@@ -1,0 +1,130 @@
+<!doctype html>
+<!-- CrazyGames cover art. Open as cover.html?layout=landscape|portrait|square, or run tools/make-crazygames-covers.mjs
+     to render all three as PNGs. The drawings are the game's own objects, scaled to true size. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Size It Up cover</title>
+<style>
+  @font-face { font-family: "Bricolage Grotesque"; font-weight: 600 800; src: url("../fonts/bricolage-latin.woff2") format("woff2"); }
+  :root { --bg: #15122e; --panel: #221d4a; --ink: #f5f2ff; --muted: #a9a3c9; --ref: #c9ccf5; --guess: #ff8b33; --true: #3ddc84; --sun: #ffd166; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--ink); font-family: "Bricolage Grotesque", system-ui, sans-serif; }
+  .cover { position: relative; width: 100vw; height: 100vh; display: flex; overflow: hidden;
+    background: radial-gradient(120% 90% at 75% 20%, #3a2d78 0%, var(--bg) 60%); }
+  /* ruler ticks along the top and bottom edges, like the site header */
+  .ticks { position: absolute; left: 0; right: 0; height: 2.4vmin; background: repeating-linear-gradient(90deg, rgba(255,255,255,.16) 0 .28vmin, transparent .28vmin 2.2vmin); }
+  .ticks.t { top: 0; } .ticks.b { bottom: 0; }
+  .text { display: flex; flex-direction: column; justify-content: center; z-index: 2; }
+  h1 { font-weight: 800; line-height: .88; letter-spacing: -.02em; text-transform: uppercase; text-shadow: .7vmin .7vmin 0 #0b0920; }
+  h1 span { color: var(--guess); display: block; }
+  .tag { font-weight: 800; color: var(--sun); background: #0b0920; border-radius: 999px; padding: .35em .9em; width: max-content; }
+  .scene { position: relative; z-index: 1; flex: 1; min-width: 0; min-height: 0; }
+  svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  .ref-fill { fill: var(--ref); } .guess-fill { fill: var(--guess); }
+  /* non-scaling-stroke keeps the dashes the same size however far the drawing is scaled */
+  .true-outline, .true-outline * { fill: none; stroke: var(--true); stroke-width: 4; stroke-dasharray: 10 8; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+  .ground { stroke: rgba(255,255,255,.35); stroke-width: 3; }
+  .name { fill: var(--muted); font-weight: 800; text-anchor: middle; }
+  .mline { stroke: var(--ink); stroke-width: 2.5; fill: none; }
+  .mbox { fill: var(--ink); } .mtxt { fill: var(--bg); font-weight: 800; text-anchor: middle; }
+  .mbox.g { fill: var(--guess); } .mtxt.g { fill: #1b1030; }
+
+  /* landscape 16:9: title left, scene right */
+  .landscape .text { width: 38%; flex: none; padding: 0 0 0 5vw; gap: 2.4vh; }
+  .landscape h1 { font-size: 15vh; }
+  .landscape .tag { font-size: 3.4vh; }
+  /* portrait and square: title on top, scene below */
+  .portrait, .square { flex-direction: column; }
+  .portrait .text, .square .text { align-items: center; text-align: center; padding: 8vh 6vw 0; gap: 1.6vh; }
+  .portrait h1 { font-size: 15vw; } .portrait .tag { font-size: 4.6vw; }
+  .square h1 { font-size: 12.5vw; } .square .tag { font-size: 3.8vw; }
+  .portrait .scene { padding: 0 4vw 9vh; } .square .scene { padding: 0 4vw 6vh; }
+  .landscape .scene { padding: 6vh 3vw 6vh 2vw; }
+</style>
+</head>
+<body>
+<div class="cover" id="cover">
+  <div class="ticks t"></div><div class="ticks b"></div>
+  <div class="text">
+    <h1>Size<span>It Up</span></h1>
+    <div class="tag">Can you guess the real size?</div>
+  </div>
+  <div class="scene" id="scene"></div>
+</div>
+<script src="../data/objects.js"></script>
+<script>
+(() => {
+  const layout = new URLSearchParams(location.search).get('layout') || 'landscape';
+  document.getElementById('cover').classList.add(layout);
+  const byId = Object.fromEntries(OBJECTS.map(o => [o.id, o]));
+  // measure each drawing's bounding box so we can scale it by its real height
+  const NS = 'http://www.w3.org/2000/svg';
+  const probe = document.createElementNS(NS, 'svg');
+  probe.setAttribute('style', 'position:absolute;left:-9999px;width:10px;height:10px');
+  document.body.appendChild(probe);
+  const bbox = o => { const g = document.createElementNS(NS, 'g'); g.innerHTML = o.svg; probe.appendChild(g); const b = g.getBBox(); g.remove(); return b; };
+
+  // Grey things at true size, then the orange one the player is resizing, with the green outline showing the truth
+  const items = layout === 'landscape'
+    ? [{ id: 'human', role: 'ref' }, { id: 'elephant', role: 'ref' }, { id: 'giraffe', role: 'guess', scale: 0.82 }]
+    : [{ id: 'human', role: 'ref' }, { id: 'elephant', role: 'ref' }, { id: 'giraffe', role: 'guess', scale: 0.82 }];
+  const el = document.getElementById('scene');
+  const W = el.clientWidth, H = el.clientHeight;
+  const FONT = Math.max(16, Math.min(W, H) * 0.034);
+  const top = FONT * 3.4, bottom = FONT * 3.4, gap = W * 0.04;
+  const boxes = items.map(it => {
+    const o = byId[it.id], b = bbox(o), size = o.size * (it.scale || 1);
+    return { it, o, b, w: size * b.width / b.height, h: size };
+  });
+  const trueBoxes = boxes.map(x => ({ w: x.o.size * x.b.width / x.b.height, h: x.o.size }));
+  const maxH = Math.max(...trueBoxes.map(b => b.h));
+  const sumW = trueBoxes.reduce((a, b) => a + b.w, 0);
+  const s = Math.min((H - top - bottom) / maxH, (W - gap * (items.length - 1)) / sumW);
+  const ground = H - bottom;
+  let x = (W - (sumW * s + gap * (items.length - 1))) / 2;
+  let out = `<svg viewBox="0 0 ${W} ${H}">`;
+  let lastEnd = -Infinity, lastRow = 0;
+  // real width of a label, measured in the same font as the cover draws it
+  const textWidth = str => {
+    const t = document.createElementNS(NS, 'text');
+    t.setAttribute('class', 'name'); t.setAttribute('font-size', FONT); t.textContent = str;
+    probe.appendChild(t);
+    const w = t.getComputedTextLength();
+    t.remove();
+    return w;
+  };
+  boxes.forEach((bx, i) => {
+    const tb = trueBoxes[i], k = (bx.w * s) / bx.b.width;
+    const place = (w, h) => `translate(${x} ${ground - h * s}) scale(${(w * s) / bx.b.width}) translate(${-bx.b.x} ${-bx.b.y})`;
+    if (bx.it.role === 'guess') {
+      out += `<g class="true-outline" transform="${place(tb.w, tb.h)}">${bx.o.svg.replace(/fill="[^"]*"/g, '')}</g>`;
+    }
+    out += `<g class="${bx.it.role}-fill" transform="${place(bx.w, bx.h)}">${bx.o.svg}</g>`;
+    const name = bx.o.name.replace(/ \(.*\)$/, '');
+    // keep the label on the cover when its figure is narrower than its name
+    const half = textWidth(name) / 2;
+    const nx = Math.min(W - half, Math.max(half, x + tb.w * s / 2));
+    // drop a label to a second row when it would run into the one before it
+    const row = nx - half < lastEnd + FONT * 0.5 && lastRow === 0 ? 1 : 0;
+    if (row === 0) lastEnd = nx + half;
+    lastRow = row;
+    out += `<text class="name" x="${nx}" y="${ground + FONT * (1.5 + row * 1.2)}" font-size="${FONT}">${name}</text>`;
+    // height label above each ref; the guess shows a guessed height in orange
+    const lab = (bx.it.role === 'guess' ? bx.h : bx.o.size);
+    const txt = (lab >= 10 ? lab.toFixed(0) : lab.toFixed(1)).replace(/\.0$/, '') + ' m';
+    const topY = ground - bx.h * s, lx = x - FONT * 0.6;
+    out += `<path class="mline" d="M${lx} ${ground}V${topY}M${lx - 6} ${topY}h12M${lx - 6} ${ground}h12"/>`;
+    const g = bx.it.role === 'guess' ? ' g' : '';
+    const pw = txt.length * FONT * 0.62 + FONT;
+    out += `<rect class="mbox${g}" x="${x + bx.w * s / 2 - pw / 2}" y="${topY - FONT * 2.1}" width="${pw}" height="${FONT * 1.5}" rx="${FONT * .35}"/>` +
+           `<text class="mtxt${g}" x="${x + bx.w * s / 2}" y="${topY - FONT * 1.02}" font-size="${FONT * .95}">${txt}</text>`;
+    x += tb.w * s + gap;
+  });
+  out += `<line class="ground" x1="0" x2="${W}" y1="${ground}" y2="${ground}"/></svg>`;
+  el.innerHTML = out;
+  document.documentElement.dataset.ready = '1';
+})();
+</script>
+</body>
+</html>
