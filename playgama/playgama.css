@@ -1,0 +1,20 @@
+/* Playgama build only. */
+
+/* The page itself never scrolls (no browser scrollbar): the game area scrolls inside, with the bar hidden */
+html, body { height: 100%; overflow: hidden; }
+body { display: flex; flex-direction: column; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+input, textarea { -webkit-user-select: text; user-select: text; }
+main.wrap { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
+main.wrap::-webkit-scrollbar { display: none; }
+header.top { flex: none; }
+
+/* Mute button */
+.mute-btn svg { width: 20px; height: 20px; display: block; }
+.mute-btn .slash { display: none; }
+.mute-btn.off .slash { display: block; }
+.mute-btn.off .waves { display: none; }
+
+/* Result squares are drawn, not emoji */
+.blocks .sq { display: inline-block; width: 1.15em; height: 1.15em; border-radius: .3em; margin: 0 .14em; vertical-align: middle; }
+.blocks .sq.g { background: #3ddc84; } .blocks .sq.y { background: #ffd166; } .blocks .sq.o { background: #ff8b33; } .blocks .sq.r { background: #e83f6f; }
+.intro-steps .ie { font-weight: 800; }
