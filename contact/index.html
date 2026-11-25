@@ -39,8 +39,32 @@
       </div>
     </div>
 
+    <section class="panel">
+      <h2 style="margin-top:0">Send us a message</h2>
+      <form class="form" id="cform" novalidate>
+        <label>Your name
+          <input id="c-name" name="name" required maxlength="80" autocomplete="name">
+        </label>
+        <label>Your email <span>So we can reply. We don't add it to any list.</span>
+          <input id="c-email" name="email" type="email" required maxlength="160" autocomplete="email" inputmode="email">
+        </label>
+        <label>What is it about?
+          <select id="c-topic" name="topic">
+            <option>A number looks wrong</option><option>Something broke</option><option>Idea for a game or feature</option>
+            <option>Leagues and schools</option><option>Press or partnership</option><option>My data</option><option>Something else</option>
+          </select>
+        </label>
+        <label>Message
+          <textarea id="c-msg" name="message" required minlength="10" maxlength="4000" style="min-height:140px"></textarea>
+        </label>
+        <div style="position:absolute;left:-9999px" aria-hidden="true"><label>Website <input id="c-web" name="website" tabindex="-1" autocomplete="off"></label></div>
+        <div><button class="primary big" type="submit" id="csend">✉️ Send message</button></div>
+        <p class="hint" id="cmsg" role="status"></p>
+      </form>
+    </section>
+
     <section class="panel ct-main">
-      <p class="ct-k">Email</p>
+      <p class="ct-k">Or email us directly</p>
       <a class="ct-mail" id="mail" href="mailto:contact@sizeit.games">contact@sizeit.games</a>
       <div class="actions">
         <a class="primary big" id="mailBtn" href="mailto:contact@sizeit.games">✉️ Write to us</a>
@@ -76,6 +100,31 @@
     for (const id of ['mail', 'mailBtn']) document.getElementById(id).href = 'mailto:' + addr;
     document.getElementById('mail').textContent = addr;
     document.getElementById('copyBtn').addEventListener('click', () => SG.copyText(addr));
+
+    const $ = id => document.getElementById(id);
+    $('cform').addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = { name: $('c-name').value.trim(), email: $('c-email').value.trim(), topic: $('c-topic').value,
+        message: $('c-msg').value.trim(), website: $('c-web').value, page: location.href };
+      if (!data.name) { $('cmsg').textContent = 'Please tell us your name.'; return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { $('cmsg').textContent = 'Please enter a valid email address.'; return; }
+      if (data.message.length < 10) { $('cmsg').textContent = 'Please write a little more.'; return; }
+      $('csend').disabled = true;
+      $('cmsg').textContent = 'Sending…';
+      try {
+        const r = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+        const j = await r.json().catch(() => ({}));
+        if (r.ok && j.ok) {
+          $('cform').innerHTML = '<div class="ok">Thanks, ' + SG.esc(data.name) + '! Your message is on its way and we\'ll reply by email.</div>';
+          return;
+        }
+        if (r.status === 400) { $('cmsg').textContent = j.error || 'Please check the form.'; return; }
+        throw new Error('send failed');
+      } catch {
+        const href = 'mailto:' + addr + '?subject=' + encodeURIComponent(data.topic) + '&body=' + encodeURIComponent(data.message);
+        $('cmsg').innerHTML = 'Couldn\'t send it from here. <a href="' + SG.esc(href) + '">Send it by email instead</a>.';
+      } finally { if ($('csend')) $('csend').disabled = false; }
+    });
   </script>
 </body>
 </html>

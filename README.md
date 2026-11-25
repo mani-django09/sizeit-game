@@ -160,6 +160,18 @@ Changing either secret signs the admin out everywhere. `functions/api/admin/[[pa
 
 Housekeeping: the dashboard looks back at most a year, so you can delete older events with the commented-out `delete` at the end of `schema.sql`.
 
+## Contact form
+
+`contact/` has a form that posts to `functions/api/contact.js`. The function checks the message and sends it through Gmail's SMTP server (`smtp.gmail.com:465`) with an app password, to your Gmail inbox; Reply-To is the visitor, so Reply in Gmail answers them. Cloudflare Email Routing (`contact@sizeit.games` → your Gmail) covers people who email the address directly. No third-party mail service.
+
+Setup:
+
+1. Google Account → Security → turn on 2-Step Verification, then App passwords → create one ("sizeit.games"). Copy the 16 letters.
+2. Cloudflare Pages → the project → Settings → Variables and Secrets, add **Secrets** for Production: `GMAIL_USER` (your Gmail address) and `GMAIL_APP_PASSWORD`. Optional: `CONTACT_TO` (defaults to `GMAIL_USER`).
+3. Redeploy.
+
+Until the secrets are set the form shows a "send it by email instead" mailto link. The form has a hidden honeypot field and the function only accepts posts from the site's own origin. To test locally put the same names in `.dev.vars` and run `npm run dev`. If the app password is ever revoked or Google blocks the login, the form falls back to the mailto link.
+
 ## Sharing, challenge links and link previews
 
 - **Share sheet**: every Share button opens a small sheet with WhatsApp first, then X, Telegram, Copy and (on phones) the system share menu. `SG.share(text)` in `common.js`. `SG.track(name, data)` is called on every share; it goes to the activity log for the admin panel, and to `window.sgTrack` if a page defines one.
