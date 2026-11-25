@@ -162,12 +162,12 @@ Housekeeping: the dashboard looks back at most a year, so you can delete older e
 
 ## Contact form
 
-`contact/` has a form that posts to `functions/api/contact.js`. The function checks the message and sends it through Gmail's SMTP server (`smtp.gmail.com:465`) with an app password, to your Gmail inbox; Reply-To is the visitor, so Reply in Gmail answers them. Cloudflare Email Routing (`contact@sizeit.games` → your Gmail) covers people who email the address directly. No third-party mail service.
+`contact/` has a form that posts to `functions/api/contact.js`. The function checks the message and sends it through Gmail's SMTP server (`smtp.gmail.com:465`) with an app password, to `contact@sizeit.games`, which Email Routing forwards to your Gmail; Reply-To is the visitor, so Reply in Gmail answers them. Cloudflare Email Routing (`contact@sizeit.games` → your Gmail) covers people who email the address directly. No third-party mail service.
 
 Setup:
 
 1. Google Account → Security → turn on 2-Step Verification, then App passwords → create one ("sizeit.games"). Copy the 16 letters.
-2. Cloudflare Pages → the project → Settings → Variables and Secrets, add **Secrets** for Production: `GMAIL_USER` (your Gmail address) and `GMAIL_APP_PASSWORD`. Optional: `CONTACT_TO` (defaults to `GMAIL_USER`).
+2. Cloudflare Pages → the project → Settings → Variables and Secrets, add **Secrets** for Production: `GMAIL_USER` (your Gmail address) and `GMAIL_APP_PASSWORD`. Optional: `CONTACT_TO` (defaults to `contact@sizeit.games`).
 3. Redeploy.
 
 Until the secrets are set the form shows a "send it by email instead" mailto link. The form has a hidden honeypot field and the function only accepts posts from the site's own origin. To test locally put the same names in `.dev.vars` and run `npm run dev`. If the app password is ever revoked or Google blocks the login, the form falls back to the mailto link.
