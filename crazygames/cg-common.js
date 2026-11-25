@@ -48,8 +48,10 @@
     const [ey, em, ed] = SITE.epoch.split('-').map(Number);
     return Math.round((Date.UTC(y, m - 1, d) - Date.UTC(ey, em - 1, ed)) / 86400000) + 1;
   }
-  // Objects added later carry `since: 'YYYY-MM-DD'` and only join puzzles from that day on
-  const fresh = list => list.filter(x => !x.since || x.since <= todayKey());
+  // Objects added later carry `since: 'YYYY-MM-DD'` and only join puzzles from that day on.
+  // Film, game and anime characters (category 'pop': Pikachu, Darth Vader, Godzilla, ...) belong to other companies,
+  // so the CrazyGames build leaves them out. objects.js then drops the empty Pop Culture category by itself.
+  const fresh = list => list.filter(x => (!x.since || x.since <= todayKey()) && x.cat !== 'pop');
   function untilMidnight() {
     const now = new Date();
     const mid = new Date(now); mid.setHours(24, 0, 0, 0);
