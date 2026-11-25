@@ -353,13 +353,33 @@
       measure(el.trueM, p.tgt, xt, ground, tb, s, `Real: ${fmtLen(p.tgt.size)}`, trueHigher ? lift : 0, W);
       if (lift && !trueHigher) measure(el.guessM, p.tgt, xt, ground, gb, s, fmtLen(guessSize()), lift, W);
     }
+    // Names sit under their objects. When one object is tiny the two names would run into each other,
+    // so measure them and push them apart, keeping both on the board.
     const nameY = ground + 19;
-    el.refName.setAttribute('x', Math.min(W - 70, Math.max(70, xr + rb.w * s / 2)));
-    el.refName.setAttribute('y', nameY);
     el.refName.textContent = p.ref.name;
-    el.tgtName.setAttribute('x', Math.min(W - 70, Math.max(70, xt + tw * s / 2)));
-    el.tgtName.setAttribute('y', nameY);
     el.tgtName.textContent = p.tgt.name;
+    el.refName.style.fontSize = el.tgtName.style.fontSize = '';
+    let rw = el.refName.getComputedTextLength(), gw = el.tgtName.getComputedTextLength();
+    // two long names on a narrow phone: shrink both until they fit side by side
+    const fit = (W - 24) / (rw + gw + 12);
+    if (fit < 1) {
+      const fs = parseFloat(getComputedStyle(el.refName).fontSize) * fit + 'px';
+      el.refName.style.fontSize = el.tgtName.style.fontSize = fs;
+      rw *= fit; gw *= fit;
+    }
+    const onBoard = (x, w) => Math.min(W - w / 2 - 6, Math.max(w / 2 + 6, x));
+    let rx = onBoard(xr + rb.w * s / 2, rw), gx = onBoard(xt + tw * s / 2, gw);
+    const need = (rw + gw) / 2 + 12;
+    if (gx - rx < need) {
+      const mid = (rx + gx) / 2;
+      rx = mid - need / 2; gx = mid + need / 2;
+      const left = 6 - (rx - rw / 2), right = gx + gw / 2 - (W - 6);
+      if (left > 0) { rx += left; gx += left; } else if (right > 0) { rx -= right; gx -= right; }
+    }
+    el.refName.setAttribute('x', rx);
+    el.refName.setAttribute('y', nameY);
+    el.tgtName.setAttribute('x', gx);
+    el.tgtName.setAttribute('y', nameY);
     return animating;
   }
   (function loop() {
