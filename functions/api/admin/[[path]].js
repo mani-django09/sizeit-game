@@ -91,6 +91,20 @@ export async function onRequest({ request, env, params }) {
 
   if (!configured) return json({ error: 'not_configured' }, 503);
   if (!(await signedIn(request, env))) return json({ error: 'signed_out' }, 401);
+
+  // Ignore a browser (the owner's own, or any player), or stop ignoring it: { device, label, on }
+  if (path === 'ignore' && request.method === 'POST') {
+    // only from the admin page itself: a JSON body from this site's own origin
+    const origin = request.headers.get('Origin');
+    if ((origin && origin !== url.origin) || !(request.headers.get('Content-Type') || '').includes('application/json')) {
+      return json({ error: 'forbidden' }, 403);
+    }
+    let b = {};
+    try { b = await request.json(); } catch { /* empty body */ }
+    const device = String(b.device || '').toLowerCase();
+    if (!UUID.test(device)) return json({ error: 'bad_device' }, 400);
+    return rpc(env, 'admin_ignore', { p_device: device, p_label: b.label ? String(b.label).slice(0, 60) : null, p_on: b.on !== false });
+  }
   if (request.method !== 'GET') return json({ error: 'method' }, 405);
 
   switch (path) {
@@ -117,6 +131,8 @@ export async function onRequest({ request, env, params }) {
     }
     case 'lists':
       return rpc(env, 'admin_lists', {});
+    case 'ignored':
+      return rpc(env, 'admin_ignored_list', {});
     default:
       return json({ error: 'not_found' }, 404);
   }

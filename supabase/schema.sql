@@ -274,6 +274,16 @@ create index if not exists activity_events_event on public.activity_events (even
 alter table public.activity_events enable row level security;
 revoke all on public.activity_events from anon, authenticated;
 
+-- Browsers the owner marked as their own ("Ignore my visits" on the admin page). Their new events aren't
+-- stored, and their old ones are left out of every admin number and list (but not deleted).
+create table if not exists public.admin_ignored (
+  device     uuid primary key,
+  label      text,
+  created_at timestamptz not null default now()
+);
+alter table public.admin_ignored enable row level security;
+revoke all on public.admin_ignored from anon, authenticated;
+
 -- Add up to 20 events from one browser. At most 1000 events per browser per day; the rest are dropped.
 -- p_events: [{ e: event, p: page path, g: game, m: mode, s: score, r: referrer host, d: { extra fields } }]
 create or replace function public.log_events(p_device uuid, p_session text, p_platform text, p_events json)
@@ -283,6 +293,7 @@ declare
   cc  text := nullif(upper(left(btrim(coalesce(hdr ->> 'cf-ipcountry', '')), 2)), '');
 begin
   if p_device is null or p_events is null or json_typeof(p_events) <> 'array' then raise exception 'bad request'; end if;
+  if exists (select 1 from admin_ignored where device = p_device) then return json_build_object('ok', true); end if;
   if (select count(*) from activity_events where device = p_device and created_at > now() - interval '1 day') >= 1000 then
     return json_build_object('ok', false, 'reason', 'limit');
   end if;
@@ -316,6 +327,7 @@ begin
              (e.created_at at time zone p_tz) as lt, (e.created_at at time zone p_tz)::date as day
       from activity_events e
       where e.created_at >= (since::timestamp at time zone p_tz)
+        and not exists (select 1 from admin_ignored i where i.device = e.device)
     ),
     firsts as (
       select device, (min(created_at) at time zone p_tz)::date as first_day
@@ -344,9 +356,10 @@ begin
         'views_range',       (select count(*) from ev where event = 'page_view'),
         'sessions_range',    (select count(distinct session) from ev),
         'avg_session_min',   (select round(avg(mins)::numeric, 1) from sess),
-        'players_all',       (select count(distinct device) from activity_events),
-        'events_all',        (select count(*) from activity_events),
-        'scores_today',      (select count(*) from daily_scores where day = today),
+        'players_all',       (select count(distinct device) from activity_events where device not in (select device from admin_ignored)),
+        'events_all',        (select count(*) from activity_events where device not in (select device from admin_ignored)),
+        'ignored',           (select count(*) from admin_ignored),
+        'scores_today',      (select count(*) from daily_scores where day = today and device not in (select device from admin_ignored)),
         'suggestions_week',  (select count(*) from object_suggestions where created_at > now() - interval '7 days'),
         'suggestions_all',   (select count(*) from object_suggestions),
         'leagues',           (select count(*) from leagues),
@@ -414,6 +427,8 @@ returns json language sql stable security definer set search_path = public as $$
     from activity_events
     where (p_before is null or id < p_before) and (p_device is null or device = p_device)
       and (p_event is null or event = p_event) and (p_game is null or game = p_game)
+      -- ignored browsers only show up when asked for by their id
+      and (p_device is not null or device not in (select device from admin_ignored))
     order by id desc
     limit greatest(1, least(coalesce(p_limit, 100), 500))) x
 $$;
@@ -425,6 +440,7 @@ returns json language sql stable security definer set search_path = public as $$
   with recent as (
     select device from activity_events
     where created_at > now() - make_interval(days => greatest(1, least(coalesce(p_days, 30), 365)))
+      and device not in (select device from admin_ignored)
     group by device
   ),
   names as (select device, string_agg(distinct name, ', ') as names from league_members group by device),
@@ -454,6 +470,7 @@ create or replace function public.admin_device(p_device uuid)
 returns json language sql stable security definer set search_path = public as $$
   select json_build_object(
     'device', p_device,
+    'ignored', exists (select 1 from admin_ignored where device = p_device),
     'summary', (
       select json_build_object('first_seen', min(created_at), 'last_seen', max(created_at), 'events', count(*),
              'games', count(*) filter (where event = 'game_end'), 'views', count(*) filter (where event = 'page_view'),
@@ -489,7 +506,8 @@ returns json language sql stable security definer set search_path = public as $$
     'scores', (
       select coalesce(json_agg(x order by x.day desc, x.players desc), '[]'::json) from (
         select day, game, count(*) as players, round(avg(score))::integer as avg_score, max(score) as best, game_max(game) as max
-        from daily_scores where day > (now() at time zone 'utc')::date - 30 group by day, game) x
+        from daily_scores where day > (now() at time zone 'utc')::date - 30 and device not in (select device from admin_ignored)
+        group by day, game) x
     ),
     'suggestions', (
       select coalesce(json_agg(x order by x.id desc), '[]'::json) from (
@@ -507,7 +525,36 @@ returns json language sql stable security definer set search_path = public as $$
   )
 $$;
 
+-- Ignore one browser (p_on true) or stop ignoring it (false). Returns the full list, like admin_ignored_list().
+create or replace function public.admin_ignore(p_device uuid, p_label text default null, p_on boolean default true)
+returns json language plpgsql security definer set search_path = public as $$
+begin
+  if p_device is null then raise exception 'device required'; end if;
+  if p_on then
+    insert into admin_ignored (device, label) values (p_device, left(btrim(p_label), 60))
+    on conflict (device) do update set label = coalesce(excluded.label, admin_ignored.label);
+  else
+    delete from admin_ignored where device = p_device;
+  end if;
+  return admin_ignored_list();
+end
+$$;
+
+-- The ignored browsers, with how much activity each has (hidden from the admin numbers)
+create or replace function public.admin_ignored_list()
+returns json language sql stable security definer set search_path = public as $$
+  select coalesce(json_agg(x order by x.created_at desc), '[]'::json) from (
+    select i.device, i.label, i.created_at,
+           (select count(*) from activity_events e where e.device = i.device) as events,
+           (select max(created_at) from activity_events e where e.device = i.device) as last_seen
+    from admin_ignored i) x
+$$;
+
 -- Only the secret (service role) key may call the admin functions; never the publishable key in the browser.
+revoke all on function public.admin_ignore(uuid, text, boolean) from public, anon, authenticated;
+revoke all on function public.admin_ignored_list() from public, anon, authenticated;
+grant execute on function public.admin_ignore(uuid, text, boolean) to service_role;
+grant execute on function public.admin_ignored_list() to service_role;
 revoke all on function public.admin_overview(integer, text) from public, anon, authenticated;
 revoke all on function public.admin_events(integer, bigint, uuid, text, text) from public, anon, authenticated;
 revoke all on function public.admin_players(integer, text, integer) from public, anon, authenticated;

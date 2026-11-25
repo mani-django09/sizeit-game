@@ -156,6 +156,8 @@ Setup:
 
 Changing either secret signs the admin out everywhere. `functions/api/admin/[[path]].js` checks the password, keeps you signed in for a week with an HttpOnly cookie, and is the only place the secret key is used. To run it locally, put the same three names (plus `SUPABASE_URL` if needed) in `.dev.vars` (ignored by git) and run `npm run dev`.
 
+**Your own visits**: "Ignore my visits" in the sidebar (on each of your phones and computers) adds that browser to `admin_ignored`. Its new events are no longer stored (`log_events` skips it, and `assets/common.js` stops sending when `localStorage.sg_no_log` is set), and its past activity and Daily scores are left out of every admin number and list. Any player can be ignored from their details, and the Players tab lists ignored browsers with a "Count again" button.
+
 Housekeeping: the dashboard looks back at most a year, so you can delete older events with the commented-out `delete` at the end of `schema.sql`.
 
 ## Sharing, challenge links and link previews

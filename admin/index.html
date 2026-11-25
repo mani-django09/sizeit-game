@@ -37,6 +37,7 @@
         <button data-view="leagues"><i>🏆</i><span>Leagues</span></button>
       </nav>
       <div class="side-foot">
+        <button class="ghost-link me-btn" id="meBtn" type="button" hidden></button>
         <a class="ghost-link" href="../" target="_blank" rel="noopener">Open site ↗</a>
         <button class="ghost-link" id="themeBtn" type="button">Theme</button>
         <button class="ghost-link" id="logoutBtn" type="button">Sign out</button>
@@ -57,6 +58,10 @@
           <button class="btn icon" id="refreshBtn" type="button" title="Refresh" aria-label="Refresh">↻</button>
         </div>
       </header>
+      <div class="notice me-banner" id="meBanner" hidden>
+        <span>🙈 Your own visits from this browser are counted too.</span>
+        <span class="me-actions"><button class="btn primary" id="meBannerYes" type="button">Ignore my visits</button><button class="btn" id="meBannerNo" type="button">Not now</button></span>
+      </div>
       <div class="notice" id="notice" hidden></div>
       <div id="view" class="view" aria-live="polite"></div>
     </main>

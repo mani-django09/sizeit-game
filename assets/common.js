@@ -441,11 +441,12 @@
   // for the owner's admin page at /admin/. Each event carries the random device id, a session id (new after
   // 30 idle minutes) and an "OS · browser · device type" label. No names, IP addresses or locations are sent;
   // the country comes from Cloudflare on the server. Events are batched and sent at most every few seconds.
-  // Not sent from localhost (set localStorage sg_log_local to true to test), or for the Answers page's hidden games.
+  // Not sent from localhost (set localStorage sg_log_local to true to test), for the Answers page's hidden games,
+  // or from a browser the owner marked with "Ignore my visits" on the admin page (localStorage sg_no_log).
   const activity = (() => {
     const cfg = SITE.leaderboard || {};
     const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) && !store.get('sg_log_local', false);
-    const on = !!(cfg.url && cfg.key) && location.hash !== '#answers' && location.protocol !== 'file:' && !local;
+    const on = !!(cfg.url && cfg.key) && location.hash !== '#answers' && location.protocol !== 'file:' && !local && !store.get('sg_no_log', false);
     const queue = [];
     let timer = 0;
     function session() {

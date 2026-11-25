@@ -108,8 +108,61 @@
     view: VIEWS[store.get('view')] ? store.get('view') : 'overview',
     days: [1, 7, 30, 90].includes(store.get('days')) ? store.get('days') : 30,
     metric: 'players', timer: 0, loading: false, seen: new Set(), feed: [], filters: { event: '', game: '', device: '' },
-    players: null, q: '', lists: null, listQ: ''
+    players: null, q: '', lists: null, listQ: '', ignored: []
   };
+
+  // ---------- Ignoring the owner's own visits ----------
+  // The admin page is on the site's own origin, so it can read the site's device id (sg_device) and turn
+  // logging off in this browser (sg_no_log, read by assets/common.js). The server list (admin_ignored) is the
+  // source of truth: it also hides the browser's past activity, and works for the owner's other devices.
+  const site = {
+    get(k) { try { const v = localStorage.getItem(k); return v == null ? null : JSON.parse(v); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* private mode */ } },
+    del(k) { try { localStorage.removeItem(k); } catch { /* private mode */ } }
+  };
+  function myDevice() {
+    let id = site.get('sg_device');
+    if (typeof id !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)) {
+      id = crypto.randomUUID ? crypto.randomUUID()
+        : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); });
+      site.set('sg_device', id);   // the site will use this same id from now on
+    }
+    return id;
+  }
+  function browserLabel() {
+    const ua = navigator.userAgent || '';
+    const os = /Android/i.test(ua) ? 'Android' : /iPhone|iPad|iPod/.test(ua) ? 'iOS' : /Windows/.test(ua) ? 'Windows' : /Mac OS X/.test(ua) ? 'Mac' : 'Linux';
+    const br = /Edg\//.test(ua) ? 'Edge' : /SamsungBrowser/.test(ua) ? 'Samsung' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : 'Safari';
+    return `My ${os} · ${br}`;
+  }
+  const isIgnored = d => (S.ignored || []).some(x => x.device === d);
+  // Keeps this browser's sg_no_log in step with the server list, then updates the button and banner
+  function syncMe() {
+    const me = myDevice(), on = isIgnored(me);
+    if (on) site.set('sg_no_log', true); else site.del('sg_no_log');
+    const b = $('#meBtn');
+    b.hidden = false;
+    b.classList.toggle('on', on);
+    b.textContent = on ? '✓ My visits ignored' : '🙈 Ignore my visits';
+    b.title = on ? 'This browser isn\'t counted. Click to count it again.' : 'Stop counting this browser\'s visits and hide its past activity';
+    $('#meBanner').hidden = on || store.get('meDismissed', false);
+    renderIgnored();
+  }
+  async function loadIgnored() {
+    try { S.ignored = await api('ignored'); syncMe(); } catch { /* the database may not have the function yet */ }
+  }
+  async function setIgnored(device, on, label) {
+    S.ignored = await api('ignore', { method: 'POST', body: { device, on, label } });
+    syncMe();
+    go(S.view, true);
+  }
+  $('#meBtn').addEventListener('click', async e => {
+    const b = e.currentTarget; b.disabled = true;
+    try { await setIgnored(myDevice(), !isIgnored(myDevice()), browserLabel()); } catch (err) { if (!err.quiet) { $('#notice').innerHTML = explain(err); $('#notice').hidden = false; } }
+    finally { b.disabled = false; }
+  });
+  $('#meBannerYes').addEventListener('click', () => $('#meBtn').click());
+  $('#meBannerNo').addEventListener('click', () => { store.set('meDismissed', true); $('#meBanner').hidden = true; });
 
   // ---------- Sign in ----------
   function showLogin(msg, info) {
@@ -122,6 +175,7 @@
   function showApp() {
     $('#login').hidden = true; $('#app').hidden = false;
     go(S.view);
+    loadIgnored();
   }
   $('#loginForm').addEventListener('submit', async e => {
     e.preventDefault();
@@ -417,7 +471,13 @@
             <div class="filters"><input type="search" id="pSearch" placeholder="Search a device id or league name…" value="${esc(S.q)}"></div></header>
           <div class="table-wrap"><table class="nowrap"><thead><tr><th>Player</th><th>Last seen</th><th>First seen</th><th class="r">Days</th><th class="r">Visits</th><th class="r">Games</th><th class="r">Pages</th><th>Last game</th><th>Where</th><th>Device</th></tr></thead>
           <tbody id="pBody"></tbody></table></div>
-        </div>`;
+        </div>
+        <div class="card"><header><h2>Ignored browsers <small>left out of every number and list</small></h2></header><div id="ignBody"></div></div>`;
+      $('#ignBody').addEventListener('click', async e => {
+        const b = e.target.closest('button[data-unignore]'); if (!b) return;
+        b.disabled = true;
+        try { await setIgnored(b.dataset.unignore, false); } catch (err) { b.disabled = false; if (!err.quiet) { $('#notice').innerHTML = explain(err); $('#notice').hidden = false; } }
+      });
       let t = 0;
       $('#pSearch').addEventListener('input', e => { clearTimeout(t); t = setTimeout(() => { S.q = e.target.value.trim(); refresh(); }, 300); });
       $('#pBody').addEventListener('click', e => { const tr = e.target.closest('tr[data-device]'); if (tr) openDevice(tr.dataset.device); });
@@ -430,6 +490,16 @@
       <td>${p.last_game ? `${gicon(p.last_game)} ${esc(gname(p.last_game))}` : '<span class="muted">–</span>'}</td>
       <td>${flag(p.country)} ${esc(country(p.country))}</td><td class="small muted">${esc(p.platform || '')}</td></tr>`).join('')
       : `<tr><td colspan="10" class="empty">${S.q ? 'No player matches that search.' : 'No players in this period yet.'}</td></tr>`;
+    renderIgnored();
+  }
+  function renderIgnored() {
+    const box = $('#ignBody'); if (!box) return;
+    const me = myDevice(), rows = S.ignored || [];
+    box.innerHTML = rows.length ? `<div class="table-wrap"><table class="nowrap"><thead><tr><th>Browser</th><th>Ignored</th><th class="r">Hidden events</th><th>Last seen</th><th></th></tr></thead><tbody>
+      ${rows.map(r => `<tr><td><div class="who">${avatar(r.device)}<div>${devTag(r.device)} ${r.device === me ? '<span class="chip accent">this browser</span>' : ''}<div class="small">${esc(r.label || '')}</div></div></div></td>
+        <td class="muted">${ago(r.created_at)}</td><td class="r">${nf(r.events)}</td><td class="muted">${r.last_seen ? ago(r.last_seen) : '–'}</td>
+        <td class="r"><button class="btn" data-unignore="${esc(r.device)}">Count again</button></td></tr>`).join('')}</tbody></table></div>`
+      : '<p class="empty">None yet. Use “Ignore my visits” in the sidebar on each of your own devices, or “Ignore this player” in a player\'s details.</p>';
   }
 
   // ---------- One player ----------
@@ -440,9 +510,12 @@
       const d = await api(`device?id=${encodeURIComponent(id)}`);
       const s = d.summary || {}, evs = d.events || [];
       const last = evs[0] || {};
-      let html = `<section><div class="who">${avatar(id)}<div><h2>Player ${esc(id.slice(0, 8))}</h2>
+      const ign = !!d.ignored, mine = id === myDevice();
+      let html = `<section><div class="who">${avatar(id)}<div><h2>Player ${esc(id.slice(0, 8))} ${mine ? '<span class="chip accent">this browser</span>' : ''} ${ign ? '<span class="chip ignored">ignored</span>' : ''}</h2>
         <div class="small muted">${flag(last.country)} ${esc(country(last.country))}${last.platform ? ' · ' + esc(last.platform) : ''}</div></div></div>
-        <p class="small muted" style="margin:10px 0 0">Device id <span class="dev">${esc(id)}</span> <button class="btn" style="padding:2px 8px;font-size:.78rem" id="copyId">Copy</button></p></section>
+        <p class="small muted" style="margin:10px 0 0">Device id <span class="dev">${esc(id)}</span> <button class="btn" style="padding:2px 8px;font-size:.78rem" id="copyId">Copy</button></p>
+        <p style="margin:12px 0 0"><button class="btn" id="ignoreDev">${ign ? '👁️ Count this player again' : '🙈 Ignore this player'}</button>
+        <span class="small muted">${ign ? 'Hidden from every number and list.' : 'For your own phone or laptop: hides it from every number and list.'}</span></p></section>
         <section class="mini-kpis">
           <div><b>${nf(s.games)}</b><span>games finished</span></div><div><b>${nf(s.sessions)}</b><span>visits</span></div><div><b>${nf(s.views)}</b><span>pages viewed</span></div>
           <div><b style="font-size:1rem">${s.first_seen ? esc(when(s.first_seen)) : '–'}</b><span>first seen</span></div>
@@ -466,6 +539,13 @@
       html += `</div>${evs.length >= 300 ? '<p class="small muted">Showing the newest 300 events.</p>' : ''}</section>
         <p><button class="btn" id="devFeed">Show in Live activity →</button></p>`;
       $('#drawerBody').innerHTML = html;
+      $('#ignoreDev').addEventListener('click', async e => {
+        e.target.disabled = true;
+        try {
+          await setIgnored(id, !ign, mine ? browserLabel() : `Player ${id.slice(0, 8)}${last.platform ? ' · ' + last.platform : ''}`);
+          openDevice(id);
+        } catch (err) { if (!err.quiet) $('#drawerBody').insertAdjacentHTML('afterbegin', `<div class="notice">${explain(err)}</div>`); e.target.disabled = false; }
+      });
       $('#copyId').addEventListener('click', e => { navigator.clipboard && navigator.clipboard.writeText(id).then(() => { e.target.textContent = 'Copied'; }); });
       $('#devFeed').addEventListener('click', () => { closeDrawer(); S.filters = { event: '', game: '', device: id }; $('#view').innerHTML = ''; go('live'); });
     } catch (e) {
