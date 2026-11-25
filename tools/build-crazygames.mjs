@@ -56,11 +56,38 @@ writeFileSync(join(out, 'game.js'), js);
 
 // ---- style.css, data, fonts, SDK files ----
 writeFileSync(join(out, 'style.css'), patch(read('assets/style.css'), /\.\.\/fonts\//g, 'fonts/', 'font paths') +
-  '\n/* CrazyGames build */\nbody.ad-playing { pointer-events: none; }\n');
+  `
+/* CrazyGames build */
+body.ad-playing { pointer-events: none; }
+/* Everything a round needs, including Lock in, fits on one phone screen without scrolling.
+   The header already names the game, so the big title goes and only the mode switch stays. */
+@media (max-width: 560px) {
+  .ghero { padding: 10px 0 8px; }
+  .ghero .title { display: none; }
+  .prompt { font-size: 1.05rem; margin: 8px 0; }
+  .prompt small, .hint { display: none; }
+  #board { height: 36vh; min-height: 200px; }
+  /* − slider + on one row, Lock in full width below */
+  .controls { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; margin-top: 10px; }
+  .controls input[type=range] { order: 1; min-width: 0; flex-basis: auto; }
+  .controls #lockBtn { grid-column: 1 / -1; }
+}
+/* short windows: the CrazyGames frame on a laptop (about 1280x720), or a phone turned sideways */
+@media (max-height: 820px) and (min-width: 561px) {
+  .ghero { padding: 10px 0 8px; }
+  .ghero .title { display: none; }
+  .prompt { margin: 8px 0; }
+  .prompt small, .hint { display: none; }
+  #board { height: 38vh; min-height: 200px; }
+  .controls { margin-top: 10px; }
+}
+`);
 // source URLs are never shown in this build, so leave them out of the data too
 writeFileSync(join(out, 'objects.js'), read('data/objects.js').replace(/ ?src: 'https:[^']*',?/g, '').replace("const W = 'https://en.wikipedia.org/wiki/';", "const W = '';"));
 cpSync(join(root, 'crazygames', 'cg-common.js'), join(out, 'cg-common.js'));
 cpSync(join(root, 'crazygames', 'cg-sdk.js'), join(out, 'cg-sdk.js'));
+// the font's licence (SIL OFL) has to travel with the font files
+cpSync(join(root, 'fonts', 'OFL.txt'), join(out, 'fonts', 'OFL.txt'));
 cpSync(join(root, 'fonts', 'bricolage-latin.woff2'), join(out, 'fonts', 'bricolage-latin.woff2'));
 cpSync(join(root, 'fonts', 'bricolage-latin-ext.woff2'), join(out, 'fonts', 'bricolage-latin-ext.woff2'));
 
