@@ -4,7 +4,7 @@
 //   node tools/make-crazygames-videos.mjs
 //   node tools/make-crazygames-videos.mjs --list-seeds   (print candidate rounds to pick a new SEED)
 //
-// Output: dist/crazygames-videos/{landscape-1920x1080,portrait-1080x1920}.mp4, about 18 seconds each.
+// Output: dist/crazygames-videos/{landscape-1920x1080,portrait-1080x1620}.mp4, about 18 seconds each.
 // Headless Chrome (or Edge) plays a scripted Unlimited game: five rounds, then the result screen.
 // The DevTools screencast keeps each frame's real timestamp, and ffmpeg turns them into 30 fps H.264.
 import { createServer } from 'node:http';
@@ -33,9 +33,10 @@ const ROUNDS = [
   { slide: 700, off: 1.01, hold: 800 }
 ];
 const LAYOUTS = [
-  // CSS size × scale = video size. 1280×720 is about the CrazyGames frame on a laptop; 360×640 is a phone.
+  // CSS size × scale = video size. 1280×720 is about the CrazyGames frame on a laptop. CrazyGames wants the portrait
+  // video at 2:3 (not 9:16), so it is 450×675 of phone-sized page, tall enough to keep Lock in on screen.
   { name: 'landscape-1920x1080', w: 1280, h: 720, scale: 1.5 },
-  { name: 'portrait-1080x1920', w: 360, h: 640, scale: 3 }
+  { name: 'portrait-1080x1620', w: 450, h: 675, scale: 2.4 }
 ];
 
 const browserPath = [
