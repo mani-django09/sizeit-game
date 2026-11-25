@@ -61,7 +61,7 @@ export async function onRequestPost({ request, env }) {
 
   try {
     await Promise.race([
-      smtpSend(env.GMAIL_USER, env.GMAIL_APP_PASSWORD, to, raw),
+      smtpSend(env.GMAIL_USER.trim(), env.GMAIL_APP_PASSWORD.replace(/s+/g, ''), to, raw),
       new Promise((_, no) => setTimeout(() => no(new Error('timeout')), 12000))
     ]);
   } catch (e) {
