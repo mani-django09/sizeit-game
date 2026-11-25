@@ -8,7 +8,7 @@
 // Settings: Cloudflare Pages → the project → Settings → Variables and Secrets (type "Secret"):
 //   GMAIL_USER          the Gmail address that sends and receives the messages
 //   GMAIL_APP_PASSWORD  a 16-letter Google "App password" (Google Account → Security → 2-Step Verification → App passwords)
-//   CONTACT_TO          optional, who receives the messages; defaults to contact@sizeit.games
+//   CONTACT_TO          optional, the address shown in the To: line; defaults to contact@sizeit.games
 // For `wrangler pages dev`, put them in .dev.vars.
 import { connect } from 'cloudflare:sockets';
 
@@ -44,10 +44,13 @@ export async function onRequestPost({ request, env }) {
 
   const page = clean(d.page, 300);
   const body = [`From: ${name} <${email}>`, `Topic: ${topic}`, ...(page ? [`Page: ${page}`] : []), '', message].join('\n');
-  const to = addr(env.CONTACT_TO || 'contact@sizeit.games');   // Email Routing forwards it to Gmail
+  // The mail shows as sent to contact@sizeit.games, but is delivered straight to the Gmail inbox: Cloudflare Email
+  // Routing refuses to forward a message that comes from the same Gmail it forwards to.
+  const shownTo = addr(env.CONTACT_TO || 'contact@sizeit.games');
+  const to = addr(env.GMAIL_USER);
   const raw = [
     `From: ${hdr('sizeit.games contact form')} <${addr(env.GMAIL_USER)}>`,
-    `To: ${to}`,
+    `To: ${shownTo}`,
     `Reply-To: ${hdr(name)} <${addr(email)}>`,
     `Subject: ${hdr(`[sizeit.games] ${topic}: ${name}`.slice(0, 200))}`,
     `Message-ID: <${crypto.randomUUID()}@sizeit.games>`,
