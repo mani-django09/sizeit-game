@@ -50,7 +50,7 @@ export async function onRequestPost({ request, env }) {
   const to = addr(env.GMAIL_USER);
   const raw = [
     `From: ${hdr('sizeit.games contact form')} <${addr(env.GMAIL_USER)}>`,
-    `To: ${shownTo}`,
+    `To: ${shownTo}, ${to}`,   // listing the real receiver too stops Gmail labelling it "bcc"
     `Reply-To: ${hdr(name)} <${addr(email)}>`,
     `Subject: ${hdr(`[sizeit.games] ${topic}: ${name}`.slice(0, 200))}`,
     `Message-ID: <${crypto.randomUUID()}@sizeit.games>`,
