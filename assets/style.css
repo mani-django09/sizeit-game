@@ -9,6 +9,14 @@
   src: url("../fonts/bricolage-latin-ext.woff2") format("woff2");
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
+/* Shown for the moment before Bricolage arrives: Arial (or Roboto/Helvetica) resized to Bricolage's width
+   and line height, so headings don't reflow and push the page around when the real font swaps in.
+   Measured at weight 700: Bricolage text is 89.4% as wide as Arial, ascent 0.93 em, descent 0.27 em. */
+@font-face {
+  font-family: "Bricolage Fallback"; font-weight: 600 800;
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Arial"), local("Roboto"), local("Helvetica Neue"), local("Helvetica");
+  size-adjust: 89.4%; ascent-override: 104%; descent-override: 30.2%; line-gap-override: 0%;
+}
 
 /* ===== Tokens ===== */
 :root {
@@ -47,7 +55,7 @@
   --peach: #ffb37a;
   --dots: rgba(27, 23, 64, .1);
   --on-accent: #1b1740;
-  --display: "Bricolage Grotesque", system-ui, sans-serif;
+  --display: "Bricolage Grotesque", "Bricolage Fallback", system-ui, sans-serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -124,6 +132,11 @@ h1, h2, h3, .display { font-family: var(--display); letter-spacing: -.02em; }
 .big { padding: 14px 26px; font-size: 1.08rem; }
 
 /* ===== Header ===== */
+/* common.js adds the header after the page is first drawn. Until it does, keep its space free, so the page
+   doesn't jump down when it appears (that jump was the site's biggest layout shift). Heights match the
+   header: one row on wider screens, two rows (brand, then links) on phones. */
+body:not(:has(> header.top))::before { content: ""; display: block; height: 70px; }
+@media (max-width: 560px) { body:not(:has(> header.top))::before { height: 114px; } }
 .top {
   position: sticky; top: 0; z-index: 20;
   background: color-mix(in srgb, var(--bg) 88%, transparent);
@@ -985,6 +998,8 @@ body { background-color: var(--bg); background-image: radial-gradient(var(--dots
 /* the ground: the lineup's ground line sits at 76% of its height */
 /* (a background on the svg itself stops Chrome drawing its contents, so the ground is a layer behind it) */
 .parade #parade { position: relative; z-index: 0; }
+/* the home page draws the parade (a 560×300 SVG) with JavaScript: keep its space so the page below doesn't jump */
+.parade #parade:empty { aspect-ratio: 560 / 300; }
 .parade #parade::before { content: ""; position: absolute; left: -14px; right: -14px; bottom: 0; height: 24%; background: var(--mint); z-index: -1; }
 .parade .cap { background: var(--mint); margin: 0 -14px; padding: 2px 16px 12px; }
 /* outlines stay 2.5px however much a drawing is scaled */
