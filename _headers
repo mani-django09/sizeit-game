@@ -26,3 +26,9 @@ https://:project.pages.dev/*
 # The image behind a challenge link preview is generated per link: not for search results
 /og-card
   X-Robots-Tag: noindex
+
+# The admin page: never indexed, cached or framed
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+  X-Frame-Options: DENY

@@ -26,7 +26,9 @@ self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET' || new URL(e.request.url).origin !== location.origin) return;
+  const u = new URL(e.request.url);
+  if (e.request.method !== 'GET' || u.origin !== location.origin) return;
+  if (u.pathname.startsWith('/admin') || u.pathname.startsWith('/api/')) return;   // the admin page is never cached
   e.respondWith(
     fetch(e.request).then(res => {
       const copy = res.clone();

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Admin · sizeit.games</title>
+  <!-- The owner's admin page. Not linked from the site, never indexed, and it loads no analytics. -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#ff7a1a">
+  <link rel="icon" href="../icon.svg" type="image/svg+xml">
+  <link rel="preload" href="../fonts/bricolage-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="login" id="login" hidden>
+    <form class="login-card" id="loginForm" autocomplete="on">
+      <div class="brand big"><img src="../icon.svg" alt="" width="44" height="44"><div><b>sizeit.games</b><span>Admin</span></div></div>
+      <h1>Welcome back</h1>
+      <p class="muted">Sign in to see what players are doing on the site.</p>
+      <input type="text" name="username" value="admin" autocomplete="username" hidden>
+      <label class="field"><span>Password</span><input type="password" id="pw" name="password" autocomplete="current-password" required autofocus></label>
+      <button class="btn primary wide" type="submit" id="loginBtn">Sign in</button>
+      <p class="login-msg" id="loginMsg" role="alert"></p>
+    </form>
+  </div>
+
+  <div class="app" id="app" hidden>
+    <aside class="side">
+      <div class="brand"><img src="../icon.svg" alt="" width="34" height="34"><div><b>sizeit.games</b><span>Admin</span></div></div>
+      <nav class="nav" id="nav" aria-label="Sections">
+        <button data-view="overview"><i>📊</i><span>Overview</span></button>
+        <button data-view="live"><i>⚡</i><span>Live activity</span><em class="live-dot" id="navLive" hidden></em></button>
+        <button data-view="players"><i>👥</i><span>Players</span></button>
+        <button data-view="scores"><i>🏅</i><span>Daily scores</span></button>
+        <button data-view="suggestions"><i>💡</i><span>Suggestions</span></button>
+        <button data-view="leagues"><i>🏆</i><span>Leagues</span></button>
+      </nav>
+      <div class="side-foot">
+        <a class="ghost-link" href="../" target="_blank" rel="noopener">Open site ↗</a>
+        <button class="ghost-link" id="themeBtn" type="button">Theme</button>
+        <button class="ghost-link" id="logoutBtn" type="button">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="bar">
+        <div>
+          <h1 id="title">Overview</h1>
+          <p class="muted small" id="subtitle"></p>
+        </div>
+        <div class="bar-tools">
+          <div class="seg" id="range" role="group" aria-label="Date range">
+            <button data-days="1">Today</button><button data-days="7">7 days</button><button data-days="30">30 days</button><button data-days="90">90 days</button>
+          </div>
+          <span class="updated small muted" id="updated"></span>
+          <button class="btn icon" id="refreshBtn" type="button" title="Refresh" aria-label="Refresh">↻</button>
+        </div>
+      </header>
+      <div class="notice" id="notice" hidden></div>
+      <div id="view" class="view" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="drawer" id="drawer" aria-label="Player details" hidden>
+    <button class="btn icon close" id="drawerClose" type="button" aria-label="Close">✕</button>
+    <div id="drawerBody"></div>
+  </aside>
+  <div class="tip" id="tip" hidden></div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

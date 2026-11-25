@@ -245,3 +245,279 @@ grant execute on function public.league_join(text, uuid, text) to anon, authenti
 grant execute on function public.league_create(text, uuid, text) to anon, authenticated;
 grant execute on function public.league_leave(text, uuid) to anon, authenticated;
 grant execute on function public.league_board(text, date, uuid) to anon, authenticated;
+
+-- ===== Activity log and the admin page (/admin/) =====
+-- Every page view, finished game, share and league action, so the owner can see how the site is used.
+-- Each row carries the same random device id as the leaderboard, a session id (a new one after 30 idle
+-- minutes), the country Cloudflare reports for the request and a short "OS · browser · device type" label.
+-- No names, IP addresses or exact locations. The browser can only add rows, through log_events().
+-- The admin page reads them through the admin_* functions, which only the secret (service role) key can call.
+-- Safe to run again: it only creates what's missing and replaces the functions.
+create table if not exists public.activity_events (
+  id         bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  device     uuid not null,
+  session    text,
+  event      text not null,
+  page       text,
+  game       text,
+  mode       text,
+  score      integer,
+  data       jsonb,
+  country    text,
+  platform   text,
+  ref        text
+);
+create index if not exists activity_events_time on public.activity_events (created_at);
+create index if not exists activity_events_device on public.activity_events (device, created_at);
+create index if not exists activity_events_event on public.activity_events (event, created_at);
+alter table public.activity_events enable row level security;
+revoke all on public.activity_events from anon, authenticated;
+
+-- Add up to 20 events from one browser. At most 1000 events per browser per day; the rest are dropped.
+-- p_events: [{ e: event, p: page path, g: game, m: mode, s: score, r: referrer host, d: { extra fields } }]
+create or replace function public.log_events(p_device uuid, p_session text, p_platform text, p_events json)
+returns json language plpgsql security definer set search_path = public as $$
+declare
+  hdr json := coalesce(nullif(current_setting('request.headers', true), '')::json, '{}'::json);
+  cc  text := nullif(upper(left(btrim(coalesce(hdr ->> 'cf-ipcountry', '')), 2)), '');
+begin
+  if p_device is null or p_events is null or json_typeof(p_events) <> 'array' then raise exception 'bad request'; end if;
+  if (select count(*) from activity_events where device = p_device and created_at > now() - interval '1 day') >= 1000 then
+    return json_build_object('ok', false, 'reason', 'limit');
+  end if;
+  insert into activity_events (device, session, event, page, game, mode, score, data, country, platform, ref)
+  select p_device, left(p_session, 40), ev, left(x ->> 'p', 200), left(x ->> 'g', 20), left(x ->> 'm', 20),
+         case when (x ->> 's') ~ '^-?\d{1,9}$' then (x ->> 's')::integer end,
+         case when json_typeof(x -> 'd') = 'object' and length((x -> 'd')::text) <= 1000 then (x -> 'd')::jsonb end,
+         cc, left(p_platform, 40), left(x ->> 'r', 100)
+  from (
+    select x, left(regexp_replace(lower(coalesce(x ->> 'e', '')), '[^a-z0-9_]', '', 'g'), 30) as ev
+    from json_array_elements(p_events) with ordinality as t(x, i)
+    where i <= 20 and json_typeof(x) = 'object'
+  ) s
+  where ev <> '';
+  return json_build_object('ok', true);
+end
+$$;
+grant execute on function public.log_events(uuid, text, text, json) to anon, authenticated;
+
+-- Everything on the admin page's Overview tab for the last p_days days (days counted in p_tz).
+create or replace function public.admin_overview(p_days integer default 30, p_tz text default 'Asia/Kolkata')
+returns json language plpgsql stable security definer set search_path = public as $$
+declare
+  d     integer := greatest(1, least(coalesce(p_days, 30), 365));
+  today date    := (now() at time zone p_tz)::date;
+  since date    := today - d + 1;
+begin
+  return (
+    with ev as (
+      select e.id, e.device, e.session, e.event, e.page, e.game, e.mode, e.score, e.country, e.platform, e.ref, e.created_at,
+             (e.created_at at time zone p_tz) as lt, (e.created_at at time zone p_tz)::date as day
+      from activity_events e
+      where e.created_at >= (since::timestamp at time zone p_tz)
+    ),
+    firsts as (
+      select device, (min(created_at) at time zone p_tz)::date as first_day
+      from activity_events where device in (select device from ev) group by device
+    ),
+    sess as (
+      select extract(epoch from max(created_at) - min(created_at)) / 60 as mins
+      from ev where session is not null group by session
+      having count(*) > 1 and max(created_at) - min(created_at) < interval '6 hours'   -- leave out tabs left open for days
+    )
+    select json_build_object(
+      'today', today, 'since', since, 'days', d, 'tz', p_tz,
+      'kpi', json_build_object(
+        'live',              (select count(distinct device) from ev where created_at > now() - interval '5 minutes'),
+        'players_today',     (select count(distinct device) from ev where day = today),
+        'players_yesterday', (select count(distinct device) from ev where day = today - 1),
+        'new_today',         (select count(*) from firsts where first_day = today),
+        'sessions_today',    (select count(distinct session) from ev where day = today),
+        'games_today',       (select count(*) from ev where day = today and event = 'game_end'),
+        'games_yesterday',   (select count(*) from ev where day = today - 1 and event = 'game_end'),
+        'views_today',       (select count(*) from ev where day = today and event = 'page_view'),
+        'players_range',     (select count(distinct device) from ev),
+        'new_range',         (select count(*) from firsts where first_day >= since),
+        'returning_range',   (select count(*) from (select device from ev group by device having count(distinct day) > 1) r),
+        'games_range',       (select count(*) from ev where event = 'game_end'),
+        'views_range',       (select count(*) from ev where event = 'page_view'),
+        'sessions_range',    (select count(distinct session) from ev),
+        'avg_session_min',   (select round(avg(mins)::numeric, 1) from sess),
+        'players_all',       (select count(distinct device) from activity_events),
+        'events_all',        (select count(*) from activity_events),
+        'scores_today',      (select count(*) from daily_scores where day = today),
+        'suggestions_week',  (select count(*) from object_suggestions where created_at > now() - interval '7 days'),
+        'suggestions_all',   (select count(*) from object_suggestions),
+        'leagues',           (select count(*) from leagues),
+        'league_members',    (select count(*) from league_members)
+      ),
+      'series', (
+        select json_agg(json_build_object('day', g.day, 'players', coalesce(a.players, 0), 'views', coalesce(a.views, 0),
+                                          'games', coalesce(a.games, 0), 'new', coalesce(f.n, 0)) order by g.day)
+        from (select generate_series(since::timestamp, today::timestamp, interval '1 day')::date as day) g
+        left join (select day, count(distinct device) as players, count(*) filter (where event = 'page_view') as views,
+                          count(*) filter (where event = 'game_end') as games
+                   from ev group by day) a on a.day = g.day
+        left join (select first_day, count(*) as n from firsts group by first_day) f on f.first_day = g.day
+      ),
+      'games', (
+        select coalesce(json_agg(x order by x.plays desc), '[]'::json) from (
+          select g.game, count(*) as plays, count(distinct g.device) as players, round(avg(g.score))::integer as avg_score,
+                 max(g.score) as best, count(*) filter (where g.day = today) as today,
+                 (select json_object_agg(coalesce(m.mode, '?'), m.n) from (
+                    select e2.mode, count(*) as n from ev e2
+                    where e2.event = 'game_end' and e2.game = g.game group by e2.mode) m) as modes
+          from ev g where g.event = 'game_end' and g.game is not null
+          group by g.game) x
+      ),
+      'pages', (
+        select coalesce(json_agg(x order by x.views desc), '[]'::json) from (
+          select page, count(*) as views, count(distinct device) as players
+          from ev where event = 'page_view' group by page order by count(*) desc limit 15) x
+      ),
+      'countries', (
+        select coalesce(json_agg(x order by x.players desc), '[]'::json) from (
+          select coalesce(country, '??') as country, count(distinct device) as players, count(*) as events
+          from ev group by 1 order by count(distinct device) desc limit 20) x
+      ),
+      'platforms', (
+        select coalesce(json_agg(x order by x.players desc), '[]'::json) from (
+          select coalesce(platform, 'Unknown') as platform, count(distinct device) as players
+          from ev group by 1 order by count(distinct device) desc limit 12) x
+      ),
+      'refs', (
+        select coalesce(json_agg(x order by x.visits desc), '[]'::json) from (
+          select ref, count(*) as visits, count(distinct device) as players
+          from ev where event = 'page_view' and ref is not null and ref <> '' group by ref order by count(*) desc limit 12) x
+      ),
+      'events', (
+        select coalesce(json_agg(x order by x.n desc), '[]'::json) from (
+          select event, count(*) as n, count(distinct device) as players from ev group by event) x
+      ),
+      'heat', (
+        select coalesce(json_agg(x), '[]'::json) from (
+          select extract(isodow from lt)::integer as d, extract(hour from lt)::integer as h, count(*) as c
+          from ev group by 1, 2) x
+      )
+    )
+  );
+end
+$$;
+
+-- The newest events, optionally for one device, event name or game. p_before: an id, to page backwards.
+create or replace function public.admin_events(p_limit integer default 100, p_before bigint default null,
+  p_device uuid default null, p_event text default null, p_game text default null)
+returns json language sql stable security definer set search_path = public as $$
+  select coalesce(json_agg(x order by x.id desc), '[]'::json) from (
+    select id, created_at, device, session, event, page, game, mode, score, data, country, platform, ref
+    from activity_events
+    where (p_before is null or id < p_before) and (p_device is null or device = p_device)
+      and (p_event is null or event = p_event) and (p_game is null or game = p_game)
+    order by id desc
+    limit greatest(1, least(coalesce(p_limit, 100), 500))) x
+$$;
+
+-- Players (browsers) seen in the last p_days days, most recent first. p_q: the start of a device id,
+-- or part of a display name used in a Friends League.
+create or replace function public.admin_players(p_days integer default 30, p_q text default null, p_limit integer default 200)
+returns json language sql stable security definer set search_path = public as $$
+  with recent as (
+    select device from activity_events
+    where created_at > now() - make_interval(days => greatest(1, least(coalesce(p_days, 30), 365)))
+    group by device
+  ),
+  names as (select device, string_agg(distinct name, ', ') as names from league_members group by device),
+  agg as (
+    select e.device, min(e.created_at) as first_seen, max(e.created_at) as last_seen, count(*) as events,
+           count(*) filter (where e.event = 'game_end') as games,
+           count(*) filter (where e.event = 'page_view') as views,
+           count(distinct e.session) as sessions,
+           count(distinct (e.created_at at time zone 'Asia/Kolkata')::date) as days,
+           (array_agg(e.country order by e.id desc) filter (where e.country is not null))[1] as country,
+           (array_agg(e.platform order by e.id desc) filter (where e.platform is not null))[1] as platform,
+           (array_agg(e.game order by e.id desc) filter (where e.game is not null))[1] as last_game
+    from activity_events e join recent r using (device)
+    group by e.device
+  )
+  select coalesce(json_agg(x order by x.last_seen desc), '[]'::json) from (
+    select a.*, n.names from agg a left join names n using (device)
+    where coalesce(btrim(p_q), '') = ''
+       or a.device::text like lower(btrim(p_q)) || '%'
+       or n.names ilike '%' || btrim(p_q) || '%'
+    order by a.last_seen desc
+    limit greatest(1, least(coalesce(p_limit, 200), 1000))) x
+$$;
+
+-- Everything about one browser: totals, its last 300 events, games, Daily scores and leagues.
+create or replace function public.admin_device(p_device uuid)
+returns json language sql stable security definer set search_path = public as $$
+  select json_build_object(
+    'device', p_device,
+    'summary', (
+      select json_build_object('first_seen', min(created_at), 'last_seen', max(created_at), 'events', count(*),
+             'games', count(*) filter (where event = 'game_end'), 'views', count(*) filter (where event = 'page_view'),
+             'sessions', count(distinct session))
+      from activity_events where device = p_device
+    ),
+    'events', (
+      select coalesce(json_agg(x order by x.id desc), '[]'::json) from (
+        select id, created_at, session, event, page, game, mode, score, data, country, platform, ref
+        from activity_events where device = p_device order by id desc limit 300) x
+    ),
+    'games', (
+      select coalesce(json_agg(x order by x.plays desc), '[]'::json) from (
+        select game, count(*) as plays, round(avg(score))::integer as avg_score, max(score) as best
+        from activity_events where device = p_device and event = 'game_end' and game is not null group by game) x
+    ),
+    'scores', (
+      select coalesce(json_agg(x order by x.day desc, x.game), '[]'::json) from (
+        select game, day, score, game_max(game) as max, created_at
+        from daily_scores where device = p_device order by day desc limit 200) x
+    ),
+    'leagues', (
+      select coalesce(json_agg(json_build_object('code', m.code, 'league', l.name, 'name', m.name, 'joined_at', m.joined_at)), '[]'::json)
+      from league_members m join leagues l using (code) where m.device = p_device
+    )
+  )
+$$;
+
+-- Daily scores per game and day (last 30 days), object suggestions and Friends Leagues.
+create or replace function public.admin_lists()
+returns json language sql stable security definer set search_path = public as $$
+  select json_build_object(
+    'scores', (
+      select coalesce(json_agg(x order by x.day desc, x.players desc), '[]'::json) from (
+        select day, game, count(*) as players, round(avg(score))::integer as avg_score, max(score) as best, game_max(game) as max
+        from daily_scores where day > (now() at time zone 'utc')::date - 30 group by day, game) x
+    ),
+    'suggestions', (
+      select coalesce(json_agg(x order by x.id desc), '[]'::json) from (
+        select id, created_at, name, category, measure, source, note
+        from object_suggestions order by id desc limit 300) x
+    ),
+    'leagues', (
+      select coalesce(json_agg(x order by x.members desc, x.created_at desc), '[]'::json) from (
+        select l.code, l.name, l.created_at, count(m.device) as members,
+               string_agg(m.name, ', ' order by m.joined_at) as names
+        from leagues l left join league_members m using (code)
+        group by l.code, l.name, l.created_at
+        order by count(m.device) desc limit 300) x
+    )
+  )
+$$;
+
+-- Only the secret (service role) key may call the admin functions; never the publishable key in the browser.
+revoke all on function public.admin_overview(integer, text) from public, anon, authenticated;
+revoke all on function public.admin_events(integer, bigint, uuid, text, text) from public, anon, authenticated;
+revoke all on function public.admin_players(integer, text, integer) from public, anon, authenticated;
+revoke all on function public.admin_device(uuid) from public, anon, authenticated;
+revoke all on function public.admin_lists() from public, anon, authenticated;
+grant execute on function public.admin_overview(integer, text) to service_role;
+grant execute on function public.admin_events(integer, bigint, uuid, text, text) to service_role;
+grant execute on function public.admin_players(integer, text, integer) to service_role;
+grant execute on function public.admin_device(uuid) to service_role;
+grant execute on function public.admin_lists() to service_role;
+
+-- Optional housekeeping: the admin page looks back at most a year.
+-- delete from public.activity_events where created_at < now() - interval '400 days';

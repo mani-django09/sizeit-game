@@ -1,9 +1,10 @@
 {
   "version": 1,
-  "description": "Run Pages Functions only for HTML pages and the preview image, never for scripts, images or fonts (keeps the free quota for real visits). Add new pages here.",
+  "description": "Run Pages Functions only for HTML pages, the preview image and the admin API (/api/*), never for scripts, images or fonts (keeps the free quota for real visits). Add new pages here.",
   "include": [
     "/",
     "/og-card",
+    "/api/*",
     "/size-it-up/",
     "/which-is-heavier/",
     "/sort-it/",

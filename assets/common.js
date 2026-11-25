@@ -436,8 +436,88 @@
     }));
     dlg.showModal();
   }
-  // Analytics hook: a no-op until an analytics script that defines window.sgTrack is added
-  function track(name, data) { try { if (typeof window.sgTrack === 'function') window.sgTrack(name, data || {}); } catch { /* ignore */ } }
+  // ---------- Activity log ----------
+  // Page views, finished games, shares and league actions go to log_events() in Supabase (supabase/schema.sql),
+  // for the owner's admin page at /admin/. Each event carries the random device id, a session id (new after
+  // 30 idle minutes) and an "OS · browser · device type" label. No names, IP addresses or locations are sent;
+  // the country comes from Cloudflare on the server. Events are batched and sent at most every few seconds.
+  // Not sent from localhost (set localStorage sg_log_local to true to test), or for the Answers page's hidden games.
+  const activity = (() => {
+    const cfg = SITE.leaderboard || {};
+    const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) && !store.get('sg_log_local', false);
+    const on = !!(cfg.url && cfg.key) && location.hash !== '#answers' && location.protocol !== 'file:' && !local;
+    const queue = [];
+    let timer = 0;
+    function session() {
+      const now = Date.now();
+      let s = store.get('sg_session', null);
+      if (!s || typeof s.id !== 'string' || now - s.t > 30 * 60 * 1000) s = { id: now.toString(36) + Math.random().toString(36).slice(2, 10) };
+      s.t = now;
+      store.set('sg_session', s);
+      return s.id;
+    }
+    const platform = (() => {
+      const ua = navigator.userAgent || '';
+      const ipad = /iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+      const os = /Android/i.test(ua) ? 'Android' : ipad || /iPhone|iPod/.test(ua) ? 'iOS' : /Windows/.test(ua) ? 'Windows'
+        : /CrOS/.test(ua) ? 'ChromeOS' : /Mac OS X/.test(ua) ? 'macOS' : /Linux/.test(ua) ? 'Linux' : 'Other';
+      const br = /Edg\//.test(ua) ? 'Edge' : /OPR\/|Opera/.test(ua) ? 'Opera' : /SamsungBrowser/.test(ua) ? 'Samsung'
+        : /FxiOS|Firefox\//.test(ua) ? 'Firefox' : /CriOS|Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Other';
+      const kind = ipad || /Tablet/i.test(ua) || (/Android/i.test(ua) && !/Mobi/i.test(ua)) ? 'tablet' : /Mobi|iPhone|iPod/i.test(ua) ? 'mobile' : 'desktop';
+      let app = false;
+      try { app = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch { /* ignore */ }
+      return `${os} · ${br} · ${kind}${app ? ' · app' : ''}`;
+    })();
+    function flush() {
+      clearTimeout(timer); timer = 0;
+      while (queue.length) {
+        const body = JSON.stringify({ p_device: board.deviceId(), p_session: session(), p_platform: platform, p_events: queue.splice(0, 20) });
+        const headers = { 'Content-Type': 'application/json', apikey: cfg.key };
+        if (cfg.key.startsWith('eyJ')) headers.Authorization = `Bearer ${cfg.key}`;
+        // keepalive lets the last events of a page still arrive after the player has moved on
+        try { fetch(`${cfg.url.replace(/\/$/, '')}/rest/v1/rpc/log_events`, { method: 'POST', headers, body, keepalive: true }).catch(() => {}); } catch { /* ignore */ }
+      }
+    }
+    // e: event name (a-z, 0-9, _); f: { g: game, m: mode, s: score, r: referrer host, d: { anything small } }
+    function log(e, f = {}) {
+      if (!on) return;
+      queue.push({ e, p: location.pathname, ...f });
+      if (queue.length >= 20) flush();
+      else if (!timer) timer = setTimeout(flush, e === 'page_view' ? 1500 : 4000);
+    }
+    if (on) {
+      addEventListener('pagehide', flush);
+      document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flush(); });
+      const q = new URLSearchParams(location.search), d = {};
+      let r = '';
+      try { const u = new URL(document.referrer); if (u.host !== location.host) r = u.host.replace(/^www\./, ''); } catch { /* no referrer */ }
+      if (q.get('utm_source')) d.src = q.get('utm_source').slice(0, 40);
+      if (q.get('vs')) d.vs = 1;
+      if (q.get('mode')) d.mode = q.get('mode').slice(0, 20);
+      log('page_view', { r, d });
+    }
+    // Every game calls vsResult() when a game ends, so that is where finished games are logged.
+    let last = '';
+    function gameEnd(ctx, score) {
+      const page = SITE.games.find(g => location.pathname.includes('/' + g.path));
+      const game = page ? page.id : location.pathname.includes('/weekly/') ? 'weekly' : '';
+      let mode = (ctx && ctx.mode) || '';
+      if (mode === 'daily' && (archiveDate || (ctx.date && ctx.date !== todayKey()))) mode = 'archive';
+      const key = `${game}|${mode}|${score}|${Math.floor(Date.now() / 5000)}`;   // the same result shown twice in a row is one game
+      if (!game || key === last) return;
+      last = key;
+      const d = {};
+      if (ctx.date && (mode === 'daily' || mode === 'archive')) d.day = ctx.date;
+      if (vsFor(ctx)) d.vs = 1;
+      log('game_end', { g: game, m: mode, s: Math.round(Number(score) || 0), d });
+    }
+    return { on, log, gameEnd, flush };
+  })();
+  // Shares, random challenges and league actions: logged for the admin page, and passed to window.sgTrack if a page defines it
+  function track(name, data) {
+    activity.log(String(name).toLowerCase(), { d: data || {} });
+    try { if (typeof window.sgTrack === 'function') window.sgTrack(name, data || {}); } catch { /* ignore */ }
+  }
 
   // ---------- Challenge links ----------
   // Every shared result is a challenge. The link carries the score (and name, if given), and the friend who
@@ -487,6 +567,7 @@
   }
   // On the result screen: who won
   function vsResult(resultEl, ctx, mine) {
+    activity.gameEnd(ctx || {}, mine);
     let line = resultEl.querySelector('.vs-line');
     const c = vsFor(ctx);
     if (!c) { if (line) line.hidden = true; return; }

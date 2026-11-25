@@ -140,9 +140,27 @@ What it can't stop: someone who looks up the answers and plays perfectly. Every 
 
 Free-tier note: Supabase pauses a free project after a week with no requests. A site with daily players keeps it awake.
 
+## Admin panel (`/admin/`)
+
+A password-protected dashboard of what players do: players live now and today, games finished per day, each game's plays, modes and scores, when people play (day × hour), countries, devices, referrers and top pages, a live feed of every event, a list of players (browsers) with a full timeline for each, plus Daily scores, suggestions and leagues. It isn't linked from the site, and it is kept out of search, caches and analytics.
+
+What is logged: `activity` in `assets/common.js` sends `page_view` on every page, `game_end` (game, mode, score) whenever a game calls `SG.vsResult()`, and every `SG.track()` call (shares, random challenges, league actions). Events go in batches to `log_events()` in Supabase with the random device id, a session id (new after 30 idle minutes) and an "OS · browser · device type" label; the server adds the country from Cloudflare. Nothing is sent from localhost unless `localStorage.sg_log_local` is `true`.
+
+Setup:
+
+1. Run `supabase/schema.sql` again in the Supabase SQL Editor. It adds `activity_events`, `log_events()` and the `admin_*` functions, which only the secret key can call.
+2. In Cloudflare Pages → the project → Settings → Variables and Secrets, add two **Secrets** for Production:
+   - `ADMIN_PASSWORD`: the admin password (long and random).
+   - `SUPABASE_SERVICE_KEY`: Supabase → Project Settings → API Keys → a **secret** key (`sb_secret_…`) or the legacy `service_role` key. Never put this key in the site's code.
+3. Redeploy, then open `https://sizeit.games/admin/`.
+
+Changing either secret signs the admin out everywhere. `functions/api/admin/[[path]].js` checks the password, keeps you signed in for a week with an HttpOnly cookie, and is the only place the secret key is used. To run it locally, put the same three names (plus `SUPABASE_URL` if needed) in `.dev.vars` (ignored by git) and run `npm run dev`.
+
+Housekeeping: the dashboard looks back at most a year, so you can delete older events with the commented-out `delete` at the end of `schema.sql`.
+
 ## Sharing, challenge links and link previews
 
-- **Share sheet**: every Share button opens a small sheet with WhatsApp first, then X, Telegram, Copy and (on phones) the system share menu. `SG.share(text)` in `common.js`. `SG.track(name, data)` is called on every share; it does nothing until an analytics script defines `window.sgTrack`.
+- **Share sheet**: every Share button opens a small sheet with WhatsApp first, then X, Telegram, Copy and (on phones) the system share menu. `SG.share(text)` in `common.js`. `SG.track(name, data)` is called on every share; it goes to the activity log for the admin panel, and to `window.sgTrack` if a page defines one.
 - **Every share is a challenge**: the link carries the score and the player's name (`?vs=780&by=Rahul`). A Daily link adds `?date=`, so a friend plays the same day's puzzles (from the Archive if they open it later). Unlimited, Endless and Rush links add `?mode=&s=<seed>`, so the friend gets the same run. Survival (random every run) and Weekly use `?mode=run` and `?mode=week&s=<monday>`. The friend sees a banner, and "You vs Rahul" at the end. Helpers: `SG.challengeUrl`, `SG.challengeText`, `SG.vsBanner`, `SG.vsResult`.
 - **First-visit intro**: three animated steps shown once per game (`HOWTO` in `common.js`). Survival and Weekly explain themselves on their start screens, so they have none.
 
@@ -164,7 +182,8 @@ A WhatsApp group shares one 6-letter code. Members join with just a name; the ta
 | `functions/_middleware.js` | Makes canonical, `og:url` and `og:image` absolute from the requested address, so previews work before `set-domain.py` is run and on `*.pages.dev`. For a challenge link it rewrites the title to "Rahul scored 780/1000 in Size It Up. Can you beat it?" and points `og:image` at `/og-card` |
 | `functions/og-card.js` | Draws the 1200×630 challenge image (`@cf-wasm/og`). It loads Bricolage Grotesque from Google Fonts at request time; if drawing fails it redirects to the game's own `og/*.png` |
 | `edge/challenge.js` | Game names and score formats for both. Keep in step with `SITE.games` |
-| `_routes.json` | Runs the functions only for HTML pages and `/og-card`, not for scripts and images, to stay inside the free quota. **Add every new page here** |
+| `functions/api/admin/[[path]].js` | The admin panel's API: sign-in and the `admin_*` database reads (see Admin panel above) |
+| `_routes.json` | Runs the functions only for HTML pages, `/og-card` and `/api/*`, not for scripts and images, to stay inside the free quota. **Add every new page here** |
 
 Cloudflare builds the functions from `functions/` in the project root (not from `dist/`) and installs `package.json` itself, so the build settings above stay the same. To try them locally: `npm install`, then `npm run dev` and open http://localhost:8788.
 
